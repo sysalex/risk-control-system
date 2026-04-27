@@ -35,6 +35,19 @@
 
 ---
 
+## 编码规范
+
+### Domain Service 命名与包结构
+
+- **场景**：COLA 架构中 Application Service 和 Domain Service 并存，容易混淆
+- **做法**：
+  - Domain Service 接口必须以 `DomainService` 结尾，如 `RuleDomainService`、`RiskScoreDomainService`
+  - 接口放在 `com.harness.risk.domain.service` 包下
+  - 实现类放在 `com.harness.risk.domain.service.impl` 子包中，如 `RuleDomainServiceImpl`
+- **为什么有效**：命名上严格区分 Application Service（`AuthService`、`UserService`）和 Domain Service（`RuleDomainService`），避免注入时混淆
+
+---
+
 ## 决策经验
 
 <!-- 关键技术决策的记录，格式：决策 + 备选 + 选择理由 -->
