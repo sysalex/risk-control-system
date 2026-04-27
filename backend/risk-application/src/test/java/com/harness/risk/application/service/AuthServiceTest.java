@@ -1,0 +1,152 @@
+package com.harness.risk.application.service;
+
+import com.harness.risk.application.dto.LoginRequest;
+import com.harness.risk.application.dto.RefreshRequest;
+import com.harness.risk.application.dto.RegisterRequest;
+import com.harness.risk.application.dto.TokenResponse;
+import com.harness.risk.application.dto.UserResponse;
+import com.harness.risk.common.exception.AppException;
+import com.harness.risk.common.security.JwtUtil;
+import com.harness.risk.common.security.PasswordEncoder;
+import com.harness.risk.domain.user.User;
+import com.harness.risk.domain.user.UserRole;
+import com.harness.risk.infrastructure.mapper.UserMapper;
+import io.jsonwebtoken.Claims;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+/**
+ * {@link AuthService} 单元测试
+ *
+ * @author harness-agent
+ * @since 2026-04-27
+ */
+@ExtendWith(MockitoExtension.class)
+class AuthServiceTest {
+
+    @Mock
+    private UserMapper userMapper;
+    @Mock
+    private JwtUtil jwtUtil;
+    @Mock
+    private PasswordEncoder passwordEncoder;
+    @InjectMocks
+    private AuthService authService;
+
+    private User sampleUser() {
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("alice");
+        user.setEmail("alice@test.com");
+        user.setHashedPassword("encoded");
+        user.setRole(UserRole.ADMIN);
+        user.setActive(true);
+        return user;
+    }
+
+    @Test
+    void loginSuccessReturnsTokens() {
+        User user = sampleUser();
+        when(userMapper.selectOne(any())).thenReturn(user);
+        when(passwordEncoder.matches("password123", "encoded")).thenReturn(true);
+        when(jwtUtil.generateAccessToken(1L, "alice", "admin")).thenReturn("access-token");
+        when(jwtUtil.generateRefreshToken(1L)).thenReturn("refresh-token");
+
+        TokenResponse resp = authService.login(new LoginRequest("alice", "password123"));
+
+        assertEquals("access-token", resp.accessToken());
+        assertEquals("refresh-token", resp.refreshToken());
+        assertEquals(1800, resp.expiresIn()); // 30 * 60
+    }
+
+    @Test
+    void loginFailsWhenUserNotFound() {
+        when(userMapper.selectOne(any())).thenReturn(null);
+
+        AppException e = assertThrows(AppException.class,
+                () -> authService.login(new LoginRequest("bob", "password")));
+        assertEquals(401, e.getCode());
+    }
+
+    @Test
+    void loginFailsWhenPasswordMismatch() {
+        User user = sampleUser();
+        when(userMapper.selectOne(any())).thenReturn(user);
+        when(passwordEncoder.matches(any(), any())).thenReturn(false);
+
+        AppException e = assertThrows(AppException.class,
+                () -> authService.login(new LoginRequest("alice", "wrong")));
+        assertEquals(401, e.getCode());
+    }
+
+    @Test
+    void loginLocksAfterFiveFailures() {
+        User user = sampleUser();
+        when(userMapper.selectOne(any())).thenReturn(user);
+        when(passwordEncoder.matches(any(), any())).thenReturn(false);
+
+        for (int i = 0; i < 5; i++) {
+            assertThrows(AppException.class,
+                    () -> authService.login(new LoginRequest("alice", "wrong")));
+        }
+
+        AppException e = assertThrows(AppException.class,
+                () -> authService.login(new LoginRequest("alice", "wrong")));
+        assertEquals(429, e.getCode());
+    }
+
+    @Test
+    void registerSuccessReturnsUserResponse() {
+        when(userMapper.selectCount(any())).thenReturn(0L);
+        when(passwordEncoder.encode("password123")).thenReturn("encoded");
+
+        UserResponse resp = authService.register(
+                new RegisterRequest("alice", "alice@test.com", "password123"));
+
+        assertEquals("alice", resp.username());
+        assertEquals("alice@test.com", resp.email());
+        verify(userMapper).insert(any(User.class));
+    }
+
+    @Test
+    void registerFailsWhenUsernameOrEmailExists() {
+        when(userMapper.selectCount(any())).thenReturn(1L);
+
+        AppException e = assertThrows(AppException.class,
+                () -> authService.register(new RegisterRequest("alice", "a@test.com", "password123")));
+        assertEquals(409, e.getCode());
+    }
+
+    @Test
+    void refreshSuccessReturnsNewTokens() {
+        Claims claims = mock(Claims.class);
+        when(claims.getSubject()).thenReturn("1");
+        when(jwtUtil.parseToken("old-refresh")).thenReturn(claims);
+
+        User user = sampleUser();
+        when(userMapper.selectById(1L)).thenReturn(user);
+        when(jwtUtil.generateAccessToken(1L, "alice", "admin")).thenReturn("new-access");
+        when(jwtUtil.generateRefreshToken(1L)).thenReturn("new-refresh");
+
+        TokenResponse resp = authService.refresh(new RefreshRequest("old-refresh"));
+
+        assertEquals("new-access", resp.accessToken());
+        assertEquals("new-refresh", resp.refreshToken());
+    }
+
+    @Test
+    void refreshFailsWhenTokenInvalid() {
+        when(jwtUtil.parseToken("bad-token")).thenThrow(new AppException(401, "Token invalid"));
+
+        AppException e = assertThrows(AppException.class,
+                () -> authService.refresh(new RefreshRequest("bad-token")));
+        assertEquals(401, e.getCode());
+    }
+}

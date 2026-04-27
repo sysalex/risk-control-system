@@ -52,13 +52,23 @@
 
 ## 阶段 2：后端 API — 认证与用户
 
-- [ ] 2.1 UserRepository（CRUD）
-- [ ] 2.2 AuthService（登录、注册、token 刷新）
-- [ ] 2.3 UserService（用户管理）
-- [ ] 2.4 /auth 路由（login、refresh、logout、register）
-- [ ] 2.5 /users 路由（me、列表、创建、删除）
-- [ ] 2.6 认证依赖注入（JwtInterceptor、RequireRole 注解）
-- [ ] 2.7 认证模块测试（覆盖率 ≥ 80%）
+- [x] 2.1 UserRepository（CRUD）
+- [x] 2.2 AuthService（登录、注册、token 刷新）
+  - 完成时间：2026-04-27
+  - 包含登录失败 5 次锁定（15 分钟）、注册冲突检测、token 刷新
+- [x] 2.3 UserService（用户管理）
+  - 完成时间：2026-04-27
+  - 包含 me / list（分页）/ create / update / delete
+- [x] 2.4 /auth 路由（login、refresh、logout、register）
+- [x] 2.5 /users 路由（me、列表、创建、删除）
+- [x] 2.6 认证依赖注入（JwtInterceptor、RequireRole 注解、RoleAspect AOP）
+- [x] 2.7 认证模块测试（覆盖率 ≥ 80%）
+  - 完成时间：2026-04-27
+  - 后端全量测试：61 个用例，0 失败；Jacoco 全模块报告通过
+  - risk-common：JwtUtilTest (4) + PasswordEncoderTest (3)
+  - risk-application：AuthServiceTest (8) + UserServiceTest (9)
+  - risk-starter：AuthControllerTest (4) + UserControllerTest (5) + JwtInterceptorTest (4) + 迁移测试 (4)
+  - 审查状态：本地代码/安全自检通过
 
 依赖：阶段 1 全部完成
 

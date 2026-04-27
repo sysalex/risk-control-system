@@ -8,6 +8,24 @@
 
 ## [Unreleased]
 
+### Added
+- 认证与用户 API（Stage 2）：
+  - `JwtUtil`（risk-common）：HS256 JWT 生成/解析，支持 access token / refresh token，密钥通过 SHA-256 派生固定为 32 字节
+  - `PasswordEncoder`（risk-common）：BCrypt 哈希包装器（strength=10）
+  - `AuthConstants`（risk-common）：跨层共享的 request attribute 常量（ATTR_USER_ID / ATTR_USERNAME / ATTR_ROLE），消除 common→domain 循环依赖
+  - `RequireRole` 注解 + `RoleAspect` AOP（risk-interfaces）：基于角色字符串的权限控制，避免 common 层依赖 domain 层
+  - `AuthService`（risk-application）：登录（5 次失败锁定 15 分钟）、注册（用户名/邮箱冲突检测）、token 刷新、登出占位
+  - `UserService`（risk-application）：me / list 分页 / create / update / delete
+  - `AuthController`（risk-interfaces）：`/api/v1/auth/login`、`/refresh`、`/logout`、`/register`
+  - `UserController`（risk-interfaces）：`/api/v1/users/me`、`/users`（列表/创建）、`/users/{id}`（更新/删除）
+  - `JwtInterceptor` + `RequestIdInterceptor`（risk-starter）：JWT Bearer 校验、requestId 注入；`WebMvcConfig` 注册拦截器并排除 `/api/v1/health` 和 `/api/v1/auth/**`
+  - H2 内存数据库（risk-starter test scope）+ `application-test.yml`：支持 `@SpringBootTest` + `@AutoConfigureMockMvc` 控制器测试，无需本地 MySQL
+  - 测试：后端全量 61 个用例全部通过
+    - risk-common：JwtUtilTest (4) + PasswordEncoderTest (3)
+    - risk-application：AuthServiceTest (8) + UserServiceTest (9)
+    - risk-starter：AuthControllerTest (4) + UserControllerTest (5) + JwtInterceptorTest (4) + Flyway 迁移测试 (4)
+  - SDD 产物：`docs/specs/auth-api.md`、`docs/plans/auth-api.md`
+
 ### Changed
 - **后端技术栈切换**：FastAPI + PostgreSQL + SQLAlchemy → Spring Boot 3 + MySQL + MyBatis-Plus
 - **后端语言**：Python 3.12 → Java 17

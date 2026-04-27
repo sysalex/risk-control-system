@@ -1,5 +1,6 @@
 package com.harness.risk.starter.config;
 
+import com.harness.risk.starter.interceptor.JwtInterceptor;
 import com.harness.risk.starter.interceptor.RequestIdInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -20,15 +21,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final RequestIdInterceptor requestIdInterceptor;
+    private final JwtInterceptor jwtInterceptor;
 
     /**
-     * 注册请求追踪拦截器
+     * 注册请求追踪和 JWT 认证拦截器
      *
      * @param registry 拦截器注册中心
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(requestIdInterceptor);
+        registry.addInterceptor(jwtInterceptor)
+                .addPathPatterns("/api/v1/**")
+                .excludePathPatterns("/api/v1/health", "/api/v1/auth/**");
     }
 
     /**
