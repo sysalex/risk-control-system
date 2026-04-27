@@ -42,6 +42,12 @@
 - [ ] 错误路径有 `log.error()` 记录
 - [ ] 无裸 `System.out.println()` 或 `console.log()`
 
+### 性能基线
+- [ ] 后端 API：P99 响应时间 ≤ 500ms（健康检查/静态资源除外）
+- [ ] 前端首屏：LCP（Largest Contentful Paint）≤ 2.5s（本地开发环境）
+- [ ] 数据库：慢查询阈值 > 200ms 必须记录警告日志并纳入优化 backlog
+- [ ] 构建：CI 全量构建 + 测试 ≤ 10 分钟
+
 ### 知识沉淀（Compound Engineering）
 - [ ] 本次是否发现了新的模式/反模式？
 - [ ] 是否有可复用的决策经验或踩坑记录？
@@ -76,7 +82,7 @@
 ## 数据库迁移 DoD
 
 - [ ] 迁移脚本可正向执行（`mvn flyway:migrate`）
-- [ ] 迁移脚本可回滚（`mvn flyway:undo`）
+- [ ] 迁移脚本可回滚（提供 downgrade SQL 或备份恢复方案；Flyway Community 不支持 `flyway:undo`）
 - [ ] 迁移不包含数据操作（结构变更与数据迁移分离）
 - [ ] 新表/字段有注释说明用途
 

@@ -66,6 +66,8 @@
 
 ## Agent 自动触发规则
 
+> 以下 Agent 为工作流角色定义，实际执行时需通过 Skill 工具调用或手动触发。
+
 ### 强制触发（MUST）
 
 | 场景 | Agent | 触发时机 | 跳过条件 |
@@ -150,17 +152,21 @@
 
 ### 标记完成前必须确认
 
+所有任务的完成标准（DoD）以 `docs/definition-of-done.md` 为唯一真相源。以下为高层概览：
+
 1. **代码质量**：测试通过、覆盖率 ≥ 80%、lint 零错误、编译通过
 2. **代码审查**：code-reviewer 已运行、CRITICAL/HIGH 已修复、security-reviewer（如适用）
 3. **安全检查**：OWASP Top 10 通过、无敏感信息泄露、权限校验到位
 4. **文档更新**：task-list.md 状态已更新、CHANGELOG.md 已更新、API 文档已更新（如适用）
 5. **知识沉淀**：是否有新模式/反模式/踩坑记录？有则更新 `.harness/learnings.md` 或 `docs/patterns.md`
 
+> 详细清单（按任务类型细分）及性能基线、违规处理方式，见 `docs/definition-of-done.md`。
+
 ### 默认收尾顺序
 
 ```
 运行验证 → 更新 task-list.md → 更新 CHANGELOG.md → 更新 handoff/learnings
-→ git status 自检 → git commit → git push
+→ git status 自检 → 确认当前分支非 `main` → git commit → git push
 ```
 
 除非用户要求暂停，否则必须走完全部 7 步。

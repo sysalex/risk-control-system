@@ -23,6 +23,12 @@
 - **日志规范**：`from app.core.logging import get_logger` → `@Slf4j` + `log.info()`
 
 ### Added
+- AuditLog 模型与迁移：
+  - 新增 `AuditLog` 领域模型，记录操作类型、资源类型/ID、前后值快照、操作者 IP 等审计字段
+  - 新增 `AuditLogMapper` 基础 Mapper，为后续审计日志自动注入提供持久化边界
+  - 新增 Flyway `V4__create_audit_log_table.sql`，创建 `audit_logs` 表、外键、复合查询索引
+  - 新增审计日志模型、Mapper 注解、迁移 SQL 关键路径测试
+  - 补充 `backend/lombok.config`，启用 `addLombokGeneratedAnnotation = true`，解决 Lombok 生成方法导致 Jacoco 覆盖率失真问题
 - RiskScore / Decision 模型与迁移：
   - 新增 `RiskScore`、`Decision` 领域模型，以及 `DecisionType` 枚举
   - 新增 `RiskScoreMapper`、`DecisionMapper` 基础 Mapper，为评分和决策 API 提供持久化边界
@@ -75,7 +81,7 @@
 - OWASP Top 10 安全检查清单：docs/security-checklist.md
 - 架构决策记录：docs/adr/decisions.md（技术栈选型、分层架构、认证方案、审计日志不可变）
 
-### Optimized
+### Changed
 - **后端分层架构**：`Controller → Service → Mapper` 扁平三层 → COLA 四层（Interfaces → Application → Domain ← Infrastructure）
 - **ADR-005**：新增 COLA 分层架构决策记录，含与传统分层对比表
 - **AGENTS.md**：多 AI 代理兼容的上下文文件，Cursor/Codex 等工具可读取
