@@ -30,11 +30,11 @@
 - [ ] DEBUG = False（生产环境）
 - [ ] 默认账号/密码已修改
 - [ ] 错误响应不泄露堆栈信息
-- [ ] 依赖包版本无已知漏洞（定期 `pip audit`）
+- [ ] 依赖包版本无已知漏洞（定期 `npm audit` / `mvn org.owasp:dependency-check-maven:check`）
 
 ### 6. Vulnerable and Outdated Components（过时组件）
 - [ ] 定期更新依赖包版本
-- [ ] 使用 `pip audit` / `npm audit` 扫描漏洞
+- [ ] 使用 `npm audit` / `mvn dependency:check` 扫描漏洞
 
 ### 7. Identification and Authentication Failures（认证失效）
 - [ ] 登录接口有失败次数限制（防爆破）

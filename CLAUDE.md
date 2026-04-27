@@ -10,7 +10,7 @@ Web 版风控系统，支持规则引擎、风险事件管理、风险评分、�
 |------|------|
 | 前端 | Vue 3 + TypeScript + Vite + Pinia + Vue Router |
 | UI 组件 | Element Plus |
-| 后端 | Java 17 + Spring Boot 3.x + MyBatis-Plus 3.5.x |
+| 后端 | Java 21 + Spring Boot 3.x + MyBatis-Plus 3.5.x |
 | 数据库 | MySQL 8.0 |
 | ORM | MyBatis-Plus（代码生成器 + 条件构造器） |
 | 构建工具 | Maven 3.9+ |
@@ -81,7 +81,7 @@ npm install --registry=https://registry.npmmirror.com
 
 ### 配置文件
 
-`backend/src/main/resources/application.yml`（不提交到 Git，提交 `.env.example`）:
+`backend/risk-starter/src/main/resources/application.yml`（不提交到 Git，提交 `.env.example`）:
 ```yaml
 spring:
   application:
@@ -241,7 +241,7 @@ View → Store (Pinia) → API Layer → Backend
 
 ### Java / Spring Boot
 
-- Java 版本：Java 17+
+- Java 版本：Java 21（兼容 Java 17+）
 - Spring Boot 版本：3.x
 - 类型：所有方法必须有完整类型注解
 - 命名：变量/方法 camelCase，类名/接口名 PascalCase，常量 UPPER_SNAKE_CASE
@@ -269,6 +269,11 @@ View → Store (Pinia) → API Layer → Backend
 - Composition API + `<script setup>` 语法
 - 组件命名：PascalCase
 - 文件组织：按功能模块，不按文件类型
+
+### 通用编码约束
+
+- 方法长度 ≤ 50 行，文件长度 ≤ 800 行
+- 禁止无信息量的注释（如 `// 构造函数`、`// 设置值`）
 
 ## 安全规范
 

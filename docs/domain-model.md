@@ -158,15 +158,15 @@ dimensions 字段 JSON 结构示例：
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
-| id | int PK | 主键 |
-| user_id | int FK | 操作用户 |
-| action | str | 操作类型（create/update/delete/enable/disable） |
-| resource_type | str | 资源类型（rule/event/score/decision/user） |
-| resource_id | int | 资源 ID |
-| old_values | jsonb | 修改前值 |
-| new_values | jsonb | 修改后值 |
-| created_at | datetime | 操作时间 |
-| ip_address | str | 操作 IP |
+| id | BIGINT PK | 主键，自增 |
+| user_id | BIGINT FK | 操作用户 |
+| action | VARCHAR(32) | 操作类型（create/update/delete/enable/disable） |
+| resource_type | VARCHAR(32) | 资源类型（rule/event/score/decision/user） |
+| resource_id | BIGINT | 资源 ID |
+| old_values | JSON | 修改前值 |
+| new_values | JSON | 修改后值 |
+| created_at | DATETIME(3) | 操作时间 |
+| ip_address | VARCHAR(64) | 操作 IP |
 
 ## 业务规则
 

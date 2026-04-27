@@ -82,7 +82,7 @@ users
   id, username, email, hashed_password, role, created_at
 
 risk_rules
-  id, name, description, conditions(jsonb), actions(jsonb),
+  id, name, description, conditions(JSON), actions(JSON),
   priority, enabled, creator_id(→users), created_at
 
 risk_events
@@ -92,7 +92,7 @@ risk_events
 
 risk_scores
   id, subject_type, subject_id, score, max_score,
-  dimensions(jsonb), evaluated_at, evaluator_id(→users)
+  dimensions(JSON), evaluated_at, evaluator_id(→users)
 
 decisions
   id, event_id(→risk_events), decision_type,
@@ -100,7 +100,7 @@ decisions
 
 audit_logs
   id, user_id(→users), action, resource_type,
-  resource_id, old_values(jsonb), new_values(jsonb),
+  resource_id, old_values(JSON), new_values(JSON),
   created_at, ip_address
 ```
 
