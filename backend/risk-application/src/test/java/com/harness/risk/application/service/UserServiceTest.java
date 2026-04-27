@@ -8,6 +8,7 @@ import com.harness.risk.common.exception.AppException;
 import com.harness.risk.common.security.PasswordEncoder;
 import com.harness.risk.domain.user.User;
 import com.harness.risk.domain.user.UserRole;
+import com.harness.risk.application.service.impl.UserServiceImpl;
 import com.harness.risk.infrastructure.mapper.UserMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

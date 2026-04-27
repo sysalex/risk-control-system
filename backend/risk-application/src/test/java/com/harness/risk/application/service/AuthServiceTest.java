@@ -1,6 +1,7 @@
 package com.harness.risk.application.service;
 
 import com.harness.risk.application.dto.LoginRequest;
+import com.harness.risk.application.service.impl.AuthServiceImpl;
 import com.harness.risk.application.dto.RefreshRequest;
 import com.harness.risk.application.dto.RegisterRequest;
 import com.harness.risk.application.dto.TokenResponse;

@@ -1,4 +1,4 @@
-package com.harness.risk.application.service;
+package com.harness.risk.application.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.harness.risk.application.dto.LoginRequest;
@@ -6,6 +6,8 @@ import com.harness.risk.application.dto.RefreshRequest;
 import com.harness.risk.application.dto.RegisterRequest;
 import com.harness.risk.application.dto.TokenResponse;
 import com.harness.risk.application.dto.UserResponse;
+import com.harness.risk.application.service.AuthService;
+import com.harness.risk.application.service.UserService;
 import com.harness.risk.common.exception.AppException;
 import com.harness.risk.common.security.JwtUtil;
 import com.harness.risk.common.security.PasswordEncoder;
