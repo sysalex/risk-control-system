@@ -1,36 +1,42 @@
 # 会话交接记录
 
-> 每次会话结束或中断前更新本文件，用于跨会话恢复上下文。
-> 不替代 `docs/task-list.md` 和 `CHANGELOG.md`，仅补充临时上下文。
+> 用于在**会话异常中断**或**需要跨会话传递临时上下文**时恢复状态。
+> 不替代 `docs/task-list.md` 和 `CHANGELOG.md`——正常完成的任务以这两者为准。
+
+---
+
+## 何时更新本文件
+
+| 场景 | 是否更新 | 说明 |
+|------|---------|------|
+| 会话正常结束，任务已完成 | 否 | 以 `task-list.md` + `CHANGELOG.md` 为真相源 |
+| 会话异常中断（崩溃、超时、网络断开），有未完成的临时状态 | 是 | 记录中断点和待恢复上下文 |
+| 需要跨会话传递复杂决策的中间结论 | 是 | 记录决策上下文，避免重复讨论 |
+
+---
 
 ## 当前会话
 
 | 字段 | 值 |
 |------|-----|
 | 日期 | 2026-04-27 |
-| Agent | Codex |
-| 当前任务 | 1.3 RiskScore / Decision 模型 + 迁移 |
-| 状态 | `[x]` 已完成 |
+| 当前任务 | 规范体系优化（AGENTS.md、DoD、tech-debt、patterns、session-handoff） |
+| 状态 | `[~]` 进行中 |
 
 ### 当前状态
 
-- 已完成：0.3 前端骨架；0.4 框架缺失组件；1.1 User 模型和 `users` 初始化迁移；1.2 RiskRule/RiskEvent 模型、Mapper、Flyway V2 迁移；1.3 RiskScore/Decision 模型、Mapper、Flyway V3 迁移。
-- 进行中：无。
+- 已完成：阶段 0 框架搭建；阶段 1 数据库模型（User、RiskRule、RiskEvent、RiskScore、Decision、AuditLog）；阶段 2 认证与用户 API。
+- 进行中：规范优化（本次会话）。
 - 阻塞项：无。
 
 ### 下一步
 
-- 下一任务：1.4 AuditLog 模型 + 迁移。
-
-### 验证结果
-
-- 前端：`pnpm vitest run`、`pnpm coverage`、`pnpm type-check`、`pnpm lint`、`pnpm build` 均通过；覆盖率 Statements 100% / Branches 90.9% / Functions 100% / Lines 100%。
-- 后端：使用 JDK 21 运行 `mvn test` 通过；新增 User、RiskRule、RiskEvent、RiskScore、Decision 领域模型、Mapper 注解、Flyway 迁移 SQL 关键路径测试。
-- 全量门禁：`powershell -ExecutionPolicy Bypass -File scripts/check.ps1` 通过。
+- 完成本次规范优化后，运行质量门禁验证无破坏。
+- 下一阶段（待用户确认）：阶段 3 规则管理 API。
 
 ### 备注
 
-- Maven 命令需临时设置 `JAVA_HOME=C:\Users\Administrator\.jdks\ms-21.0.10`，避免误用系统 Java 8。
+- 本次优化基于 Harness Engineering 规范自检结果，涉及 5 个文件的文档修订，不涉及代码或 schema 变更。
 
 ---
 

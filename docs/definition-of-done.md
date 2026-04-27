@@ -21,7 +21,13 @@
 
 ### 测试
 - [ ] 新增代码有对应测试（TDD：先写测试再实现）
-- [ ] 测试覆盖率 ≥ 80%（`jacoco` / `vitest --coverage`）
+- [ ] 测试覆盖率满足分层要求（`jacoco` / `vitest --coverage`）
+  - `risk-domain` / `risk-application`（核心逻辑）：≥ 85%
+  - `risk-interfaces`（Controller 薄层）：≥ 70%
+  - `risk-starter`（配置、入口）：≥ 60%，纯配置类可用 Lombok `@Generated` 排除
+  - `risk-common`（工具类）：≥ 80%
+  - 前端（`vitest --coverage`）：≥ 80%
+  - 全量聚合覆盖率：≥ 80%
 - [ ] 所有现有测试仍然通过（无回归）
 - [ ] 边界条件和错误路径有测试覆盖
 

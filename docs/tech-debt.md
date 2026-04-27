@@ -14,14 +14,14 @@
 
 ## 技术债务清单
 
-| ID | 描述 | 优先级 | 状态 | 引入时间 | 备注 |
-|----|------|--------|------|---------|------|
-| TD-001 | `scripts/check.sh` 依赖 Bash，当前 Windows PowerShell 环境无法直接运行 | 中 | [x] | 2026-04-27 | 已新增 `scripts/check.ps1`，Windows 使用 PowerShell 入口；Bash 入口保留给类 Unix 环境 |
+| ID | 描述 | 影响范围 | 优先级 | 预估工时 | 状态 | 引入时间 | 不修复的风险 | 备注 |
+|----|------|----------|--------|----------|------|---------|--------------|------|
+| TD-001 | `scripts/check.sh` 依赖 Bash，当前 Windows PowerShell 环境无法直接运行 | 本地开发环境、CI 可移植性 | 中 | 2h | [x] | 2026-04-27 | Windows 开发者无法运行质量门禁，规范执行依赖特定 OS | 已新增 `scripts/check.ps1`，Windows 使用 PowerShell 入口；Bash 入口保留给类 Unix 环境 |
 
 ---
 
 ## 添加新债务
 
 ```markdown
-| TD-XXX | 简要描述 | 高/中/低 | [ ] | YYYY-MM-DD | 备注 |
+| TD-XXX | 简要描述 | 影响模块/范围 | 高/中/低 | Xh | [ ] | YYYY-MM-DD | 不修复会导致什么后果 | 备注 |
 ```
