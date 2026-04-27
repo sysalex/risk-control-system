@@ -1,6 +1,5 @@
 package com.harness.risk.application.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.harness.risk.application.dto.CreateUserRequest;
 import com.harness.risk.application.dto.UpdateUserRequest;
@@ -10,11 +9,12 @@ import com.harness.risk.common.security.PasswordEncoder;
 import com.harness.risk.domain.user.User;
 import com.harness.risk.domain.user.UserRole;
 import com.harness.risk.infrastructure.mapper.UserMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 /**
- * {@link UserService} 单元测试
+ * {@link UserServiceImpl} 单元测试
  *
  * @author harness-agent
  * @since 2026-04-27
@@ -35,8 +35,15 @@ class UserServiceTest {
     private UserMapper userMapper;
     @Mock
     private PasswordEncoder passwordEncoder;
-    @InjectMocks
-    private UserService userService;
+
+    private UserServiceImpl userService;
+
+    @BeforeEach
+    void setUp() {
+        userService = new UserServiceImpl();
+        ReflectionTestUtils.setField(userService, "baseMapper", userMapper);
+        ReflectionTestUtils.setField(userService, "passwordEncoder", passwordEncoder);
+    }
 
     private User sampleUser() {
         User user = new User();

@@ -10,7 +10,6 @@ import com.harness.risk.common.security.JwtUtil;
 import com.harness.risk.common.security.PasswordEncoder;
 import com.harness.risk.domain.user.User;
 import com.harness.risk.domain.user.UserRole;
-import com.harness.risk.infrastructure.mapper.UserMapper;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 /**
- * {@link AuthService} 单元测试
+ * {@link AuthServiceImpl} 单元测试
  *
  * @author harness-agent
  * @since 2026-04-27
@@ -32,13 +31,13 @@ import static org.mockito.Mockito.*;
 class AuthServiceTest {
 
     @Mock
-    private UserMapper userMapper;
+    private UserService userService;
     @Mock
     private JwtUtil jwtUtil;
     @Mock
     private PasswordEncoder passwordEncoder;
     @InjectMocks
-    private AuthService authService;
+    private AuthServiceImpl authService;
 
     private User sampleUser() {
         User user = new User();
@@ -54,7 +53,7 @@ class AuthServiceTest {
     @Test
     void loginSuccessReturnsTokens() {
         User user = sampleUser();
-        when(userMapper.selectOne(any())).thenReturn(user);
+        when(userService.getOne(any())).thenReturn(user);
         when(passwordEncoder.matches("password123", "encoded")).thenReturn(true);
         when(jwtUtil.generateAccessToken(1L, "alice", "admin")).thenReturn("access-token");
         when(jwtUtil.generateRefreshToken(1L)).thenReturn("refresh-token");
@@ -63,12 +62,12 @@ class AuthServiceTest {
 
         assertEquals("access-token", resp.accessToken());
         assertEquals("refresh-token", resp.refreshToken());
-        assertEquals(1800, resp.expiresIn()); // 30 * 60
+        assertEquals(1800, resp.expiresIn());
     }
 
     @Test
     void loginFailsWhenUserNotFound() {
-        when(userMapper.selectOne(any())).thenReturn(null);
+        when(userService.getOne(any())).thenReturn(null);
 
         AppException e = assertThrows(AppException.class,
                 () -> authService.login(new LoginRequest("bob", "password")));
@@ -78,7 +77,7 @@ class AuthServiceTest {
     @Test
     void loginFailsWhenPasswordMismatch() {
         User user = sampleUser();
-        when(userMapper.selectOne(any())).thenReturn(user);
+        when(userService.getOne(any())).thenReturn(user);
         when(passwordEncoder.matches(any(), any())).thenReturn(false);
 
         AppException e = assertThrows(AppException.class,
@@ -89,7 +88,7 @@ class AuthServiceTest {
     @Test
     void loginLocksAfterFiveFailures() {
         User user = sampleUser();
-        when(userMapper.selectOne(any())).thenReturn(user);
+        when(userService.getOne(any())).thenReturn(user);
         when(passwordEncoder.matches(any(), any())).thenReturn(false);
 
         for (int i = 0; i < 5; i++) {
@@ -104,7 +103,7 @@ class AuthServiceTest {
 
     @Test
     void registerSuccessReturnsUserResponse() {
-        when(userMapper.selectCount(any())).thenReturn(0L);
+        when(userService.count(any())).thenReturn(0L);
         when(passwordEncoder.encode("password123")).thenReturn("encoded");
 
         UserResponse resp = authService.register(
@@ -112,12 +111,12 @@ class AuthServiceTest {
 
         assertEquals("alice", resp.username());
         assertEquals("alice@test.com", resp.email());
-        verify(userMapper).insert(any(User.class));
+        verify(userService).save(any(User.class));
     }
 
     @Test
     void registerFailsWhenUsernameOrEmailExists() {
-        when(userMapper.selectCount(any())).thenReturn(1L);
+        when(userService.count(any())).thenReturn(1L);
 
         AppException e = assertThrows(AppException.class,
                 () -> authService.register(new RegisterRequest("alice", "a@test.com", "password123")));
@@ -131,7 +130,7 @@ class AuthServiceTest {
         when(jwtUtil.parseToken("old-refresh")).thenReturn(claims);
 
         User user = sampleUser();
-        when(userMapper.selectById(1L)).thenReturn(user);
+        when(userService.getById(1L)).thenReturn(user);
         when(jwtUtil.generateAccessToken(1L, "alice", "admin")).thenReturn("new-access");
         when(jwtUtil.generateRefreshToken(1L)).thenReturn("new-refresh");
 
