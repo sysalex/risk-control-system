@@ -16,7 +16,7 @@
 
 | ID | 描述 | 优先级 | 状态 | 引入时间 | 备注 |
 |----|------|--------|------|---------|------|
-| TD-001 | `scripts/check.sh` 依赖 Bash，当前 Windows PowerShell 环境无法直接运行 | 中 | [ ] | 2026-04-27 | 阶段 0.4 质量门禁补全时处理：提供 PowerShell 入口或明确 Git Bash/WSL 前置条件 |
+| TD-001 | `scripts/check.sh` 依赖 Bash，当前 Windows PowerShell 环境无法直接运行 | 中 | [x] | 2026-04-27 | 已新增 `scripts/check.ps1`，Windows 使用 PowerShell 入口；Bash 入口保留给类 Unix 环境 |
 
 ---
 

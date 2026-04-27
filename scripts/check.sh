@@ -3,92 +3,73 @@
 
 set -e
 
+PASS=true
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+
 echo "========================================"
 echo " 质量门禁检查"
 echo "========================================"
 
-PASS=true
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-
-# --- Java Lint/Format ---
-echo ""
-echo ">>> Java 代码规范 (checkstyle + spotless)..."
-if [ -d "$ROOT/backend" ]; then
-    cd "$ROOT/backend"
-    if [ -f "pom.xml" ]; then
-        mvn checkstyle:check spotless:check 2>/dev/null && echo "[OK] checkstyle + spotless" || { echo "[FAIL] checkstyle + spotless"; PASS=false; }
-    else
-        echo "[SKIP] backend/pom.xml not found"
+java_major_version() {
+    local output
+    output="$(java -version 2>&1 || true)"
+    if [[ "$output" =~ version\ \"1\.([0-9]+) ]]; then
+        echo "${BASH_REMATCH[1]}"
+        return
     fi
+    if [[ "$output" =~ version\ \"([0-9]+) ]]; then
+        echo "${BASH_REMATCH[1]}"
+        return
+    fi
+    echo "0"
+}
+
+use_compatible_jdk() {
+    local major
+    major="$(java_major_version)"
+    if [ "$major" -ge 17 ]; then
+        return
+    fi
+
+    local idea_jdk="$HOME/.jdks/ms-21.0.10"
+    if [ -x "$idea_jdk/bin/java" ]; then
+        export JAVA_HOME="$idea_jdk"
+        export PATH="$JAVA_HOME/bin:$PATH"
+    fi
+}
+
+run_step() {
+    local name="$1"
+    local workdir="$2"
+    shift 2
+
+    echo ""
+    echo ">>> $name"
+    if (cd "$workdir" && "$@"); then
+        echo "[OK] $name"
+    else
+        echo "[FAIL] $name"
+        PASS=false
+    fi
+}
+
+use_compatible_jdk
+
+if [ -f "$ROOT/backend/pom.xml" ]; then
+    run_step "Java 测试 (Maven)" "$ROOT/backend" mvn test
 else
-    echo "[SKIP] backend/ not found"
+    echo "[SKIP] backend/pom.xml not found"
 fi
 
-# --- Java Compile ---
-echo ""
-echo ">>> Java 编译..."
-if [ -d "$ROOT/backend" ]; then
-    cd "$ROOT/backend"
-    if [ -f "pom.xml" ]; then
-        mvn compile 2>/dev/null && echo "[OK] compile" || { echo "[FAIL] compile"; PASS=false; }
-    else
-        echo "[SKIP] backend/pom.xml not found"
-    fi
+if [ -f "$ROOT/frontend/package.json" ]; then
+    run_step "TypeScript 类型检查" "$ROOT/frontend" pnpm type-check
+    run_step "前端 Lint" "$ROOT/frontend" pnpm lint
+    run_step "前端测试覆盖率" "$ROOT/frontend" pnpm coverage
+    run_step "前端生产构建" "$ROOT/frontend" pnpm build
 else
-    echo "[SKIP] backend/ not found"
+    echo "[SKIP] frontend/package.json not found"
 fi
 
-# --- Java Tests ---
-echo ""
-echo ">>> Java 测试 (JUnit 5)..."
-if [ -d "$ROOT/backend" ]; then
-    cd "$ROOT/backend"
-    if [ -d "src/test" ]; then
-        mvn test 2>/dev/null && echo "[OK] junit" || { echo "[FAIL] junit"; PASS=false; }
-    else
-        echo "[SKIP] backend/src/test not found"
-    fi
-fi
-
-# --- TypeScript Type Check ---
-echo ""
-echo ">>> TypeScript 类型检查 (vue-tsc)..."
-if [ -d "$ROOT/frontend" ]; then
-    cd "$ROOT/frontend"
-    if [ -f "node_modules/.bin/vue-tsc" ]; then
-        pnpm vue-tsc --noEmit 2>/dev/null && echo "[OK] vue-tsc" || { echo "[FAIL] vue-tsc"; PASS=false; }
-    else
-        echo "[SKIP] 前端依赖未安装"
-    fi
-else
-    echo "[SKIP] frontend/ not found"
-fi
-
-# --- Frontend Lint ---
-echo ""
-echo ">>> 前端 Lint (eslint)..."
-if [ -d "$ROOT/frontend" ]; then
-    cd "$ROOT/frontend"
-    if [ -f "node_modules/.bin/eslint" ]; then
-        pnpm eslint src/ 2>/dev/null && echo "[OK] eslint" || { echo "[FAIL] eslint"; PASS=false; }
-    else
-        echo "[SKIP] 前端依赖未安装"
-    fi
-fi
-
-# --- Frontend Tests ---
-echo ""
-echo ">>> 前端测试 (vitest)..."
-if [ -d "$ROOT/frontend" ]; then
-    cd "$ROOT/frontend"
-    if [ -f "node_modules/.bin/vitest" ]; then
-        pnpm vitest run 2>/dev/null && echo "[OK] vitest" || { echo "[FAIL] vitest"; PASS=false; }
-    else
-        echo "[SKIP] 前端依赖未安装"
-    fi
-fi
-
-# --- Result ---
 echo ""
 echo "========================================"
 if [ "$PASS" = true ]; then
@@ -96,7 +77,6 @@ if [ "$PASS" = true ]; then
     echo "========================================"
 else
     echo " 质量门禁未通过，请修复后再提交"
-    echo " 提示：查阅 docs/definition-of-done.md"
     echo "========================================"
     exit 1
 fi

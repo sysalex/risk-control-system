@@ -23,6 +23,13 @@
 - **日志规范**：`from app.core.logging import get_logger` → `@Slf4j` + `log.info()`
 
 ### Added
+- 框架缺失组件补齐：
+  - `scripts/check.ps1`：Windows PowerShell 质量门禁入口，自动切换 IDEA JDK 21
+  - `scripts/check.sh`：与前端/后端验证矩阵对齐
+  - `frontend/src/utils/logger.ts`：前端日志门面，替代业务代码直接调用 `console.log`
+  - `frontend/src/utils/error-reporting.ts`：Vue/global error/unhandled rejection 错误上报入口
+  - 新增 3 个工具测试文件，前端测试总数提升到 8 个测试文件、16 个测试用例
+- SDD 产物：`docs/specs/framework-missing-components.md`、`docs/plans/framework-missing-components.md`
 - 前端骨架：Vue 3 + TypeScript + Vite + Pinia + Vue Router + Axios
   - `frontend/package.json`、Vite、TypeScript、ESLint、Vitest 配置
   - `src/main.ts`、`App.vue`、基础路由、首页占位、应用 Store、Axios HTTP 客户端

@@ -9,23 +9,24 @@
 |------|-----|
 | 日期 | 2026-04-27 |
 | Agent | Codex |
-| 当前任务 | 0.3 前端骨架 |
+| 当前任务 | 0.4 补全框架缺失组件 |
 | 状态 | `[x]` 已完成 |
 
 ### 当前状态
 
-- 已完成：0.3 前端骨架；Vue 3/Vite/Pinia/Router/Axios 基础工程与测试基线已建立。
+- 已完成：0.3 前端骨架；0.4 框架缺失组件；PowerShell/Bash 质量门禁、前端 logger、前端错误上报已建立。
 - 进行中：无。
-- 阻塞项：`scripts/check.sh` 因当前环境无 `bash` 无法直接运行，已登记 TD-001。
+- 阻塞项：无。
 
 ### 下一步
 
-- 下一任务：0.4 补全框架缺失组件（日志、异常体系、任务清单、质量门禁）。
+- 下一任务：阶段 1 数据库模型，前置依赖阶段 0 已完成。
 
 ### 验证结果
 
-- 前端：`pnpm vitest run`、`pnpm coverage`、`pnpm type-check`、`pnpm lint`、`pnpm build` 均通过；覆盖率 100%。
+- 前端：`pnpm vitest run`、`pnpm coverage`、`pnpm type-check`、`pnpm lint`、`pnpm build` 均通过；覆盖率 Statements 100% / Branches 90.9% / Functions 100% / Lines 100%。
 - 后端：使用 JDK 21 运行 `mvn test` 通过。
+- 全量门禁：`powershell -ExecutionPolicy Bypass -File scripts/check.ps1` 通过。
 
 ### 备注
 

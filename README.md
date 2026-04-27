@@ -52,6 +52,12 @@ bash scripts/test.sh --frontend-only  # 仅前端
 bash scripts/check.sh
 ```
 
+Windows PowerShell:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/check.ps1
+```
+
 等同于 Stop Hook 自动执行的检查（lint + 类型检查），提交前手动运行。
 
 ---

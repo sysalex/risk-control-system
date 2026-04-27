@@ -177,7 +177,8 @@ harness-agent/
 │   │   └── src/main/java/com/harness/risk/starter/
 │   └── .env.example
 ├── scripts/
-│   └── check.sh                 # 质量门禁脚本
+│   ├── check.sh                 # Bash 质量门禁脚本
+│   └── check.ps1                # Windows PowerShell 质量门禁脚本
 └── docker-compose.yml           # 本地开发环境
 ```
 

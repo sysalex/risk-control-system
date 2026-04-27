@@ -104,7 +104,7 @@ Specify → Clarify → Plan → Tasks → TDD
 
 ## 质量门禁
 
-每个任务完成前运行 `scripts/check.sh`，确保 lint 零错误、编译通过、覆盖率 ≥ 80%、全部测试通过。详细命令和反馈循环见 `docs/feedback-loop.md`。
+每个任务完成前运行质量门禁：类 Unix 环境使用 `scripts/check.sh`，Windows PowerShell 使用 `scripts/check.ps1`，确保 lint 零错误、编译通过、覆盖率 ≥ 80%、全部测试通过。详细命令和反馈循环见 `docs/feedback-loop.md`。
 
 ## 异常处理
 
@@ -223,7 +223,7 @@ pnpm vitest run --coverage                   # 测试 + 覆盖率
 ### 关键文件路径
 任务清单 `docs/task-list.md` · 完成标准 `docs/definition-of-done.md` · 变更日志 `CHANGELOG.md`
 API 规范 `docs/api-spec.md` · 架构 `docs/architecture.md` · 领域模型 `docs/domain-model.md`
-安全检查 `docs/security-checklist.md` · 质量门禁 `scripts/check.sh` · Harness 自检 `docs/harness-checklist.md`
+安全检查 `docs/security-checklist.md` · 质量门禁 `scripts/check.sh` / `scripts/check.ps1` · Harness 自检 `docs/harness-checklist.md`
 
 ### Agent 快速选择
 | 需求 | Agent |

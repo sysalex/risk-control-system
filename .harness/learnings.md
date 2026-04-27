@@ -13,6 +13,7 @@
 
 - Vitest 覆盖率阈值建议直接写入 `vite.config.ts`，让 `pnpm coverage` 自动阻断低于 80% 的改动。
 - Vue/Vite 构建脚本使用 `vue-tsc --noEmit -p tsconfig.app.json && vite build`，避免 `vue-tsc -b` 在根目录生成配置文件产物。
+- Windows 环境的质量门禁应提供 `.ps1` 入口；仅有 Bash 脚本会导致 PowerShell 用户无法闭合验证循环。
 
 ### 部署相关
 
@@ -30,4 +31,4 @@
 
 ## 临时方案
 
-- 当前 PowerShell 环境无 `bash`，无法直接运行 `scripts/check.sh`；本次以等价的前后端命令完成验证。
+- _暂无_

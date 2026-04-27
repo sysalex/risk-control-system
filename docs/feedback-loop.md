@@ -56,8 +56,9 @@
 5. 运行测试，确认通过
 6. 检查覆盖率 ≥ 80%
 7. 逐项核对 DoD 清单
-8. 更新 docs/task-list.md 状态为 [x]
-9. 更新 CHANGELOG.md
+8. 运行 `scripts/check.sh`；Windows 使用 `powershell -ExecutionPolicy Bypass -File scripts/check.ps1`
+9. 更新 docs/task-list.md 状态为 [x]
+10. 更新 CHANGELOG.md
 ```
 
 **禁止跳步**：不得在测试未通过时标记任务完成。
