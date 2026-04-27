@@ -29,7 +29,10 @@
 
 ## 阶段 1：数据库模型
 
-- [ ] 1.1 User 模型 + Flyway 初始化迁移
+- [x] 1.1 User 模型 + Flyway 初始化迁移
+  - 完成时间：2026-04-27
+  - 测试覆盖率：新增领域模型、Mapper、迁移 SQL 关键路径测试；全量质量门禁通过
+  - 审查状态：本地代码/安全自检通过
 - [ ] 1.2 RiskRule / RiskEvent 模型 + 迁移
 - [ ] 1.3 RiskScore / Decision 模型 + 迁移
 - [ ] 1.4 AuditLog 模型 + 迁移

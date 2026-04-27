@@ -23,6 +23,11 @@
 - **日志规范**：`from app.core.logging import get_logger` → `@Slf4j` + `log.info()`
 
 ### Added
+- User 模型与初始化迁移：
+  - 新增 `User` 领域模型、`UserRole` 枚举与 MyBatis-Plus 表映射注解
+  - 新增 `UserMapper` 基础 Mapper，为后续用户仓储和认证模块提供持久化边界
+  - 新增 Flyway `V1__create_users_table.sql`，创建 `users` 表、用户名/邮箱唯一索引和时间戳字段
+  - 新增领域模型、Mapper 注解、迁移 SQL 关键路径测试，并补充 `docs/specs/user-model.md`、`docs/plans/user-model.md`
 - 框架缺失组件补齐：
   - `scripts/check.ps1`：Windows PowerShell 质量门禁入口，自动切换 IDEA JDK 21
   - `scripts/check.sh`：与前端/后端验证矩阵对齐

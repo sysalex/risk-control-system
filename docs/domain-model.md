@@ -47,13 +47,14 @@
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
-| id | int PK | 主键 |
-| username | str UNIQUE | 用户名 |
-| email | str UNIQUE | 邮箱 |
-| hashed_password | str | bcrypt 哈希密码 |
-| role | enum | admin / risk_analyst / operator |
-| is_active | bool | 是否启用 |
-| created_at | datetime | 创建时间 |
+| id | BIGINT PK | 主键，自增 |
+| username | VARCHAR(64) UNIQUE | 用户名 |
+| email | VARCHAR(128) UNIQUE | 邮箱 |
+| hashed_password | VARCHAR(255) | BCrypt 哈希密码 |
+| role | VARCHAR(32) | admin / risk_analyst / operator |
+| is_active | TINYINT(1) | 是否启用 |
+| created_at | DATETIME(3) | 创建时间 |
+| updated_at | DATETIME(3) | 更新时间 |
 
 ### RiskRule（风控规则）
 
