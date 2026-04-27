@@ -16,6 +16,7 @@
 - Windows 环境的质量门禁应提供 `.ps1` 入口；仅有 Bash 脚本会导致 PowerShell 用户无法闭合验证循环。
 - Flyway 迁移 SQL 位于 `risk-starter/src/main/resources/db/migration` 时，`risk-starter` 的 Maven resources 需要包含 `**/*.sql`；否则迁移测试会因 `V1__*.sql` 未进入 classpath 失败。
 - MySQL 8 可用 `JSON` 字段承载规则条件和动作；规则引擎语义未确定前，领域模型先保留 JSON 字符串，避免过早固化表达式对象。
+- 风险评分这类小数边界使用 `BigDecimal` + MySQL `DECIMAL(5,2)`，不要用 `float/double` 把精度误差带入领域和数据库契约。
 
 ### 部署相关
 

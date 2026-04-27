@@ -23,6 +23,11 @@
 - **日志规范**：`from app.core.logging import get_logger` → `@Slf4j` + `log.info()`
 
 ### Added
+- RiskScore / Decision 模型与迁移：
+  - 新增 `RiskScore`、`Decision` 领域模型，以及 `DecisionType` 枚举
+  - 新增 `RiskScoreMapper`、`DecisionMapper` 基础 Mapper，为评分和决策 API 提供持久化边界
+  - 新增 Flyway `V3__create_risk_score_decision_tables.sql`，创建 `risk_scores`、`decisions` 表、外键、唯一约束和查询索引
+  - 新增评分/决策模型、Mapper 注解、迁移 SQL 关键路径测试，并补充 `docs/specs/risk-score-decision-model.md`、`docs/plans/risk-score-decision-model.md`
 - RiskRule / RiskEvent 模型与迁移：
   - 新增 `RiskRule`、`RiskEvent` 领域模型，以及 `RiskLevel`、`RiskEventStatus` 枚举
   - 新增 `RiskRuleMapper`、`RiskEventMapper` 基础 Mapper，为规则管理和风险事件 API 提供持久化边界

@@ -112,14 +112,17 @@ actions 字段 JSON 结构示例：
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
-| id | int PK | 主键 |
-| subject_type | str | 主体类型 |
-| subject_id | str | 主体 ID |
-| score | float | 风险评分（0-100） |
-| max_score | float | 满分值（100） |
-| dimensions | jsonb | 各维度评分明细 |
-| evaluated_at | datetime | 评估时间 |
-| evaluator_id | int FK | 评估人/系统 |
+| id | BIGINT PK | 主键，自增 |
+| event_id | BIGINT FK UNIQUE | 关联的风险事件 |
+| subject_type | VARCHAR(64) | 主体类型 |
+| subject_id | VARCHAR(128) | 主体 ID |
+| score | DECIMAL(5,2) | 风险评分（0-100） |
+| max_score | DECIMAL(5,2) | 满分值（默认 100.00） |
+| dimensions | JSON | 各维度评分明细 |
+| evaluated_at | DATETIME(3) | 评估时间 |
+| evaluator_id | BIGINT FK | 评估人/系统 |
+| created_at | DATETIME(3) | 创建时间 |
+| updated_at | DATETIME(3) | 更新时间 |
 
 dimensions 字段 JSON 结构示例：
 ```json
@@ -135,13 +138,15 @@ dimensions 字段 JSON 结构示例：
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
-| id | int PK | 主键 |
-| event_id | int FK (UNIQUE) | 关联的风险事件 |
-| decision_type | enum | approve / reject / manual_review / escalate |
-| reason | str | 决策原因 |
-| notes | str | 备注 |
-| decided_by | int FK | 决策人 |
-| decided_at | datetime | 决策时间 |
+| id | BIGINT PK | 主键，自增 |
+| event_id | BIGINT FK UNIQUE | 关联的风险事件 |
+| decision_type | VARCHAR(32) | approve / reject / manual_review / escalate |
+| reason | VARCHAR(512) | 决策原因 |
+| notes | VARCHAR(1024) | 备注 |
+| decided_by | BIGINT FK | 决策人 |
+| decided_at | DATETIME(3) | 决策时间 |
+| created_at | DATETIME(3) | 创建时间 |
+| updated_at | DATETIME(3) | 更新时间 |
 
 状态枚举：
 - `approve`：通过（非风险）
