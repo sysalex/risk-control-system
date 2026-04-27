@@ -1,0 +1,408 @@
+# 风控系统 — Harness Engineering 规范
+
+## 项目概述
+
+Web 版风控系统，支持规则引擎、风险事件管理、风险评分、决策流程、审计追踪。
+
+## 技术栈
+
+| 层次 | 技术 |
+|------|------|
+| 前端 | Vue 3 + TypeScript + Vite + Pinia + Vue Router |
+| UI 组件 | Element Plus |
+| 后端 | Java 17 + Spring Boot 3.x + MyBatis-Plus 3.5.x |
+| 数据库 | MySQL 8.0 |
+| ORM | MyBatis-Plus（代码生成器 + 条件构造器） |
+| 构建工具 | Maven 3.9+ |
+| 认证 | JWT (jjwt) |
+| 测试 - 前端 | Vitest + Vue Test Utils |
+| 测试 - 后端 | JUnit 5 + Spring Boot Test |
+| 包管理 - 前端 | pnpm / npm |
+| 包管理 - 后端 | Maven |
+
+## 本地开发环境配置
+
+### 端口锁定规则
+
+**前端端口**: `5173`（固定）
+**后端端口**: `8080`（固定）
+
+> **重要**: 端口被占用时，必须先杀掉占用端口的进程，再重新启动服务。禁止自动切换到其他端口。
+
+```bash
+# Windows - 查找占用端口的进程
+netstat -ano | findstr ":5173"
+netstat -ano | findstr ":8080"
+
+# Windows - 杀掉进程（替换 PID 为实际进程 ID）
+taskkill /F /PID <PID>
+
+# PowerShell - 一键清理
+Get-NetTCPConnection -LocalPort 5173,8080 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }
+```
+
+### 镜像源配置（中国大陆地区）
+
+> **重要**：在中国大陆地区开发时，必须配置国内镜像源，否则依赖下载可能超时或失败。
+
+**后端 Maven 依赖**：使用阿里云 Maven 镜像
+
+文件 `backend/pom.xml`（已配置）:
+```xml
+<repositories>
+    <repository>
+        <id>aliyun</id>
+        <url>https://maven.aliyun.com/repository/public</url>
+    </repository>
+</repositories>
+```
+
+安装命令示例：
+```bash
+mvn install -s settings.xml
+```
+
+**前端 npm 依赖**：可配置淘宝镜像
+
+文件 `frontend/.npmrc`（已创建）:
+```ini
+registry = https://registry.npmmirror.com
+```
+
+安装命令示例：
+```bash
+npm install --registry=https://registry.npmmirror.com
+```
+
+### MySQL 配置
+
+本地开发环境使用 root 用户，密码 `root`。
+**生产环境必须创建独立用户并设置强密码**。
+
+### 配置文件
+
+`backend/src/main/resources/application.yml`（不提交到 Git，提交 `.env.example`）:
+```yaml
+spring:
+  application:
+    name: risk-control-system
+  datasource:
+    url: jdbc:mysql://localhost:3306/risk_db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+app:
+  name: 风控系统
+  debug: true
+  jwt:
+    secret: <随机生成的安全密钥>
+    access-token-expire-minutes: 30
+    refresh-token-expire-days: 7
+  cors:
+    allowed-origins: http://localhost:5173
+```
+
+`frontend/.env`（不提交到 Git）:
+```env
+VITE_API_BASE_URL=http://localhost:8080
+```
+
+## 目录结构
+
+```
+harness-agent/
+├── CLAUDE.md                    # 本文件：Harness 核心规范
+├── AGENTS.md                    # Agent 行为指令（工作流程、协作模式）
+├── session-handoff.md           # 会话交接记录
+├── CHANGELOG.md                 # 版本变更记录
+├── .claude/
+│   ├── settings.json            # Hooks 和权限配置
+│   └── settings.local.json      # 本地覆盖（不提交）
+├── .harness/
+│   └── learnings.md             # 经验与踩坑记录
+├── .github/
+│   └── pull_request_template.md # PR 模板
+├── docs/
+│   ├── README.md                # 文档导航
+│   ├── architecture.md          # 系统架构设计
+│   ├── api-spec.md              # API 接口规范
+│   ├── domain-model.md          # 领域模型
+│   ├── definition-of-done.md    # 完成标准
+│   ├── feedback-loop.md         # 四层反馈循环
+│   ├── task-list.md             # 开发任务清单
+│   ├── security-checklist.md    # OWASP 安全检查清单
+│   ├── harness-checklist.md     # Harness 自检清单
+│   ├── autonomy-levels.md       # Agent 自治边界
+│   ├── invariants-and-guardrails.md  # 不可破坏约束
+│   ├── tech-debt.md             # 技术债务追踪
+│   ├── patterns.md              # 模式/反模式库（知识沉淀）
+│   ├── specs/                   # 功能规格文档（SDD 产物）
+│   ├── plans/                   # 实现计划文档（SDD 产物）
+│   ├── adr/                     # 架构决策记录
+│   ├── checklists/              # 检查清单
+│   │   └── change-preflight.md  # 变更前预检
+│   ├── retrospectives/          # 阶段回顾
+│   └── coverage/                # 测试覆盖率报告
+├── frontend/                    # Vue 3 前端
+│   ├── src/
+│   │   ├── api/                 # API 请求层
+│   │   ├── components/          # 通用组件
+│   │   ├── views/               # 页面视图
+│   │   ├── stores/              # Pinia 状态管理
+│   │   ├── router/              # 路由配置
+│   │   ├── types/               # TypeScript 类型定义
+│   │   └── utils/               # 工具函数
+│   ├── tests/                   # 前端测试
+│   └── vite.config.ts
+├── backend/                     # Java Spring Boot 后端（Maven 多模块）
+│   ├── pom.xml                  # 父 POM（dependencyManagement + modules）
+│   ├── risk-common/             # 公共组件（异常、响应、配置、DTO）
+│   │   ├── pom.xml
+│   │   └── src/main/java/com/harness/risk/common/
+│   ├── risk-domain/             # 领域层（实体、领域服务、值对象）
+│   │   ├── pom.xml
+│   │   └── src/main/java/com/harness/risk/domain/
+│   ├── risk-infrastructure/     # 基础设施层（Mapper、XML 映射）
+│   │   ├── pom.xml
+│   │   └── src/main/java/com/harness/risk/infrastructure/
+│   ├── risk-application/        # 应用层（用例编排、事务管理）
+│   │   ├── pom.xml
+│   │   └── src/main/java/com/harness/risk/application/
+│   ├── risk-interfaces/         # 接口层（Controller、拦截器）
+│   │   ├── pom.xml
+│   │   └── src/main/java/com/harness/risk/interfaces/
+│   ├── risk-starter/            # 启动层（入口、配置、resources）
+│   │   ├── pom.xml
+│   │   └── src/main/java/com/harness/risk/starter/
+│   └── .env.example
+├── scripts/
+│   └── check.sh                 # 质量门禁脚本
+└── docker-compose.yml           # 本地开发环境
+```
+
+## 架构约束（Agent 必须遵守）
+
+### 分层架构（后端）— COLA 模式
+
+依赖方向严格单向，由 Maven 模块依赖强制：
+
+```
+starter → interfaces → application → infrastructure → domain
+                └───────────── Common（跨层共享）
+```
+
+**Maven 模块结构**：
+
+| 模块 | artifactId | 职责 | 依赖 |
+|------|-----------|------|------|
+| **Starter** | `risk-starter` | 入口、全局配置、资源配置 | interfaces |
+| **Interfaces** | `risk-interfaces` | Controller、拦截器 | application + web |
+| **Application** | `risk-application` | 用例编排、事务管理 | infrastructure |
+| **Domain** | `risk-domain` | 实体、纯业务规则、领域服务 | common |
+| **Infrastructure** | `risk-infrastructure` | Mapper、XML 映射、外部服务 | domain + MyBatis-Plus |
+| **Common** | `risk-common` | 异常、响应、DTO | web + validation |
+
+### MyBatis-Plus 约定
+
+- 实体类使用 `@TableName`、`@TableId`、`@TableField` 注解
+- Mapper 接口继承 `BaseMapper<T>`，复杂查询使用 `QueryWrapper` / `LambdaQueryWrapper`
+- 禁止在 Service 层直接使用 `SqlSession`，必须通过 Mapper
+- 分页查询使用 `Page<T>` + `IPage<T>`
+
+### 前端架构
+
+```
+View → Store (Pinia) → API Layer → Backend
+```
+
+- View 只负责渲染和用户交互
+- 所有状态通过 Pinia Store 管理
+- API 调用统一封装在 `src/api/` 目录
+
+### 不可变数据原则
+
+- 后端：DTO 使用 `record` 或不可变类，Service 方法入参不可变
+- 前端：Store 中的状态通过 action 更新，不直接修改
+
+### API 响应格式（统一信封）
+
+```json
+{
+  "success": true,
+  "data": {},
+  "message": null,
+  "meta": { "total": 0, "page": 1, "limit": 20 }
+}
+```
+
+## 编码规范
+
+### Java / Spring Boot
+
+- Java 版本：Java 17+
+- Spring Boot 版本：3.x
+- 类型：所有方法必须有完整类型注解
+- 命名：变量/方法 camelCase，类名/接口名 PascalCase，常量 UPPER_SNAKE_CASE
+- **Starter 层**：`@SpringBootApplication` 入口、`@MapperScan`、配置类（Cors、Mvc、Redis 等）
+- **Interfaces 层**：`@RestController` + `@RequestMapping`，只做参数校验和响应格式化
+- **Application 层**：`@Service`，用例编排、`@Transactional` 事务管理
+- **Domain 层**：`@Service`（Domain Service），纯业务规则；Entity 使用 `@TableName`、`@TableId`
+- **Infrastructure 层**：Mapper 继承 `BaseMapper<T>`，XML 映射文件放 `resources/mapper/`
+- 异常处理：`@ControllerAdvice` + `@ExceptionHandler` 全局处理
+- 日志：`@Slf4j`（Lombok），禁止 `System.out.println()`
+- 异步：`@Async` + `CompletableFuture`，禁止阻塞主线程
+
+### Java 注释规范（Javadoc）
+
+- 每个类必须有 `/** */` 类级 Javadoc，包含职责描述、`@author harness-agent`、`@since YYYY-MM-DD`
+- 每个 public 方法必须有 Javadoc：作用描述 + `@param` + `@return`
+- 内部类/嵌套类同 public 类规范
+- 字段注释仅在语义不直观时添加（一行 `//` 即可）
+- 注释使用中文，描述职责和用途，不描述实现细节
+- 禁止无信息量的注释（如 `// 构造函数`、`// 设置值`）
+
+### TypeScript / Vue
+
+- 严格模式：`strict: true`
+- Composition API + `<script setup>` 语法
+- 组件命名：PascalCase
+- 文件组织：按功能模块，不按文件类型
+
+## 安全规范
+
+- 所有 API 端点（除登录/注册）必须 JWT 认证（`@JwtInterceptor`）
+- 密码使用 BCrypt 哈希，禁止明文存储
+- SQL 操作全部通过 MyBatis-Plus，禁止 `${}` 拼接 SQL（使用 `#{}` 参数化）
+- 敏感配置通过环境变量或 `@Value` 注入，禁止硬编码
+- 风控规则变更需审计日志记录（谁、何时、改了什么）
+- 风险评分/决策结果不可被未授权用户修改
+
+## 测试要求
+
+- 后端覆盖率 ≥ 80%（jacoco-maven-plugin）
+- 前端覆盖率 ≥ 80%（vitest --coverage）
+- E2E 测试覆盖核心用户流程（Playwright）
+- 新功能必须先写测试（TDD）
+
+### 测试框架
+
+| 测试类型 | 框架 | 配置 |
+|---------|------|------|
+| 后端单元测试 | JUnit 5 + Mockito | `backend/pom.xml` |
+| 后端集成测试 | Spring Boot Test + @SpringBootTest | `backend/pom.xml` |
+| 前端组件测试 | Vitest + Vue Test Utils | `frontend/vite.config.ts` |
+| E2E 测试 | Playwright | `frontend/playwright.config.ts` |
+
+## 领域模型（核心实体）
+
+- **User**：用户（管理员/风控分析师/操作员）
+- **RiskRule**：风控规则（规则条件、动作、优先级）
+- **RuleEngine**：规则引擎（执行规则匹配）
+- **RiskEvent**：风险事件（触发记录、级别、状态）
+- **RiskScore**：风险评分（评分维度、结果）
+- **Decision**：决策记录（通过/拒绝/人工审核）
+- **AuditLog**：审计日志（所有关键操作记录）
+
+## 日志规范
+
+详见 `AGENTS.md`。核心要求：
+- 后端：使用 `@Slf4j` 注解，`log.info()` / `log.error()`，禁止 `System.out.println()`
+- 前端：`import { logger } from '@/utils/logger'`，禁止 `console.log()`
+- 生产环境：后端 INFO / 前端 warn+error
+
+## 异常处理规范
+
+详见 `AGENTS.md`。核心要求：
+- 所有业务异常继承 `common.exception.AppException`
+- 使用 `@ControllerAdvice` + `@ExceptionHandler` 全局处理，禁止在 Controller 层重新包装异常
+- 禁止吞掉异常（空 catch 块）
+
+## 完成标准（DoD）
+
+**任何任务在标记 `[x]` 之前，必须逐项核对 `docs/definition-of-done.md` 对应清单。**
+
+核心要求：
+- 测试覆盖率 ≥ 80%，所有测试通过
+- lint + 编译零错误
+- 关键操作有日志（含 requestId）
+- `docs/task-list.md` 状态已更新，`CHANGELOG.md` 已更新
+
+## 可观测性
+
+详见 `AGENTS.md` 可观测性基线。核心要求：
+- 每个请求通过 `HandlerInterceptor` 注入 `requestId`，响应头返回 `X-Request-ID`
+- 慢请求（> 1s）自动记录 warning 日志
+- 运行时指标：`GET /api/v1/metrics`（请求数、错误率、平均响应时间）
+- 前端全局错误捕获并上报（`setupErrorReporting`）
+
+## 循环机制
+
+四层反馈循环，详见 `docs/feedback-loop.md`：
+- **L1 工具级**：Write/Edit 后自动 lint/format；危险命令 PreToolUse 拦截
+- **L2 任务级**：写测试 → 实现 → 测试通过 → DoD 核查 → 标记完成
+- **L3 会话级**：Stop Hook 自动运行 lint + 编译 + DoD 提醒
+- **L4 阶段级**：阶段完成后在 `docs/retrospectives/` 创建回顾文档
+
+## AI Agent 行为规范
+
+详见 `AGENTS.md`。核心要点：
+- 操作纪律：不猜测文件路径、不写 TODO 注释、修改后必须验证
+- 编码纪律：禁止未通过测试的代码、禁止 `@SuppressWarnings` 掩盖错误
+- 决策透明：架构变更必须记录 ADR，技术债务必须登记
+
+## 分支策略
+
+```
+main (稳定)
+ └── stage/0-framework
+ └── stage/1-database-models
+ └── stage/2-auth-users
+ └── stage/3-rule-management
+ └── ...
+```
+
+- `main`: 稳定分支，只能通过 PR 合并，禁止直接 push
+- `stage/N-xxx`: 每个阶段一个特性分支
+- 分支命名格式：`stage/<阶段号>-<简短描述>`
+- 合并前必须通过质量门禁（lint + 测试 + DoD 核查）
+- 提交信息格式：`<type>(scope): <description>`（Conventional Commits）
+  - type: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+  - scope: 模块名，如 `auth`, `rules`, `events`, `frontend`
+  - 示例: `feat(rules): add rule enable/disable endpoint`
+
+## 任务追踪
+
+- 所有开发任务在 `docs/task-list.md` 中登记
+- Agent 开始工作前必须查阅任务清单，确认当前任务
+- 完成任务后更新状态为 `[x]`，同步更新 `CHANGELOG.md`
+
+## Hooks 自动化
+
+详见 `.claude/settings.json`：
+- 保存 Java 文件后自动运行 checkstyle + spotless check
+- 保存 Vue/TS 文件后自动运行 prettier + eslint
+- 会话结束时运行编译 + 测试质量门禁
+
+---
+
+# CLAUDE Quick Start
+
+首读顺序：
+1. 本文件前 20 行
+2. `docs/task-list.md`
+3. `docs/invariants-and-guardrails.md`
+4. `docs/definition-of-done.md`
+5. `docs/feedback-loop.md`
+6. `docs/README.md`
+
+建议把本文件当作入口，而不是把所有执行细节都放在这里。
+
+专项文档：
+- `AGENTS.md` — Agent 工作流和协作规范
+- `docs/autonomy-levels.md` — Agent 自治边界
+- `docs/checklists/change-preflight.md` — 变更前预检
+- `docs/invariants-and-guardrails.md` — 不可破坏约束
+- `docs/README.md` — 文档导航
+- `docs/security-checklist.md` — 安全检查
+- `docs/harness-checklist.md` — Harness 自检

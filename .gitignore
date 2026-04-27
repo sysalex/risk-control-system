@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.whl
+.venv/
+venv/
+ENV/
+backend/.env
+backend/pip.ini
+backend/**/src/main/resources/application.yml
+backend/target/
+backend/**/target/
+
+# Node
+frontend/node_modules/
+frontend/.env
+frontend/.npmrc
+frontend/dist/
+frontend/.vite/
+frontend/playwright-report/
+frontend/test-results/
+frontend/.cache/
+frontend/coverage/
+
+# Local run logs
+.fastRequest/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude
+.claude/settings.local.json
+
+# Coverage reports
+docs/coverage/
+
+# Alembic autogenerate
+backend/alembic/versions/__pycache__/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Docker
+docker-compose.override.yml

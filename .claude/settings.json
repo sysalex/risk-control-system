@@ -1,0 +1,63 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm *)",
+      "Bash(mvn *)",
+      "Bash(java *)",
+      "Bash(checkstyle *)",
+      "Bash(flyway *)",
+      "Bash(git *)",
+      "Bash(docker *)",
+      "Bash(docker-compose *)",
+      "Bash(findstr \":5173 :8080\")",
+      "Bash(findstr \":8080\")"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'CMD=$(echo \"$CLAUDE_TOOL_INPUT_COMMAND\" | tr -d \"\\n\"); BLOCKED=\"\"; echo \"$CMD\" | grep -qE \"rm -rf|git push --force|git reset --hard|DROP TABLE|truncate\" && BLOCKED=\"危险命令被拦截: $CMD\"; if echo \"$CMD\" | grep -qE \"git commit.*-m\"; then MSG=$(echo \"$CMD\" | sed -n \"s/.*git commit.*-m [\\x27\\\"]\\([^\\x27\\\"]*\\)[\\x27\\\"].*/\\1/p\"); if [ -n \"$MSG\" ] && ! echo \"$MSG\" | grep -qE \"^(feat|fix|docs|style|refactor|test|chore)(\\(.+\\))?: .+\"; then BLOCKED=\"Git 提交信息不符合 Conventional Commits 格式: $MSG\\n示例: feat(auth): add login endpoint\"; fi; fi; if [ -n \"$BLOCKED\" ]; then echo \"[PreToolUse BLOCK] $BLOCKED\" >&2; exit 1; fi'"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'if [[ \"$CLAUDE_TOOL_INPUT_FILE_PATH\" =~ \\.(java)$ ]]; then cd $(dirname \"$CLAUDE_TOOL_INPUT_FILE_PATH\")/../.. && mvn checkstyle:check spotless:check 2>/dev/null; fi'"
+          },
+          {
+            "type": "command",
+            "command": "bash -c 'if [[ \"$CLAUDE_TOOL_INPUT_FILE_PATH\" =~ \\.(vue|ts|tsx|js)$ ]]; then cd $(dirname \"$CLAUDE_TOOL_INPUT_FILE_PATH\")/../.. && pnpm prettier --write \"$CLAUDE_TOOL_INPUT_FILE_PATH\" 2>/dev/null && pnpm eslint --fix \"$CLAUDE_TOOL_INPUT_FILE_PATH\" 2>/dev/null; fi'"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'CMD=$(echo \"$CLAUDE_TOOL_INPUT_COMMAND\" | tr -d \"\\n\"); if echo \"$CMD\" | grep -qE \"mvn test|vitest\"; then echo \"[循环反馈] 测试已运行，检查结果是否满足 DoD（覆盖率 ≥ 80%）\"; fi'"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'echo \"\\n========================================\"; echo \"[质量门禁] 会话结束检查\"; echo \"========================================\"; ROOT=E:/learnspace/harness-agent; PASS=true; echo \"\\n--- Java 编译 ---\"; if [ -d $ROOT/backend ]; then cd $ROOT/backend && mvn compile 2>/dev/null && echo \"[OK] compile\" || { echo \"[FAIL] compile\"; PASS=false; }; fi; echo \"\\n--- TypeScript 类型检查 ---\"; if [ -f $ROOT/frontend/node_modules/.bin/vue-tsc ]; then cd $ROOT/frontend && pnpm vue-tsc --noEmit 2>/dev/null && echo \"[OK] vue-tsc\" || { echo \"[FAIL] vue-tsc\"; PASS=false; }; else echo \"[SKIP] 前端依赖未安装\"; fi; echo \"\\n--- DoD 提醒 ---\"; echo \"请确认已核对 docs/definition-of-done.md 对应清单\"; echo \"请确认已更新 docs/task-list.md 任务状态\"; echo \"请确认已更新 CHANGELOG.md\"; echo \"\\n========================================\"; $PASS && echo \"✓ 质量门禁通过\" || echo \"✗ 质量门禁未通过，请修复后再提交\"; echo \"========================================\"'"
+          }
+        ]
+      }
+    ]
+  }
+}
