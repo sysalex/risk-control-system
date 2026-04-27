@@ -67,6 +67,7 @@
 - `docs/plans/` — 实现计划文档目录（SDD Plan 阶段产物）
 
 ### Optimized
+- **SDD 闭环规则**：将 SDD 调整为“跳过 / 轻量 SDD / 完整 SDD”三级，明确 Clarify 和 Tasks 的闭环标准，避免小型多文件任务被过度流程化。
 - 系统架构文档、API 规范、领域模型文档、ADR
 - 定义完成标准：docs/definition-of-done.md（通用/后端/前端/迁移/阶段 DoD）
 - 四层反馈循环：docs/feedback-loop.md

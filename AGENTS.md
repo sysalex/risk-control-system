@@ -37,21 +37,27 @@
 
 ### 2.5 复杂任务前置：规格驱动开发（SDD）
 
-> 影响文件 > 5 或涉及架构变更时**必须走 SDD**，不可直接编码。
+> SDD 分为轻量 SDD 和完整 SDD。目标是闭合需求澄清和任务拆分，不为了文档而文档。
 
-```
-Specify → Clarify → Plan → Tasks → TDD
-```
+#### SDD 分级
 
-| 阶段 | 产物 | 说明 |
-|------|------|------|
-| Specify | `docs/specs/<feature>.md` | 做什么，不含技术细节 |
-| Clarify | 规格中的 QA 记录 | 用户确认后写入规格 |
-| Plan | `docs/plans/<feature>.md` | 分层设计、数据流、异常路径 |
-| Tasks | task-list.md 子任务条目 | 2-5 分钟可完成，精确到文件 |
+| 级别 | 触发条件 | 必需产物 | 是否等待用户确认 |
+|------|---------|---------|----------------|
+| 跳过 SDD | 影响文件 ≤ 5，且不涉及架构/API/schema/安全边界 | 直接 TDD | 否 |
+| 轻量 SDD | 影响文件 > 5，但需求明确、边界单一、无破坏性变更 | `docs/specs/<feature>.md` + `docs/plans/<feature>.md` | 仅存在待确认问题时 |
+| 完整 SDD | 架构变更、跨阶段/跨端联动、API 契约变更、认证/授权/安全边界、破坏性 schema 变更、需求存在歧义 | Specify → Clarify → Plan → Tasks → TDD | 是 |
+
+#### 闭环要求
+
+| 阶段 | 产物 | 轻量 SDD 闭环标准 | 完整 SDD 闭环标准 |
+|------|------|------------------|------------------|
+| Specify | `docs/specs/<feature>.md` | 写清目标、非目标、验收标准、默认假设 | 同轻量 SDD |
+| Clarify | 规格中的 QA/假设记录 | 若无待确认问题，记录“无待确认问题”；若有问题，先问用户再继续 | 必须记录问题、用户答复和最终决策 |
+| Plan | `docs/plans/<feature>.md` | 写清文件计划、TDD 步骤、风险与验证命令 | 同轻量 SDD，并补数据流、异常路径、回滚/兼容策略 |
+| Tasks | Plan 中的文件级任务清单或 `task-list.md` 子任务 | Plan 中文件计划 + TDD 步骤即可闭环 | 必须拆到 `task-list.md` 子任务，单项 2-15 分钟、可独立验证 |
 
 **全栈任务**：后端优先（先 API 提供类型和数据契约，再前端）。
-**简单任务（≤5 文件）**：跳过 SDD，直接 TDD。
+**数据库任务**：已登记的新增迁移默认可按轻量 SDD 执行；修改既有迁移、破坏性 DDL、生产 schema 变更必须走完整 SDD 并等待确认。
 
 ### 3. 任务分解
 
@@ -122,8 +128,9 @@ Specify → Clarify → Plan → Tasks → TDD
 
 ### 何时使用 planner / SDD？
 ```
-影响文件 > 5 或架构变更或多阶段？ → YES → SDD 流程 → 执行
-简单修改？ → NO → 直接 TDD
+影响文件 ≤ 5 且不涉及架构/API/schema/安全？ → 跳过 SDD，直接 TDD
+影响文件 > 5 但边界清楚、无破坏性变更？ → 轻量 SDD → TDD
+架构变更 / 跨阶段 / API 契约 / 安全边界 / 破坏性 schema / 需求歧义？ → 完整 SDD → 用户确认 → TDD
 ```
 
 ### 何时并行？
@@ -173,11 +180,11 @@ Specify → Clarify → Plan → Tasks → TDD
 
 ```
 1. 查阅 task-list.md → 确认任务
-2. 影响文件 > 5 → SDD 前置
+2. 影响文件 > 5 → 轻量/完整 SDD 判定
    2.1 [Specify] docs/specs/rule-management.md
-   2.2 [Clarify] 确认规则条件语法、权限模型
+   2.2 [Clarify] 确认规则条件语法、权限模型；无待确认问题时记录默认假设
    2.3 [Plan] docs/plans/rule-management.md
-   2.4 [Tasks] task-list.md 拆为子任务
+   2.4 [Tasks] 轻量 SDD 写入 Plan 文件计划；完整 SDD 拆入 task-list.md 子任务
 3. TDD 循环（按子任务逐个）：RED → GREEN → REFACTOR → REVIEW → DOD
 4. code-reviewer + security-reviewer → 修复问题
 5. 知识沉淀：记录规则引擎设计的模式/反模式

@@ -8,8 +8,10 @@
 ## 通用 DoD（所有任务必须满足）
 
 ### 规格前置（复杂任务）
-- [ ] 影响文件 > 5 或涉及架构变更的任务，已完成 SDD 流程（Specify → Clarify → Plan → Tasks）
-- [ ] 规格文档位于 `docs/specs/`，计划文档位于 `docs/plans/`
+- [ ] 已按 `AGENTS.md` 判定 SDD 级别：跳过 / 轻量 SDD / 完整 SDD
+- [ ] 轻量 SDD：规格文档位于 `docs/specs/`，计划文档位于 `docs/plans/`
+- [ ] 轻量 SDD：规格中已记录“无待确认问题”或已完成必要问答；计划中包含文件计划、TDD 步骤、验证命令
+- [ ] 完整 SDD：已完成 Specify → Clarify → Plan → Tasks，用户确认已记录，`task-list.md` 已拆分可验证子任务
 
 ### 代码质量
 - [ ] `checkstyle` 零警告（Java）/ `eslint` 零错误（TypeScript/Vue）

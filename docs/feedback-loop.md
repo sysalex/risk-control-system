@@ -51,14 +51,16 @@
 ```
 1. 查阅 docs/task-list.md，确认任务和依赖
 2. 查阅 docs/definition-of-done.md，明确完成标准
-3. 写测试（RED）
-4. 写实现（GREEN）
-5. 运行测试，确认通过
-6. 检查覆盖率 ≥ 80%
-7. 逐项核对 DoD 清单
-8. 运行 `scripts/check.sh`；Windows 使用 `powershell -ExecutionPolicy Bypass -File scripts/check.ps1`
-9. 更新 docs/task-list.md 状态为 [x]
-10. 更新 CHANGELOG.md
+3. 判定 SDD 级别：跳过 / 轻量 SDD / 完整 SDD
+4. 需要 SDD 时先闭合 Specify / Clarify / Plan / Tasks；有待确认问题则先问用户
+5. 写测试（RED）
+6. 写实现（GREEN）
+7. 运行测试，确认通过
+8. 检查覆盖率 ≥ 80%
+9. 逐项核对 DoD 清单
+10. 运行 `scripts/check.sh`；Windows 使用 `powershell -ExecutionPolicy Bypass -File scripts/check.ps1`
+11. 更新 docs/task-list.md 状态为 [x]
+12. 更新 CHANGELOG.md
 ```
 
 **禁止跳步**：不得在测试未通过时标记任务完成。
