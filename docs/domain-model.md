@@ -60,15 +60,16 @@
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
-| id | int PK | 主键 |
-| name | str UNIQUE | 规则名称 |
-| description | str | 规则描述 |
-| conditions | jsonb | 规则条件表达式 |
-| actions | jsonb | 触发动作（告警/拒绝/标记等） |
-| priority | int | 优先级（数值越小优先级越高） |
-| enabled | bool | 是否启用 |
-| creator_id | int FK | 创建者 |
-| created_at | datetime | 创建时间 |
+| id | BIGINT PK | 主键，自增 |
+| name | VARCHAR(128) UNIQUE | 规则名称 |
+| description | VARCHAR(512) | 规则描述 |
+| conditions | JSON | 规则条件表达式 |
+| actions | JSON | 触发动作（告警/拒绝/标记等） |
+| priority | INT | 优先级（数值越小优先级越高，默认 100） |
+| enabled | TINYINT(1) | 是否启用 |
+| creator_id | BIGINT FK | 创建者 |
+| created_at | DATETIME(3) | 创建时间 |
+| updated_at | DATETIME(3) | 更新时间 |
 
 conditions 字段 JSON 结构示例：
 ```json
@@ -94,16 +95,18 @@ actions 字段 JSON 结构示例：
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
-| id | int PK | 主键 |
-| rule_id | int FK | 触发的规则 |
-| subject_type | str | 主体类型（user/transaction/account 等） |
-| subject_id | str | 主体 ID |
-| risk_level | enum | low / medium / high / critical |
-| status | enum | pending / investigating / resolved / false_positive |
-| description | str | 事件描述 |
-| triggered_at | datetime | 触发时间 |
-| resolved_at | datetime | 解决时间 |
-| resolved_by | int FK | 解决人 |
+| id | BIGINT PK | 主键，自增 |
+| rule_id | BIGINT FK | 触发的规则 |
+| subject_type | VARCHAR(64) | 主体类型（user/transaction/account 等） |
+| subject_id | VARCHAR(128) | 主体 ID |
+| risk_level | VARCHAR(32) | low / medium / high / critical |
+| status | VARCHAR(32) | pending / investigating / resolved / false_positive |
+| description | VARCHAR(1024) | 事件描述 |
+| triggered_at | DATETIME(3) | 触发时间 |
+| resolved_at | DATETIME(3) | 解决时间 |
+| resolved_by | BIGINT FK | 解决人 |
+| created_at | DATETIME(3) | 创建时间 |
+| updated_at | DATETIME(3) | 更新时间 |
 
 ### RiskScore（风险评分）
 

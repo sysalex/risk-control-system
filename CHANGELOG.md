@@ -23,6 +23,11 @@
 - **日志规范**：`from app.core.logging import get_logger` → `@Slf4j` + `log.info()`
 
 ### Added
+- RiskRule / RiskEvent 模型与迁移：
+  - 新增 `RiskRule`、`RiskEvent` 领域模型，以及 `RiskLevel`、`RiskEventStatus` 枚举
+  - 新增 `RiskRuleMapper`、`RiskEventMapper` 基础 Mapper，为规则管理和风险事件 API 提供持久化边界
+  - 新增 Flyway `V2__create_risk_rule_event_tables.sql`，创建 `risk_rules`、`risk_events` 表、外键和查询索引
+  - 新增规则/事件模型、Mapper 注解、迁移 SQL 关键路径测试，并补充 `docs/specs/risk-rule-event-model.md`、`docs/plans/risk-rule-event-model.md`
 - User 模型与初始化迁移：
   - 新增 `User` 领域模型、`UserRole` 枚举与 MyBatis-Plus 表映射注解
   - 新增 `UserMapper` 基础 Mapper，为后续用户仓储和认证模块提供持久化边界

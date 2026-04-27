@@ -15,6 +15,7 @@
 - Vue/Vite 构建脚本使用 `vue-tsc --noEmit -p tsconfig.app.json && vite build`，避免 `vue-tsc -b` 在根目录生成配置文件产物。
 - Windows 环境的质量门禁应提供 `.ps1` 入口；仅有 Bash 脚本会导致 PowerShell 用户无法闭合验证循环。
 - Flyway 迁移 SQL 位于 `risk-starter/src/main/resources/db/migration` 时，`risk-starter` 的 Maven resources 需要包含 `**/*.sql`；否则迁移测试会因 `V1__*.sql` 未进入 classpath 失败。
+- MySQL 8 可用 `JSON` 字段承载规则条件和动作；规则引擎语义未确定前，领域模型先保留 JSON 字符串，避免过早固化表达式对象。
 
 ### 部署相关
 
