@@ -1,23 +1,16 @@
 package com.harness.risk.interfaces.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.harness.risk.BaseApiIntegrationTest;
 import com.harness.risk.application.dto.CreateDecisionRequest;
 import com.harness.risk.application.dto.DecisionResponse;
 import com.harness.risk.application.dto.UpdateDecisionRequest;
 import com.harness.risk.application.service.AuditLogService;
 import com.harness.risk.application.service.DecisionService;
-import com.harness.risk.common.security.JwtUtil;
 import com.harness.risk.domain.enums.DecisionTypeEnums;
-import com.harness.risk.starter.RiskApplication;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,28 +30,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author harness-agent
  * @since 2026-04-28
  */
-@SpringBootTest(classes = RiskApplication.class)
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
-class DecisionControllerTest {
+class DecisionControllerTest extends BaseApiIntegrationTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private JwtUtil jwtUtil;
     @MockBean
     private DecisionService decisionService;
     @MockBean
     private AuditLogService auditLogService;
 
     private String adminToken() {
-        return "Bearer " + jwtUtil.generateAccessToken(1L, "alice", "admin");
+        return adminToken(1L, "alice");
     }
 
     private String analystToken() {
-        return "Bearer " + jwtUtil.generateAccessToken(2L, "bob", "analyst");
+        return analystToken(2L, "bob");
     }
 
     private DecisionResponse sampleDecision() {

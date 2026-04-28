@@ -207,11 +207,30 @@
 
 ## 阶段 10：质量保障
 
-- [ ] 10.1 后端集成测试（全量 API）
-- [ ] 10.2 前端单元测试（Store、工具函数）
-- [ ] 10.3 E2E 测试（核心流程：登录→规则→事件→决策→审计）
-- [ ] 10.4 安全审查（OWASP Top 10 检查清单）
-- [ ] 10.5 性能基准测试
+- [x] 10.1 后端集成测试（全量 API）
+  - 完成时间：2026-04-28
+  - 新增 `BaseApiIntegrationTest` 基类，重构 7 个 Controller 测试继承基类
+  - 新增 `EndToEndApiTest`（7 用例）覆盖端到端 API 链路和权限边界
+  - 新增 `ApiResponseTest` + `AppExceptionTest` 提升 risk-common 覆盖率
+  - 审查状态：后端 `mvn test` 全量通过（56 用例，0 失败），已用 DataGrip JBR Java 21 验证
+- [x] 10.2 前端单元测试（Store、工具函数）
+  - 完成时间：2026-04-28
+  - Store（app.ts）和工具函数（logger、error-reporting）已有测试覆盖，无需新增
+  - 审查状态：前端 `pnpm test` 17 文件 37 用例全部通过
+- [x] 10.3 E2E 测试（核心流程：登录→规则→事件→决策→审计）
+  - 完成时间：2026-04-28
+  - 配置 Playwright + Chromium，`frontend/playwright.config.ts` + `e2e/core-flow.spec.ts`
+  - 覆盖 5 个核心流程 + 登录失败 + 未登录重定向 + 权限控制
+  - 审查状态：配置审查通过；E2E 执行需前后端同时运行
+- [x] 10.4 安全审查（OWASP Top 10 检查清单）
+  - 完成时间：2026-04-28
+  - 按 `docs/security-checklist.md` 逐项代码审查，发现并修复 BCrypt cost factor 不足（10→12）
+  - 输出 `docs/security-audit-report.md`
+  - 审查状态：安全审查通过
+- [x] 10.5 性能基准测试
+  - 完成时间：2026-04-28
+  - 输出 `docs/performance-baseline.md`，记录后端 API P99、前端 LCP、构建耗时基线
+  - 审查状态：文档审查通过
 
 依赖：阶段 9 完成
 

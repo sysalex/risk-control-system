@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
+import { ACCESS_TOKEN_KEY } from '@/api/http'
+
 const routes: RouteRecordRaw[] = [
   {
     path: '/login',
@@ -47,6 +49,13 @@ const routes: RouteRecordRaw[] = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+})
+
+router.beforeEach((to) => {
+  const token = localStorage.getItem(ACCESS_TOKEN_KEY)
+  if (!token && to.path !== '/login') {
+    return { path: '/login' }
+  }
 })
 
 export default router

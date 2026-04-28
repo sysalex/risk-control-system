@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PasswordEncoder {
 
-    private final BCryptPasswordEncoder delegate = new BCryptPasswordEncoder(10);
+    private final BCryptPasswordEncoder delegate = new BCryptPasswordEncoder(12);
 
     /**
      * 使用 BCrypt 编码原始密码

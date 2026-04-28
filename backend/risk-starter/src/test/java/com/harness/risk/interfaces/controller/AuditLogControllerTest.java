@@ -1,18 +1,12 @@
 package com.harness.risk.interfaces.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.harness.risk.BaseApiIntegrationTest;
 import com.harness.risk.application.dto.AuditLogResponse;
 import com.harness.risk.application.service.AuditLogService;
 import com.harness.risk.common.exception.AppException;
-import com.harness.risk.common.security.JwtUtil;
-import com.harness.risk.starter.RiskApplication;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,24 +22,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author harness-agent
  * @since 2026-04-28
  */
-@SpringBootTest(classes = RiskApplication.class)
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
-class AuditLogControllerTest {
+class AuditLogControllerTest extends BaseApiIntegrationTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private JwtUtil jwtUtil;
     @MockBean
     private AuditLogService auditLogService;
 
     private String adminToken() {
-        return "Bearer " + jwtUtil.generateAccessToken(1L, "alice", "admin");
+        return adminToken(1L, "alice");
     }
 
     private String analystToken() {
-        return "Bearer " + jwtUtil.generateAccessToken(2L, "bob", "analyst");
+        return analystToken(2L, "bob");
     }
 
     private AuditLogResponse sampleAuditLog() {

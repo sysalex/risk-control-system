@@ -8,6 +8,22 @@
 
 ## [Unreleased]
 
+### Security
+- 修复 BCrypt cost factor 从 10 提升至 12（`PasswordEncoder.java`）
+
+### Added
+- 质量保障（Stage 10）：
+  - 后端测试基础设施：`BaseApiIntegrationTest` 基类统一提供 MockMvc、ObjectMapper、JwtUtil 和常用 helper
+  - 端到端 API 链路测试：`EndToEndApiTest` 覆盖登录→me→规则列表、未认证 401、无权限 403、规则 CRUD 生命周期、事件创建→查询→解决、评分 evaluate→subject 查询、操作员无法访问审计日志
+  - risk-common 覆盖率提升：`ApiResponseTest`（6 用例）+ `AppExceptionTest`（6 用例）
+  - 前端 E2E 测试框架：Playwright + Chromium 配置，`playwright.config.ts` + `e2e/auth.setup.ts` + `e2e/core-flow.spec.ts`
+  - E2E 核心流程覆盖：登录（成功/失败）、规则管理增删改查启停、风险事件创建与解决、评分决策查看与创建、审计日志列表、未登录重定向
+  - 安全审查报告：`docs/security-audit-report.md`，按 OWASP Top 10 逐项核对，发现并修复 BCrypt cost 不足问题
+  - 性能基准报告：`docs/performance-baseline.md`，记录后端 API P99、前端 LCP/FCP/TTI、构建耗时基线
+
+### Changed
+- 重构 7 个 Controller 集成测试继承 `BaseApiIntegrationTest`，消除重复注解和注入字段
+
 ### Docs
 - 调整配置文件提交规范：`backend/risk-starter/src/main/resources/application.yml` 纳入 Git，但只允许保留本地开发默认值和环境变量占位符。
 - 补充 Java 命名规范：

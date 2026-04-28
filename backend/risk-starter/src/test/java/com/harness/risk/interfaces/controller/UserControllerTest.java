@@ -1,23 +1,16 @@
 package com.harness.risk.interfaces.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.harness.risk.BaseApiIntegrationTest;
 import com.harness.risk.application.dto.CreateUserRequest;
 import com.harness.risk.application.dto.UpdateUserRequest;
 import com.harness.risk.application.dto.UserResponse;
 import com.harness.risk.application.service.AuditLogService;
 import com.harness.risk.application.service.UserService;
-import com.harness.risk.common.security.JwtUtil;
 import com.harness.risk.domain.enums.UserRoleEnums;
-import com.harness.risk.starter.RiskApplication;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,24 +31,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author harness-agent
  * @since 2026-04-27
  */
-@SpringBootTest(classes = RiskApplication.class)
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
-class UserControllerTest {
+class UserControllerTest extends BaseApiIntegrationTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private JwtUtil jwtUtil;
     @MockBean
     private UserService userService;
     @MockBean
     private AuditLogService auditLogService;
 
     private String adminToken() {
-        return "Bearer " + jwtUtil.generateAccessToken(1L, "alice", "admin");
+        return adminToken(1L, "alice");
     }
 
     private UserResponse sampleUser() {

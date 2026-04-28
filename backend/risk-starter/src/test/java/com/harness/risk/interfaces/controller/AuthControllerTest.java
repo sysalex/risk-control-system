@@ -1,6 +1,6 @@
 package com.harness.risk.interfaces.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.harness.risk.BaseApiIntegrationTest;
 import com.harness.risk.application.dto.LoginRequest;
 import com.harness.risk.application.dto.RefreshRequest;
 import com.harness.risk.application.dto.RegisterRequest;
@@ -9,15 +9,9 @@ import com.harness.risk.application.dto.UserResponse;
 import com.harness.risk.application.service.AuditLogService;
 import com.harness.risk.application.service.AuthService;
 import com.harness.risk.domain.enums.UserRoleEnums;
-import com.harness.risk.starter.RiskApplication;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 
@@ -33,15 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author harness-agent
  * @since 2026-04-27
  */
-@SpringBootTest(classes = RiskApplication.class)
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
-class AuthControllerTest {
+class AuthControllerTest extends BaseApiIntegrationTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
     @MockBean
     private AuthService authService;
     @MockBean
