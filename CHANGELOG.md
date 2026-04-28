@@ -27,6 +27,12 @@
   - 更新会话交接状态到阶段 4 完成、阶段 5 待开始
 
 ### Added
+- 管理员前端功能（Stage 8）：
+  - `UserManagementView`：用户列表、新增用户、删除用户
+  - `RuleManagementView`：规则列表、新增规则、删除规则、启用/停用规则
+  - 路由接入：`/users`、`/rules`
+  - 测试：`UserManagementView.spec`、`RuleManagementView.spec`、管理员路由断言
+  - SDD 产物：`docs/specs/admin-frontend.md`、`docs/plans/admin-frontend.md`
 - 前端公共基础（Stage 7）：
   - `LoginView`：登录表单，成功后保存 token 并进入工作台
   - `MainLayout`：侧边导航 + 顶部栏 + 路由内容出口

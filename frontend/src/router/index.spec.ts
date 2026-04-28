@@ -15,6 +15,11 @@ describe('router', () => {
     expect(resolved.matched).toHaveLength(2)
   })
 
+  it('registers admin feature pages under main layout', () => {
+    expect(router.resolve('/users').name).toBe('users')
+    expect(router.resolve('/rules').name).toBe('rules')
+  })
+
   it('loads the dashboard view component lazily', async () => {
     const route = router.getRoutes().find((item) => item.name === 'dashboard')
     const component = route?.components?.default
