@@ -11,10 +11,10 @@ const authFile = 'e2e/.auth/admin.json'
 setup('authenticate as admin', async ({ page }) => {
   await page.goto('/login')
   await page.fill('[data-test="username-input"]', 'admin')
-  await page.fill('[data-test="password-input"]', 'admin123')
+  await page.fill('[data-test="password-input"]', 'admin12345')
   await page.click('button[type="submit"]')
 
   // 等待登录成功跳转到 Dashboard
-  await expect(page).toHaveURL(/\//)
+  await expect(page).toHaveURL('http://localhost:5173/')
   await page.context().storageState({ path: authFile })
 })
