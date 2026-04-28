@@ -20,35 +20,35 @@ import java.time.LocalDateTime;
 @TableName("users")
 public class User {
 
-    // 主键
+    /** 主键 */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    // 用户名
+    /** 用户名 */
     @TableField("username")
     private String username;
 
-    // 邮箱
+    /** 邮箱 */
     @TableField("email")
     private String email;
 
-    // BCrypt 密码哈希
+    /** BCrypt 密码哈希 */
     @TableField("hashed_password")
     private String hashedPassword;
 
-    // 用户角色
+    /** 用户角色 */
     @TableField("role")
     private UserRole role = UserRole.OPERATOR;
 
-    // 是否启用
+    /** 是否启用 */
     @TableField("is_active")
     private boolean active = true;
 
-    // 创建时间
+    /** 创建时间 */
     @TableField("created_at")
     private LocalDateTime createdAt;
 
-    // 更新时间
+    /** 更新时间 */
     @TableField("updated_at")
     private LocalDateTime updatedAt;
 }

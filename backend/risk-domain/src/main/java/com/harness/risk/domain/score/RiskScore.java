@@ -21,47 +21,47 @@ import java.time.LocalDateTime;
 @TableName("risk_scores")
 public class RiskScore {
 
-    // 主键
+    /** 主键 */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    // 关联的风险事件 ID
+    /** 关联的风险事件 ID */
     @TableField("event_id")
     private Long eventId;
 
-    // 主体类型
+    /** 主体类型 */
     @TableField("subject_type")
     private String subjectType;
 
-    // 主体 ID
+    /** 主体 ID */
     @TableField("subject_id")
     private String subjectId;
 
-    // 风险评分
+    /** 风险评分 */
     @TableField("score")
     private BigDecimal score;
 
-    // 满分值
+    /** 满分值 */
     @TableField("max_score")
     private BigDecimal maxScore = new BigDecimal("100.00");
 
-    // 各维度评分明细 JSON
+    /** 各维度评分明细 JSON */
     @TableField("dimensions")
     private String dimensions;
 
-    // 评估时间
+    /** 评估时间 */
     @TableField("evaluated_at")
     private LocalDateTime evaluatedAt;
 
-    // 评估人用户 ID，为空表示系统自动评估
+    /** 评估人用户 ID，为空表示系统自动评估 */
     @TableField("evaluator_id")
     private Long evaluatorId;
 
-    // 创建时间
+    /** 创建时间 */
     @TableField("created_at")
     private LocalDateTime createdAt;
 
-    // 更新时间
+    /** 更新时间 */
     @TableField("updated_at")
     private LocalDateTime updatedAt;
 }

@@ -21,39 +21,39 @@ import java.time.LocalDateTime;
 @TableName("audit_logs")
 public class AuditLog {
 
-    // 主键
+    /** 主键 */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    // 操作用户 ID
+    /** 操作用户 ID */
     @TableField("user_id")
     private Long userId;
 
-    // 操作类型：create / update / delete / enable / disable
+    /** 操作类型：create / update / delete / enable / disable */
     @TableField("action")
     private String action;
 
-    // 资源类型：rule / event / score / decision / user
+    /** 资源类型：rule / event / score / decision / user */
     @TableField("resource_type")
     private String resourceType;
 
-    // 资源 ID
+    /** 资源 ID */
     @TableField("resource_id")
     private Long resourceId;
 
-    // 修改前值 JSON
+    /** 修改前值 JSON */
     @TableField("old_values")
     private String oldValues;
 
-    // 修改后值 JSON
+    /** 修改后值 JSON */
     @TableField("new_values")
     private String newValues;
 
-    // 操作时间
+    /** 操作时间 */
     @TableField("created_at")
     private LocalDateTime createdAt;
 
-    // 操作者 IP 地址
+    /** 操作者 IP 地址 */
     @TableField("ip_address")
     private String ipAddress;
 }
