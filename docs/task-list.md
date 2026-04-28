@@ -168,10 +168,13 @@
 
 ## 阶段 7：前端 — 公共基础
 
-- [ ] 7.1 登录页面（LoginView）
-- [ ] 7.2 主布局（MainLayout：侧边栏 + 顶栏）
-- [ ] 7.3 Dashboard 首页
-- [ ] 7.4 前端 API 模块（auth、user、rule、event、score、decision、audit）
+- [x] 7.1 登录页面（LoginView）
+- [x] 7.2 主布局（MainLayout：侧边栏 + 顶栏）
+- [x] 7.3 Dashboard 首页
+- [x] 7.4 前端 API 模块（auth、user、rule、event、score、decision、audit）
+  - 完成时间：2026-04-28
+  - 测试覆盖率：新增 LoginView、MainLayout、DashboardView、API modules、router 测试；前端 `pnpm vitest run` 通过
+  - 审查状态：本地代码/安全自检通过
 
 依赖：阶段 2 完成（可并行开发）
 

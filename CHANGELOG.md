@@ -27,6 +27,14 @@
   - 更新会话交接状态到阶段 4 完成、阶段 5 待开始
 
 ### Added
+- 前端公共基础（Stage 7）：
+  - `LoginView`：登录表单，成功后保存 token 并进入工作台
+  - `MainLayout`：侧边导航 + 顶部栏 + 路由内容出口
+  - `DashboardView`：风险运营指标概览
+  - 前端 API 模块：`authApi`、`userApi`、`ruleApi`、`eventApi`、`scoreApi`、`decisionApi`、`auditApi`
+  - HTTP token 支持：本地保存 access/refresh token，并自动注入 Bearer 请求头
+  - 测试：`LoginView.spec`、`MainLayout.spec`、`DashboardView.spec`、`modules.spec`、路由测试更新
+  - SDD 产物：`docs/specs/frontend-foundation.md`、`docs/plans/frontend-foundation.md`
 - 审计日志 API（Stage 6）：
   - `AuditLogService` + `AuditLogServiceImpl`（risk-application）：审计日志记录、详情、分页查询，支持 userId/action/resourceType 筛选
   - `AuditLogController`（risk-interfaces）：`/api/v1/audit-logs` 查询端点，仅 ADMIN 可访问

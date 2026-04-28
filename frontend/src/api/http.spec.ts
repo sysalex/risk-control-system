@@ -1,4 +1,11 @@
-import { API_BASE_URL, http, type ApiResponse } from './http'
+import {
+  ACCESS_TOKEN_KEY,
+  API_BASE_URL,
+  clearAuthTokens,
+  http,
+  setAuthTokens,
+  type ApiResponse,
+} from './http'
 
 describe('http client', () => {
   it('uses the configured API base URL', () => {
@@ -16,5 +23,24 @@ describe('http client', () => {
     }
 
     expect(response.data?.status).toBe('ok')
+  })
+
+  it('stores and clears auth tokens', () => {
+    setAuthTokens('access-token', 'refresh-token')
+
+    expect(localStorage.getItem(ACCESS_TOKEN_KEY)).toBe('access-token')
+
+    clearAuthTokens()
+
+    expect(localStorage.getItem(ACCESS_TOKEN_KEY)).toBeNull()
+  })
+
+  it('adds bearer token to outgoing requests', async () => {
+    setAuthTokens('access-token', 'refresh-token')
+    const interceptor = http.interceptors.request.handlers[0]?.fulfilled
+
+    const config = await interceptor?.({ headers: {} })
+
+    expect(config?.headers.Authorization).toBe('Bearer access-token')
   })
 })
