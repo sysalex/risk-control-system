@@ -20,43 +20,36 @@ import java.time.LocalDateTime;
 @TableName("risk_rules")
 public class RiskRule {
 
-    /** 主键 */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    /** 规则名称 */
     @TableField("name")
     private String name;
 
-    /** 规则描述 */
     @TableField("description")
     private String description;
 
-    /** 规则条件 JSON */
+    // 规则条件 JSON
     @TableField("conditions")
     private String conditions;
 
-    /** 触发动作 JSON */
+    // 触发动作 JSON
     @TableField("actions")
     private String actions;
 
-    /** 优先级，数值越小优先级越高 */
+    // 数值越小优先级越高
     @TableField("priority")
     private Integer priority = 100;
 
-    /** 是否启用 */
     @TableField("enabled")
     private boolean enabled = true;
 
-    /** 创建者用户 ID */
     @TableField("creator_id")
     private Long creatorId;
 
-    /** 创建时间 */
     @TableField("created_at")
     private LocalDateTime createdAt;
 
-    /** 更新时间 */
     @TableField("updated_at")
     private LocalDateTime updatedAt;
 }
