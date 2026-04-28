@@ -259,7 +259,8 @@ View → Store (Pinia) → API Layer → Backend
 - 每个类必须有 `/** */` 类级 Javadoc，包含职责描述、`@author harness-agent`、`@since YYYY-MM-DD`
 - 每个 public 方法必须有 Javadoc：作用描述 + `@param` + `@return`
 - 内部类/嵌套类同 public 类规范
-- 字段注释仅在语义不直观时添加（一行 `//` 即可）
+- 实体类字段必须添加注释，统一使用 `/** */` Javadoc 格式
+- 方法内部的代码注释使用 `//` 单行格式
 - 注释使用中文，描述职责和用途，不描述实现细节
 - 禁止无信息量的注释（如 `// 构造函数`、`// 设置值`）
 
