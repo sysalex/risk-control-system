@@ -26,6 +26,14 @@ Get-NetTCPConnection -LocalPort 5173,8080 -ErrorAction SilentlyContinue | ForEac
 
 ## 本机环境速查
 
+> **文件搜索优先用 `rg`（ripgrep）或 `fd`**，避免 `find` 在 Windows 下遍历慢、路径遗漏的问题。
+>
+> ```bash
+> # 搜索可执行文件
+> rg --files /e/ | rg -i mysql\.exe
+> fd mysql.exe /e/
+> ```
+
 | 项目 | 路径 / 值 | 备注 |
 |------|----------|------|
 | Maven 本地仓库 | `E:\repository` | 非默认 `~/.m2/repository` |
