@@ -13,7 +13,6 @@ venv/
 ENV/
 backend/.env
 backend/pip.ini
-backend/**/src/main/resources/application.yml
 backend/target/
 backend/**/target/
 

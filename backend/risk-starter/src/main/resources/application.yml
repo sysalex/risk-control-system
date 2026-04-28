@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: risk-control-system
+  datasource:
+    url: jdbc:mysql://localhost:3306/risk_db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jackson:
+    default-property-inclusion: non_null
+
+server:
+  port: 8080
+
+app:
+  name: risk-control-system
+  jwt:
+    secret: ${JWT_SECRET:change-me-in-production}
+    access-token-expire-minutes: 30
+    refresh-token-expire-days: 7
+  cors:
+    allowed-origins: http://localhost:5173
+
+logging:
+  level:
+    com.harness.risk: debug

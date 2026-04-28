@@ -81,7 +81,7 @@ npm install --registry=https://registry.npmmirror.com
 
 ### 配置文件
 
-`backend/risk-starter/src/main/resources/application.yml`（不提交到 Git，提交 `.env.example`）:
+`backend/risk-starter/src/main/resources/application.yml`（提交到 Git，只允许保留本地开发默认值和环境变量占位符）:
 ```yaml
 spring:
   application:
@@ -89,7 +89,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/risk_db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
     username: root
-    password: root
+    password:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 app:

@@ -9,6 +9,7 @@
 ## [Unreleased]
 
 ### Docs
+- 调整配置文件提交规范：`backend/risk-starter/src/main/resources/application.yml` 纳入 Git，但只允许保留本地开发默认值和环境变量占位符。
 - 补充 Java 命名规范：
   - DTO 统一为 `class + @Data + @NoArgsConstructor + @AllArgsConstructor`，字段使用块级 Javadoc
   - Entity 统一放在 `domain.model.entity` 包下，命名格式为 `XxxEntity`
