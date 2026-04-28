@@ -21,20 +21,23 @@ import java.time.LocalDateTime;
 @TableName("audit_logs")
 public class AuditLog {
 
+    // 主键
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    // 操作用户 ID
     @TableField("user_id")
     private Long userId;
 
-    // create / update / delete / enable / disable
+    // 操作类型：create / update / delete / enable / disable
     @TableField("action")
     private String action;
 
-    // rule / event / score / decision / user
+    // 资源类型：rule / event / score / decision / user
     @TableField("resource_type")
     private String resourceType;
 
+    // 资源 ID
     @TableField("resource_id")
     private Long resourceId;
 
@@ -46,9 +49,11 @@ public class AuditLog {
     @TableField("new_values")
     private String newValues;
 
+    // 操作时间
     @TableField("created_at")
     private LocalDateTime createdAt;
 
+    // 操作者 IP 地址
     @TableField("ip_address")
     private String ipAddress;
 }
