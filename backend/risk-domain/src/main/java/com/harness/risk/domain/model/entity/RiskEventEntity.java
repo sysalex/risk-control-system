@@ -1,15 +1,17 @@
-package com.harness.risk.domain.event;
+package com.harness.risk.domain.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.harness.risk.domain.enums.RiskEventStatusEnums;
+import com.harness.risk.domain.enums.RiskLevelEnums;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 /**
- * 风险事件实体。
+ * 风险事件实体（RiskEventEntity）。
  * <p>
  * 记录规则命中的风险事实，处理流程和决策在后续模块补齐。
  *
@@ -18,7 +20,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @TableName("risk_events")
-public class RiskEvent {
+public class RiskEventEntity {
 
     /**
      * 主键。
@@ -48,13 +50,13 @@ public class RiskEvent {
      * 风险等级。
      */
     @TableField("risk_level")
-    private RiskLevel riskLevel;
+    private RiskLevelEnums riskLevel;
 
     /**
      * 处理状态。
      */
     @TableField("status")
-    private RiskEventStatus status = RiskEventStatus.PENDING;
+    private RiskEventStatusEnums status = RiskEventStatusEnums.PENDING;
 
     /**
      * 事件描述。

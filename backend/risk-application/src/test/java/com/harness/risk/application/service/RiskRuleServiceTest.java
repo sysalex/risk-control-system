@@ -7,7 +7,7 @@ import com.harness.risk.application.dto.UpdateRuleRequest;
 import com.harness.risk.application.dto.RuleResponse;
 import com.harness.risk.application.service.impl.RiskRuleServiceImpl;
 import com.harness.risk.common.exception.AppException;
-import com.harness.risk.domain.rule.RiskRule;
+import com.harness.risk.domain.model.entity.RiskRuleEntity;
 import com.harness.risk.infrastructure.mapper.RiskRuleMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,8 +43,8 @@ class RiskRuleServiceTest {
         ReflectionTestUtils.setField(riskRuleService, "baseMapper", riskRuleMapper);
     }
 
-    private RiskRule sampleRule() {
-        RiskRule rule = new RiskRule();
+    private RiskRuleEntity sampleRule() {
+        RiskRuleEntity rule = new RiskRuleEntity();
         rule.setId(1L);
         rule.setName("大额交易检测");
         rule.setDescription("检测单笔超过 1 万的交易");
@@ -63,9 +63,9 @@ class RiskRuleServiceTest {
         RuleResponse resp = riskRuleService.create(
                 new CreateRuleRequest("大额交易检测", "描述", "{}", "{}", 10), 2L);
 
-        assertEquals("大额交易检测", resp.name());
-        assertEquals(10, resp.priority());
-        verify(riskRuleMapper).insert(any(RiskRule.class));
+        assertEquals("大额交易检测", resp.getName());
+        assertEquals(10, resp.getPriority());
+        verify(riskRuleMapper).insert(any(RiskRuleEntity.class));
     }
 
     @Test
@@ -83,8 +83,8 @@ class RiskRuleServiceTest {
 
         RuleResponse resp = riskRuleService.getById(1L);
 
-        assertEquals("大额交易检测", resp.name());
-        assertTrue(resp.enabled());
+        assertEquals("大额交易检测", resp.getName());
+        assertTrue(resp.isEnabled());
     }
 
     @Test
@@ -97,7 +97,7 @@ class RiskRuleServiceTest {
 
     @Test
     void listReturnsPagedResults() {
-        Page<RiskRule> page = new Page<>(1, 20);
+        Page<RiskRuleEntity> page = new Page<>(1, 20);
         page.setRecords(List.of(sampleRule()));
         page.setTotal(1);
         when(riskRuleMapper.selectPage(any(), any())).thenReturn(page);
@@ -105,22 +105,22 @@ class RiskRuleServiceTest {
         Page<RuleResponse> result = riskRuleService.list(1, 20);
 
         assertEquals(1, result.getTotal());
-        assertEquals("大额交易检测", result.getRecords().get(0).name());
+        assertEquals("大额交易检测", result.getRecords().get(0).getName());
     }
 
     @Test
     void updateSuccessReturnsUpdatedRule() {
-        RiskRule rule = sampleRule();
+        RiskRuleEntity rule = sampleRule();
         when(riskRuleMapper.selectById(1L)).thenReturn(rule);
         when(riskRuleMapper.selectCount(any())).thenReturn(0L);
 
         RuleResponse resp = riskRuleService.update(1L,
                 new UpdateRuleRequest("新名称", "新描述", null, null, 5));
 
-        assertEquals("新名称", resp.name());
-        assertEquals("新描述", resp.description());
-        assertEquals(5, resp.priority());
-        verify(riskRuleMapper).updateById(any(RiskRule.class));
+        assertEquals("新名称", resp.getName());
+        assertEquals("新描述", resp.getDescription());
+        assertEquals(5, resp.getPriority());
+        verify(riskRuleMapper).updateById(any(RiskRuleEntity.class));
     }
 
     @Test
@@ -134,7 +134,7 @@ class RiskRuleServiceTest {
 
     @Test
     void updateFailsWhenNameConflict() {
-        RiskRule rule = sampleRule();
+        RiskRuleEntity rule = sampleRule();
         when(riskRuleMapper.selectById(1L)).thenReturn(rule);
         when(riskRuleMapper.selectCount(any())).thenReturn(1L);
 
@@ -162,24 +162,24 @@ class RiskRuleServiceTest {
 
     @Test
     void enableRuleSetsEnabledTrue() {
-        RiskRule rule = sampleRule();
+        RiskRuleEntity rule = sampleRule();
         rule.setEnabled(false);
         when(riskRuleMapper.selectById(1L)).thenReturn(rule);
 
         RuleResponse resp = riskRuleService.enableRule(1L);
 
-        assertTrue(resp.enabled());
+        assertTrue(resp.isEnabled());
         verify(riskRuleMapper).updateById(argThat(r -> r.isEnabled()));
     }
 
     @Test
     void disableRuleSetsEnabledFalse() {
-        RiskRule rule = sampleRule();
+        RiskRuleEntity rule = sampleRule();
         when(riskRuleMapper.selectById(1L)).thenReturn(rule);
 
         RuleResponse resp = riskRuleService.disableRule(1L);
 
-        assertFalse(resp.enabled());
+        assertFalse(resp.isEnabled());
         verify(riskRuleMapper).updateById(argThat(r -> !r.isEnabled()));
     }
 

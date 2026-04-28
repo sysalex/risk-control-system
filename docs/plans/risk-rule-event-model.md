@@ -7,8 +7,8 @@
 ## 文件计划
 
 - `backend/risk-domain/src/main/java/com/harness/risk/domain/rule/RiskRule.java`
-- `backend/risk-domain/src/main/java/com/harness/risk/domain/event/RiskLevel.java`
-- `backend/risk-domain/src/main/java/com/harness/risk/domain/event/RiskEventStatus.java`
+- `backend/risk-domain/src/main/java/com/harness/risk/domain/event/RiskLevelEnums.java`
+- `backend/risk-domain/src/main/java/com/harness/risk/domain/event/RiskEventStatusEnums.java`
 - `backend/risk-domain/src/main/java/com/harness/risk/domain/event/RiskEvent.java`
 - `backend/risk-domain/src/test/java/com/harness/risk/domain/rule/RiskRuleTest.java`
 - `backend/risk-domain/src/test/java/com/harness/risk/domain/event/RiskEventTest.java`

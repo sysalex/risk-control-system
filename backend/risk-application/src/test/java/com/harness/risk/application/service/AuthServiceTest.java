@@ -9,8 +9,8 @@ import com.harness.risk.application.dto.UserResponse;
 import com.harness.risk.common.exception.AppException;
 import com.harness.risk.common.security.JwtUtil;
 import com.harness.risk.common.security.PasswordEncoder;
-import com.harness.risk.domain.user.User;
-import com.harness.risk.domain.user.UserRole;
+import com.harness.risk.domain.model.entity.UserEntity;
+import com.harness.risk.domain.enums.UserRoleEnums;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,20 +40,20 @@ class AuthServiceTest {
     @InjectMocks
     private AuthServiceImpl authService;
 
-    private User sampleUser() {
-        User user = new User();
+    private UserEntity sampleUser() {
+        UserEntity user = new UserEntity();
         user.setId(1L);
         user.setUsername("alice");
         user.setEmail("alice@test.com");
         user.setHashedPassword("encoded");
-        user.setRole(UserRole.ADMIN);
+        user.setRole(UserRoleEnums.ADMIN);
         user.setActive(true);
         return user;
     }
 
     @Test
     void loginSuccessReturnsTokens() {
-        User user = sampleUser();
+        UserEntity user = sampleUser();
         when(userService.getOne(any())).thenReturn(user);
         when(passwordEncoder.matches("password123", "encoded")).thenReturn(true);
         when(jwtUtil.generateAccessToken(1L, "alice", "admin")).thenReturn("access-token");
@@ -61,9 +61,9 @@ class AuthServiceTest {
 
         TokenResponse resp = authService.login(new LoginRequest("alice", "password123"));
 
-        assertEquals("access-token", resp.accessToken());
-        assertEquals("refresh-token", resp.refreshToken());
-        assertEquals(1800, resp.expiresIn());
+        assertEquals("access-token", resp.getAccessToken());
+        assertEquals("refresh-token", resp.getRefreshToken());
+        assertEquals(1800, resp.getExpiresIn());
     }
 
     @Test
@@ -77,7 +77,7 @@ class AuthServiceTest {
 
     @Test
     void loginFailsWhenPasswordMismatch() {
-        User user = sampleUser();
+        UserEntity user = sampleUser();
         when(userService.getOne(any())).thenReturn(user);
         when(passwordEncoder.matches(any(), any())).thenReturn(false);
 
@@ -88,7 +88,7 @@ class AuthServiceTest {
 
     @Test
     void loginLocksAfterFiveFailures() {
-        User user = sampleUser();
+        UserEntity user = sampleUser();
         when(userService.getOne(any())).thenReturn(user);
         when(passwordEncoder.matches(any(), any())).thenReturn(false);
 
@@ -110,9 +110,9 @@ class AuthServiceTest {
         UserResponse resp = authService.register(
                 new RegisterRequest("alice", "alice@test.com", "password123"));
 
-        assertEquals("alice", resp.username());
-        assertEquals("alice@test.com", resp.email());
-        verify(userService).save(any(User.class));
+        assertEquals("alice", resp.getUsername());
+        assertEquals("alice@test.com", resp.getEmail());
+        verify(userService).save(any(UserEntity.class));
     }
 
     @Test
@@ -130,15 +130,15 @@ class AuthServiceTest {
         when(claims.getSubject()).thenReturn("1");
         when(jwtUtil.parseToken("old-refresh")).thenReturn(claims);
 
-        User user = sampleUser();
+        UserEntity user = sampleUser();
         when(userService.getById(1L)).thenReturn(user);
         when(jwtUtil.generateAccessToken(1L, "alice", "admin")).thenReturn("new-access");
         when(jwtUtil.generateRefreshToken(1L)).thenReturn("new-refresh");
 
         TokenResponse resp = authService.refresh(new RefreshRequest("old-refresh"));
 
-        assertEquals("new-access", resp.accessToken());
-        assertEquals("new-refresh", resp.refreshToken());
+        assertEquals("new-access", resp.getAccessToken());
+        assertEquals("new-refresh", resp.getRefreshToken());
     }
 
     @Test

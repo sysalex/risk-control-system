@@ -8,8 +8,8 @@ import com.harness.risk.application.service.RiskEventService;
 import com.harness.risk.common.annotation.RequireRole;
 import com.harness.risk.common.response.ApiResponse;
 import com.harness.risk.common.security.AuthConstants;
-import com.harness.risk.domain.event.RiskEventStatus;
-import com.harness.risk.domain.event.RiskLevel;
+import com.harness.risk.domain.enums.RiskEventStatusEnums;
+import com.harness.risk.domain.enums.RiskLevelEnums;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -51,8 +51,8 @@ public class EventController {
     public ApiResponse<Page<EventResponse>> list(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int limit,
-            @RequestParam(required = false) RiskLevel riskLevel,
-            @RequestParam(required = false) RiskEventStatus status) {
+            @RequestParam(required = false) RiskLevelEnums riskLevel,
+            @RequestParam(required = false) RiskEventStatusEnums status) {
         return ApiResponse.ok(riskEventService.list(page, limit, riskLevel, status));
     }
 

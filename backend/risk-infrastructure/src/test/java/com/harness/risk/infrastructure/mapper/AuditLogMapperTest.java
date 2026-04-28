@@ -1,7 +1,7 @@
 package com.harness.risk.infrastructure.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.harness.risk.domain.audit.AuditLog;
+import com.harness.risk.domain.model.entity.AuditLogEntity;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.ParameterizedType;
@@ -26,6 +26,6 @@ class AuditLogMapperTest {
 
         assertTrue(BaseMapper.class.isAssignableFrom(AuditLogMapper.class));
         assertInstanceOf(ParameterizedType.class, genericInterface);
-        assertEquals(AuditLog.class, ((ParameterizedType) genericInterface).getActualTypeArguments()[0]);
+        assertEquals(AuditLogEntity.class, ((ParameterizedType) genericInterface).getActualTypeArguments()[0]);
     }
 }

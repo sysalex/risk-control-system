@@ -8,9 +8,9 @@ import com.harness.risk.application.dto.EventResponse;
 import com.harness.risk.application.dto.UpdateEventRequest;
 import com.harness.risk.application.service.RiskEventService;
 import com.harness.risk.common.exception.AppException;
-import com.harness.risk.domain.event.RiskEvent;
-import com.harness.risk.domain.event.RiskEventStatus;
-import com.harness.risk.domain.event.RiskLevel;
+import com.harness.risk.domain.enums.RiskEventStatusEnums;
+import com.harness.risk.domain.enums.RiskLevelEnums;
+import com.harness.risk.domain.model.entity.RiskEventEntity;
 import com.harness.risk.infrastructure.mapper.RiskEventMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,18 +28,18 @@ import java.util.List;
  * @since 2026-04-27
  */
 @Service
-public class RiskEventServiceImpl extends ServiceImpl<RiskEventMapper, RiskEvent> implements RiskEventService {
+public class RiskEventServiceImpl extends ServiceImpl<RiskEventMapper, RiskEventEntity> implements RiskEventService {
 
     @Override
     @Transactional
     public EventResponse create(CreateEventRequest request) {
-        RiskEvent event = new RiskEvent();
-        event.setRuleId(request.ruleId());
-        event.setSubjectType(request.subjectType());
-        event.setSubjectId(request.subjectId());
-        event.setRiskLevel(request.riskLevel());
-        event.setDescription(request.description());
-        event.setStatus(RiskEventStatus.PENDING);
+        RiskEventEntity event = new RiskEventEntity();
+        event.setRuleId(request.getRuleId());
+        event.setSubjectType(request.getSubjectType());
+        event.setSubjectId(request.getSubjectId());
+        event.setRiskLevel(request.getRiskLevel());
+        event.setDescription(request.getDescription());
+        event.setStatus(RiskEventStatusEnums.PENDING);
         event.setTriggeredAt(LocalDateTime.now());
         event.setCreatedAt(LocalDateTime.now());
         event.setUpdatedAt(LocalDateTime.now());
@@ -50,22 +50,22 @@ public class RiskEventServiceImpl extends ServiceImpl<RiskEventMapper, RiskEvent
 
     @Override
     public EventResponse getById(Long id) {
-        RiskEvent event = findOrThrow(id);
+        RiskEventEntity event = findOrThrow(id);
         return toResponse(event);
     }
 
     @Override
-    public Page<EventResponse> list(int page, int limit, RiskLevel riskLevel, RiskEventStatus status) {
-        LambdaQueryWrapper<RiskEvent> wrapper = new LambdaQueryWrapper<>();
+    public Page<EventResponse> list(int page, int limit, RiskLevelEnums riskLevel, RiskEventStatusEnums status) {
+        LambdaQueryWrapper<RiskEventEntity> wrapper = new LambdaQueryWrapper<>();
         if (riskLevel != null) {
-            wrapper.eq(RiskEvent::getRiskLevel, riskLevel);
+            wrapper.eq(RiskEventEntity::getRiskLevel, riskLevel);
         }
         if (status != null) {
-            wrapper.eq(RiskEvent::getStatus, status);
+            wrapper.eq(RiskEventEntity::getStatus, status);
         }
-        wrapper.orderByDesc(RiskEvent::getTriggeredAt);
+        wrapper.orderByDesc(RiskEventEntity::getTriggeredAt);
 
-        Page<RiskEvent> result = page(new Page<>(page, limit), wrapper);
+        Page<RiskEventEntity> result = page(new Page<>(page, limit), wrapper);
         List<EventResponse> records = result.getRecords().stream()
                 .map(this::toResponse)
                 .toList();
@@ -77,13 +77,13 @@ public class RiskEventServiceImpl extends ServiceImpl<RiskEventMapper, RiskEvent
     @Override
     @Transactional
     public EventResponse update(Long id, UpdateEventRequest request) {
-        RiskEvent event = findOrThrow(id);
+        RiskEventEntity event = findOrThrow(id);
 
-        if (request.status() != null) {
-            event.setStatus(request.status());
+        if (request.getStatus() != null) {
+            event.setStatus(request.getStatus());
         }
-        if (request.description() != null) {
-            event.setDescription(request.description());
+        if (request.getDescription() != null) {
+            event.setDescription(request.getDescription());
         }
         event.setUpdatedAt(LocalDateTime.now());
         updateById(event);
@@ -94,11 +94,11 @@ public class RiskEventServiceImpl extends ServiceImpl<RiskEventMapper, RiskEvent
     @Override
     @Transactional
     public EventResponse resolveEvent(Long id, Long resolvedBy) {
-        RiskEvent event = findOrThrow(id);
+        RiskEventEntity event = findOrThrow(id);
 
         // 已解决的事件保持幂等，不修改解决人
-        if (event.getStatus() != RiskEventStatus.RESOLVED) {
-            event.setStatus(RiskEventStatus.RESOLVED);
+        if (event.getStatus() != RiskEventStatusEnums.RESOLVED) {
+            event.setStatus(RiskEventStatusEnums.RESOLVED);
             event.setResolvedBy(resolvedBy);
             event.setResolvedAt(LocalDateTime.now());
             event.setUpdatedAt(LocalDateTime.now());
@@ -108,15 +108,15 @@ public class RiskEventServiceImpl extends ServiceImpl<RiskEventMapper, RiskEvent
         return toResponse(event);
     }
 
-    private RiskEvent findOrThrow(Long id) {
-        RiskEvent event = super.getById(id);
+    private RiskEventEntity findOrThrow(Long id) {
+        RiskEventEntity event = super.getById(id);
         if (event == null) {
             throw AppException.notFound("Event");
         }
         return event;
     }
 
-    private EventResponse toResponse(RiskEvent event) {
+    private EventResponse toResponse(RiskEventEntity event) {
         return new EventResponse(
                 event.getId(),
                 event.getRuleId(),

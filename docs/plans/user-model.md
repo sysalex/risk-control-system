@@ -6,7 +6,7 @@
 
 ## 文件计划
 
-- `backend/risk-domain/src/main/java/com/harness/risk/domain/user/UserRole.java`
+- `backend/risk-domain/src/main/java/com/harness/risk/domain/user/UserRoleEnums.java`
 - `backend/risk-domain/src/main/java/com/harness/risk/domain/user/User.java`
 - `backend/risk-domain/src/test/java/com/harness/risk/domain/user/UserTest.java`
 - `backend/risk-infrastructure/src/main/java/com/harness/risk/infrastructure/mapper/UserMapper.java`

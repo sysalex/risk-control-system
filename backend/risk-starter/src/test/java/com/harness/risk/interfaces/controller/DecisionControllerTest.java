@@ -7,7 +7,7 @@ import com.harness.risk.application.dto.DecisionResponse;
 import com.harness.risk.application.dto.UpdateDecisionRequest;
 import com.harness.risk.application.service.DecisionService;
 import com.harness.risk.common.security.JwtUtil;
-import com.harness.risk.domain.decision.DecisionType;
+import com.harness.risk.domain.enums.DecisionTypeEnums;
 import com.harness.risk.starter.RiskApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +60,7 @@ class DecisionControllerTest {
 
     private DecisionResponse sampleDecision() {
         return new DecisionResponse(
-                1L, 10L, DecisionType.MANUAL_REVIEW, "风险评分过高",
+                1L, 10L, DecisionTypeEnums.MANUAL_REVIEW, "风险评分过高",
                 "需要人工复核", 1L, LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now());
     }
 
@@ -85,7 +85,7 @@ class DecisionControllerTest {
                         .header("Authorization", adminToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CreateDecisionRequest(
-                                10L, DecisionType.MANUAL_REVIEW, "风险评分过高", "需要人工复核", 1L))))
+                                10L, DecisionTypeEnums.MANUAL_REVIEW, "风险评分过高", "需要人工复核", 1L))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.decisionType").value("MANUAL_REVIEW"));
     }
@@ -96,7 +96,7 @@ class DecisionControllerTest {
                         .header("Authorization", analystToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CreateDecisionRequest(
-                                10L, DecisionType.MANUAL_REVIEW, "风险评分过高", "需要人工复核", 1L))))
+                                10L, DecisionTypeEnums.MANUAL_REVIEW, "风险评分过高", "需要人工复核", 1L))))
                 .andExpect(status().isForbidden());
     }
 
@@ -118,7 +118,7 @@ class DecisionControllerTest {
                         .header("Authorization", adminToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new UpdateDecisionRequest(
-                                DecisionType.ESCALATE, "升级处理", "转高级审核"))))
+                                DecisionTypeEnums.ESCALATE, "升级处理", "转高级审核"))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.reason").value("风险评分过高"));
     }

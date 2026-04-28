@@ -1,4 +1,4 @@
-package com.harness.risk.domain.audit;
+package com.harness.risk.domain.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -9,7 +9,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * 审计日志实体。
+ * 审计日志实体（AuditLogEntity）。
  * <p>
  * 记录关键操作的历史快照，用于合规审计和问题追溯。
  * 审计日志创建后不允许被业务流程修改。
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @TableName("audit_logs")
-public class AuditLog {
+public class AuditLogEntity {
 
     /**
      * 主键。

@@ -1,7 +1,7 @@
 package com.harness.risk.infrastructure.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.harness.risk.domain.score.RiskScore;
+import com.harness.risk.domain.model.entity.RiskScoreEntity;
 
 /**
  * 风险评分 Mapper
@@ -11,5 +11,5 @@ import com.harness.risk.domain.score.RiskScore;
  * @author harness-agent
  * @since 2026-04-27
  */
-public interface RiskScoreMapper extends BaseMapper<RiskScore> {
+public interface RiskScoreMapper extends BaseMapper<RiskScoreEntity> {
 }

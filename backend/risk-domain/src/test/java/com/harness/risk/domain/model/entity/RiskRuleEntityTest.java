@@ -1,4 +1,4 @@
-package com.harness.risk.domain.rule;
+package com.harness.risk.domain.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -10,12 +10,12 @@ import java.lang.reflect.Field;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * {@link RiskRule} 模型测试
+ * {@link RiskRuleEntity} 模型测试
  *
  * @author harness-agent
  * @since 2026-04-27
  */
-class RiskRuleTest {
+class RiskRuleEntityTest {
 
     /**
      * 验证风控规则模型映射到 risk_rules 表
@@ -24,11 +24,11 @@ class RiskRuleTest {
      */
     @Test
     void mapsRiskRuleToRiskRulesTable() throws NoSuchFieldException {
-        TableName tableName = RiskRule.class.getAnnotation(TableName.class);
-        Field id = RiskRule.class.getDeclaredField("id");
-        Field conditions = RiskRule.class.getDeclaredField("conditions");
-        Field creatorId = RiskRule.class.getDeclaredField("creatorId");
-        Field enabled = RiskRule.class.getDeclaredField("enabled");
+        TableName tableName = RiskRuleEntity.class.getAnnotation(TableName.class);
+        Field id = RiskRuleEntity.class.getDeclaredField("id");
+        Field conditions = RiskRuleEntity.class.getDeclaredField("conditions");
+        Field creatorId = RiskRuleEntity.class.getDeclaredField("creatorId");
+        Field enabled = RiskRuleEntity.class.getDeclaredField("enabled");
 
         assertNotNull(tableName);
         assertEquals("risk_rules", tableName.value());
@@ -43,7 +43,7 @@ class RiskRuleTest {
      */
     @Test
     void defaultsToEnabledWithStandardPriority() {
-        RiskRule riskRule = new RiskRule();
+        RiskRuleEntity riskRule = new RiskRuleEntity();
 
         assertTrue(riskRule.isEnabled());
         assertEquals(100, riskRule.getPriority());

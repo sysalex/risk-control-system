@@ -5,18 +5,18 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.harness.risk.application.dto.CreateUserRequest;
 import com.harness.risk.application.dto.UpdateUserRequest;
 import com.harness.risk.application.dto.UserResponse;
-import com.harness.risk.domain.user.User;
+import com.harness.risk.domain.model.entity.UserEntity;
 
 /**
  * 用户服务接口
  * <p>
- * 继承 {@link IService<User>} 获得基础 CRUD 能力，
+ * 继承 {@link IService<UserEntity>} 获得基础 CRUD 能力，
  * 自定义方法供 Controller 调用。
  *
  * @author harness-agent
  * @since 2026-04-27
  */
-public interface UserService extends IService<User> {
+public interface UserService extends IService<UserEntity> {
 
     /**
      * 获取当前用户信息

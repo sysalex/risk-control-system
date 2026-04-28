@@ -7,7 +7,7 @@ import com.harness.risk.application.dto.CreateScoreRequest;
 import com.harness.risk.application.dto.ScoreResponse;
 import com.harness.risk.application.service.RiskScoreService;
 import com.harness.risk.common.exception.AppException;
-import com.harness.risk.domain.score.RiskScore;
+import com.harness.risk.domain.model.entity.RiskScoreEntity;
 import com.harness.risk.infrastructure.mapper.RiskScoreMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,25 +23,25 @@ import java.util.List;
  * @since 2026-04-28
  */
 @Service
-public class RiskScoreServiceImpl extends ServiceImpl<RiskScoreMapper, RiskScore> implements RiskScoreService {
+public class RiskScoreServiceImpl extends ServiceImpl<RiskScoreMapper, RiskScoreEntity> implements RiskScoreService {
 
     @Override
     @Transactional
     public ScoreResponse create(CreateScoreRequest request) {
         long count = getBaseMapper().selectCount(
-                new LambdaQueryWrapper<RiskScore>().eq(RiskScore::getEventId, request.eventId()));
+                new LambdaQueryWrapper<RiskScoreEntity>().eq(RiskScoreEntity::getEventId, request.getEventId()));
         if (count > 0) {
             throw AppException.conflict("事件已存在评分");
         }
 
-        RiskScore score = new RiskScore();
-        score.setEventId(request.eventId());
-        score.setSubjectType(request.subjectType());
-        score.setSubjectId(request.subjectId());
-        score.setScore(request.score());
-        score.setMaxScore(request.maxScore() == null ? new BigDecimal("100.00") : request.maxScore());
-        score.setDimensions(request.dimensions());
-        score.setEvaluatorId(request.evaluatorId());
+        RiskScoreEntity score = new RiskScoreEntity();
+        score.setEventId(request.getEventId());
+        score.setSubjectType(request.getSubjectType());
+        score.setSubjectId(request.getSubjectId());
+        score.setScore(request.getScore());
+        score.setMaxScore(request.getMaxScore() == null ? new BigDecimal("100.00") : request.getMaxScore());
+        score.setDimensions(request.getDimensions());
+        score.setEvaluatorId(request.getEvaluatorId());
         score.setEvaluatedAt(LocalDateTime.now());
         score.setCreatedAt(LocalDateTime.now());
         score.setUpdatedAt(LocalDateTime.now());
@@ -57,9 +57,9 @@ public class RiskScoreServiceImpl extends ServiceImpl<RiskScoreMapper, RiskScore
 
     @Override
     public Page<ScoreResponse> list(int page, int limit) {
-        Page<RiskScore> result = page(
+        Page<RiskScoreEntity> result = page(
                 new Page<>(page, limit),
-                new LambdaQueryWrapper<RiskScore>().orderByDesc(RiskScore::getEvaluatedAt));
+                new LambdaQueryWrapper<RiskScoreEntity>().orderByDesc(RiskScoreEntity::getEvaluatedAt));
         List<ScoreResponse> records = result.getRecords().stream()
                 .map(this::toResponse)
                 .toList();
@@ -70,11 +70,11 @@ public class RiskScoreServiceImpl extends ServiceImpl<RiskScoreMapper, RiskScore
 
     @Override
     public ScoreResponse getLatestBySubject(String subjectType, String subjectId) {
-        RiskScore score = getBaseMapper().selectOne(
-                new LambdaQueryWrapper<RiskScore>()
-                        .eq(RiskScore::getSubjectType, subjectType)
-                        .eq(RiskScore::getSubjectId, subjectId)
-                        .orderByDesc(RiskScore::getEvaluatedAt)
+        RiskScoreEntity score = getBaseMapper().selectOne(
+                new LambdaQueryWrapper<RiskScoreEntity>()
+                        .eq(RiskScoreEntity::getSubjectType, subjectType)
+                        .eq(RiskScoreEntity::getSubjectId, subjectId)
+                        .orderByDesc(RiskScoreEntity::getEvaluatedAt)
                         .last("LIMIT 1"));
         if (score == null) {
             throw AppException.notFound("Score");
@@ -82,15 +82,15 @@ public class RiskScoreServiceImpl extends ServiceImpl<RiskScoreMapper, RiskScore
         return toResponse(score);
     }
 
-    private RiskScore findOrThrow(Long id) {
-        RiskScore score = super.getById(id);
+    private RiskScoreEntity findOrThrow(Long id) {
+        RiskScoreEntity score = super.getById(id);
         if (score == null) {
             throw AppException.notFound("Score");
         }
         return score;
     }
 
-    private ScoreResponse toResponse(RiskScore score) {
+    private ScoreResponse toResponse(RiskScoreEntity score) {
         return new ScoreResponse(
                 score.getId(),
                 score.getEventId(),

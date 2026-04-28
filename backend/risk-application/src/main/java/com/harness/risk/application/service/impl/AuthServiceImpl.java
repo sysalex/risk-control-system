@@ -11,9 +11,11 @@ import com.harness.risk.application.service.UserService;
 import com.harness.risk.common.exception.AppException;
 import com.harness.risk.common.security.JwtUtil;
 import com.harness.risk.common.security.PasswordEncoder;
-import com.harness.risk.domain.user.User;
-import com.harness.risk.domain.user.UserRole;
+import com.harness.risk.domain.model.entity.UserEntity;
+import com.harness.risk.domain.enums.UserRoleEnums;
 import io.jsonwebtoken.Claims;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -46,17 +48,21 @@ public class AuthServiceImpl implements AuthService {
 
     private final ConcurrentHashMap<String, LoginAttempt> loginAttempts = new ConcurrentHashMap<>();
 
-    private record LoginAttempt(int count, Instant firstFailure) {
+    @Data
+    @AllArgsConstructor
+    private static class LoginAttempt {
+        private int count;
+        private Instant firstFailure;
     }
 
     @Override
     public TokenResponse login(LoginRequest request) {
-        String username = request.username();
+        String username = request.getUsername();
         checkLock(username);
 
-        User user = userService.getOne(
-                new LambdaQueryWrapper<User>().eq(User::getUsername, username));
-        if (user == null || !passwordEncoder.matches(request.password(), user.getHashedPassword())) {
+        UserEntity user = userService.getOne(
+                new LambdaQueryWrapper<UserEntity>().eq(UserEntity::getUsername, username));
+        if (user == null || !passwordEncoder.matches(request.getPassword(), user.getHashedPassword())) {
             recordFailure(username);
             throw new AppException(401, "用户名或密码错误");
         }
@@ -71,19 +77,19 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public UserResponse register(RegisterRequest request) {
         long count = userService.count(
-                new LambdaQueryWrapper<User>()
-                        .eq(User::getUsername, request.username())
+                new LambdaQueryWrapper<UserEntity>()
+                        .eq(UserEntity::getUsername, request.getUsername())
                         .or()
-                        .eq(User::getEmail, request.email()));
+                        .eq(UserEntity::getEmail, request.getEmail()));
         if (count > 0) {
             throw AppException.conflict("用户名或邮箱已存在");
         }
 
-        User user = new User();
-        user.setUsername(request.username());
-        user.setEmail(request.email());
-        user.setHashedPassword(passwordEncoder.encode(request.password()));
-        user.setRole(UserRole.OPERATOR);
+        UserEntity user = new UserEntity();
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setHashedPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(UserRoleEnums.OPERATOR);
         user.setActive(true);
         userService.save(user);
 
@@ -94,13 +100,13 @@ public class AuthServiceImpl implements AuthService {
     public TokenResponse refresh(RefreshRequest request) {
         Claims claims;
         try {
-            claims = jwtUtil.parseToken(request.refreshToken());
+            claims = jwtUtil.parseToken(request.getRefreshToken());
         } catch (Exception e) {
             throw new AppException(401, "Token 已过期或无效");
         }
 
         Long userId = Long.valueOf(claims.getSubject());
-        User user = userService.getById(userId);
+        UserEntity user = userService.getById(userId);
         if (user == null) {
             throw new AppException(401, "用户不存在");
         }
@@ -117,8 +123,8 @@ public class AuthServiceImpl implements AuthService {
 
     private void checkLock(String username) {
         LoginAttempt attempt = loginAttempts.get(username);
-        if (attempt != null && attempt.count >= MAX_LOGIN_ATTEMPTS) {
-            if (Instant.now().isBefore(attempt.firstFailure.plus(LOCK_DURATION))) {
+        if (attempt != null && attempt.getCount() >= MAX_LOGIN_ATTEMPTS) {
+            if (Instant.now().isBefore(attempt.getFirstFailure().plus(LOCK_DURATION))) {
                 throw new AppException(429, "账号已锁定，请 15 分钟后重试");
             }
             clearFailures(username);
@@ -127,10 +133,10 @@ public class AuthServiceImpl implements AuthService {
 
     private void recordFailure(String username) {
         loginAttempts.compute(username, (k, v) -> {
-            if (v == null || Instant.now().isAfter(v.firstFailure.plus(LOCK_DURATION))) {
+            if (v == null || Instant.now().isAfter(v.getFirstFailure().plus(LOCK_DURATION))) {
                 return new LoginAttempt(1, Instant.now());
             }
-            return new LoginAttempt(v.count + 1, v.firstFailure);
+            return new LoginAttempt(v.getCount() + 1, v.getFirstFailure());
         });
     }
 
@@ -138,7 +144,7 @@ public class AuthServiceImpl implements AuthService {
         loginAttempts.remove(username);
     }
 
-    private UserResponse toUserResponse(User user) {
+    private UserResponse toUserResponse(UserEntity user) {
         return new UserResponse(
                 user.getId(),
                 user.getUsername(),

@@ -1,7 +1,7 @@
 package com.harness.risk.infrastructure.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.harness.risk.domain.event.RiskEvent;
+import com.harness.risk.domain.model.entity.RiskEventEntity;
 
 /**
  * 风险事件 Mapper
@@ -11,5 +11,5 @@ import com.harness.risk.domain.event.RiskEvent;
  * @author harness-agent
  * @since 2026-04-27
  */
-public interface RiskEventMapper extends BaseMapper<RiskEvent> {
+public interface RiskEventMapper extends BaseMapper<RiskEventEntity> {
 }

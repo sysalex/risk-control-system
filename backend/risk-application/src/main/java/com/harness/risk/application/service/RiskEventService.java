@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.harness.risk.application.dto.CreateEventRequest;
 import com.harness.risk.application.dto.EventResponse;
 import com.harness.risk.application.dto.UpdateEventRequest;
-import com.harness.risk.domain.event.RiskEventStatus;
-import com.harness.risk.domain.event.RiskLevel;
+import com.harness.risk.domain.enums.RiskEventStatusEnums;
+import com.harness.risk.domain.enums.RiskLevelEnums;
 
 /**
  * 风险事件 Application Service
@@ -40,7 +40,7 @@ public interface RiskEventService {
      * @param status    状态筛选（可选）
      * @return 分页结果
      */
-    Page<EventResponse> list(int page, int limit, RiskLevel riskLevel, RiskEventStatus status);
+    Page<EventResponse> list(int page, int limit, RiskLevelEnums riskLevel, RiskEventStatusEnums status);
 
     /**
      * 更新事件

@@ -1,8 +1,8 @@
 package com.harness.risk.infrastructure.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.harness.risk.domain.decision.Decision;
-import com.harness.risk.domain.score.RiskScore;
+import com.harness.risk.domain.model.entity.DecisionEntity;
+import com.harness.risk.domain.model.entity.RiskScoreEntity;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.ParameterizedType;
@@ -22,7 +22,7 @@ class ScoreDecisionMapperTest {
      */
     @Test
     void riskScoreMapperExtendsBaseMapperForRiskScore() {
-        assertExtendsBaseMapper(RiskScoreMapper.class, RiskScore.class);
+        assertExtendsBaseMapper(RiskScoreMapper.class, RiskScoreEntity.class);
     }
 
     /**
@@ -30,7 +30,7 @@ class ScoreDecisionMapperTest {
      */
     @Test
     void decisionMapperExtendsBaseMapperForDecision() {
-        assertExtendsBaseMapper(DecisionMapper.class, Decision.class);
+        assertExtendsBaseMapper(DecisionMapper.class, DecisionEntity.class);
     }
 
     private void assertExtendsBaseMapper(Class<?> mapperType, Class<?> entityType) {

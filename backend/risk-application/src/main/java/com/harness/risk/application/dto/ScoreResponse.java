@@ -1,5 +1,9 @@
 package com.harness.risk.application.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -9,60 +13,62 @@ import java.time.LocalDateTime;
  * @author harness-agent
  * @since 2026-04-28
  */
-public record ScoreResponse(
-        /**
-         * 评分 ID。
-         */
-        Long id,
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ScoreResponse {
+    /**
+     * 评分 ID。
+     */
+    private Long id;
 
-        /**
-         * 关联事件 ID。
-         */
-        Long eventId,
+    /**
+     * 关联事件 ID。
+     */
+    private Long eventId;
 
-        /**
-         * 主体类型。
-         */
-        String subjectType,
+    /**
+     * 主体类型。
+     */
+    private String subjectType;
 
-        /**
-         * 主体 ID。
-         */
-        String subjectId,
+    /**
+     * 主体 ID。
+     */
+    private String subjectId;
 
-        /**
-         * 风险评分。
-         */
-        BigDecimal score,
+    /**
+     * 风险评分。
+     */
+    private BigDecimal score;
 
-        /**
-         * 满分值。
-         */
-        BigDecimal maxScore,
+    /**
+     * 满分值。
+     */
+    private BigDecimal maxScore;
 
-        /**
-         * 各维度评分明细 JSON。
-         */
-        String dimensions,
+    /**
+     * 各维度评分明细 JSON。
+     */
+    private String dimensions;
 
-        /**
-         * 评估时间。
-         */
-        LocalDateTime evaluatedAt,
+    /**
+     * 评估时间。
+     */
+    private LocalDateTime evaluatedAt;
 
-        /**
-         * 评估人用户 ID。
-         */
-        Long evaluatorId,
+    /**
+     * 评估人用户 ID。
+     */
+    private Long evaluatorId;
 
-        /**
-         * 创建时间。
-         */
-        LocalDateTime createdAt,
+    /**
+     * 创建时间。
+     */
+    private LocalDateTime createdAt;
 
-        /**
-         * 更新时间。
-         */
-        LocalDateTime updatedAt
-) {
+    /**
+     * 更新时间。
+     */
+    private LocalDateTime updatedAt;
 }

@@ -1,8 +1,9 @@
-package com.harness.risk.domain.user;
+package com.harness.risk.domain.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.harness.risk.domain.enums.UserRoleEnums;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
@@ -10,12 +11,12 @@ import java.lang.reflect.Field;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * {@link User} 模型测试
+ * {@link UserEntity} 模型测试
  *
  * @author harness-agent
  * @since 2026-04-27
  */
-class UserTest {
+class UserEntityTest {
 
     /**
      * 验证用户模型映射到 users 表
@@ -24,11 +25,11 @@ class UserTest {
      */
     @Test
     void mapsUserToUsersTable() throws NoSuchFieldException {
-        TableName tableName = User.class.getAnnotation(TableName.class);
-        Field id = User.class.getDeclaredField("id");
-        Field username = User.class.getDeclaredField("username");
-        Field hashedPassword = User.class.getDeclaredField("hashedPassword");
-        Field active = User.class.getDeclaredField("active");
+        TableName tableName = UserEntity.class.getAnnotation(TableName.class);
+        Field id = UserEntity.class.getDeclaredField("id");
+        Field username = UserEntity.class.getDeclaredField("username");
+        Field hashedPassword = UserEntity.class.getDeclaredField("hashedPassword");
+        Field active = UserEntity.class.getDeclaredField("active");
 
         assertNotNull(tableName);
         assertEquals("users", tableName.value());
@@ -43,10 +44,10 @@ class UserTest {
      */
     @Test
     void defaultsToActiveOperator() {
-        User user = new User();
+        UserEntity user = new UserEntity();
 
         assertTrue(user.isActive());
-        assertEquals(UserRole.OPERATOR, user.getRole());
+        assertEquals(UserRoleEnums.OPERATOR, user.getRole());
     }
 
     /**
@@ -54,8 +55,8 @@ class UserTest {
      */
     @Test
     void roleValuesMatchDatabaseValues() {
-        assertEquals("admin", UserRole.ADMIN.getValue());
-        assertEquals("risk_analyst", UserRole.RISK_ANALYST.getValue());
-        assertEquals("operator", UserRole.OPERATOR.getValue());
+        assertEquals("admin", UserRoleEnums.ADMIN.getValue());
+        assertEquals("risk_analyst", UserRoleEnums.RISK_ANALYST.getValue());
+        assertEquals("operator", UserRoleEnums.OPERATOR.getValue());
     }
 }

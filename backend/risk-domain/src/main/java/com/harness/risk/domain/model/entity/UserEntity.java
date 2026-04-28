@@ -1,15 +1,16 @@
-package com.harness.risk.domain.user;
+package com.harness.risk.domain.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.harness.risk.domain.enums.UserRoleEnums;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 /**
- * 用户实体。
+ * 用户实体（UserEntity）。
  * <p>
  * 保存认证和授权所需的基础用户资料；密码字段只存储哈希值。
  *
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @TableName("users")
-public class User {
+public class UserEntity {
 
     /**
      * 主键。
@@ -48,7 +49,7 @@ public class User {
      * 用户角色。
      */
     @TableField("role")
-    private UserRole role = UserRole.OPERATOR;
+    private UserRoleEnums role = UserRoleEnums.OPERATOR;
 
     /**
      * 是否启用。

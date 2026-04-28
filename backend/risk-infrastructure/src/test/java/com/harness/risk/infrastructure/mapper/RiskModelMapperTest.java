@@ -1,8 +1,8 @@
 package com.harness.risk.infrastructure.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.harness.risk.domain.event.RiskEvent;
-import com.harness.risk.domain.rule.RiskRule;
+import com.harness.risk.domain.model.entity.RiskEventEntity;
+import com.harness.risk.domain.model.entity.RiskRuleEntity;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.ParameterizedType;
@@ -22,7 +22,7 @@ class RiskModelMapperTest {
      */
     @Test
     void riskRuleMapperExtendsBaseMapperForRiskRule() {
-        assertExtendsBaseMapper(RiskRuleMapper.class, RiskRule.class);
+        assertExtendsBaseMapper(RiskRuleMapper.class, RiskRuleEntity.class);
     }
 
     /**
@@ -30,7 +30,7 @@ class RiskModelMapperTest {
      */
     @Test
     void riskEventMapperExtendsBaseMapperForRiskEvent() {
-        assertExtendsBaseMapper(RiskEventMapper.class, RiskEvent.class);
+        assertExtendsBaseMapper(RiskEventMapper.class, RiskEventEntity.class);
     }
 
     private void assertExtendsBaseMapper(Class<?> mapperType, Class<?> entityType) {

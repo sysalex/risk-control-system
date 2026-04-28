@@ -1,7 +1,7 @@
 package com.harness.risk.infrastructure.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.harness.risk.domain.user.User;
+import com.harness.risk.domain.model.entity.UserEntity;
 
 /**
  * 用户 Mapper
@@ -11,5 +11,5 @@ import com.harness.risk.domain.user.User;
  * @author harness-agent
  * @since 2026-04-27
  */
-public interface UserMapper extends BaseMapper<User> {
+public interface UserMapper extends BaseMapper<UserEntity> {
 }

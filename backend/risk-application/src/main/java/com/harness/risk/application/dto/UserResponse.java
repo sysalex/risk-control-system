@@ -1,6 +1,9 @@
 package com.harness.risk.application.dto;
 
-import com.harness.risk.domain.user.UserRole;
+import com.harness.risk.domain.enums.UserRoleEnums;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -10,35 +13,37 @@ import java.time.LocalDateTime;
  * @author harness-agent
  * @since 2026-04-27
  */
-public record UserResponse(
-        /**
-         * 用户 ID。
-         */
-        Long id,
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserResponse {
+    /**
+     * 用户 ID。
+     */
+    private Long id;
 
-        /**
-         * 用户名。
-         */
-        String username,
+    /**
+     * 用户名。
+     */
+    private String username;
 
-        /**
-         * 邮箱。
-         */
-        String email,
+    /**
+     * 邮箱。
+     */
+    private String email;
 
-        /**
-         * 用户角色。
-         */
-        UserRole role,
+    /**
+     * 用户角色。
+     */
+    private UserRoleEnums role;
 
-        /**
-         * 是否启用。
-         */
-        boolean active,
+    /**
+     * 是否启用。
+     */
+    private boolean active;
 
-        /**
-         * 创建时间。
-         */
-        LocalDateTime createdAt
-) {
+    /**
+     * 创建时间。
+     */
+    private LocalDateTime createdAt;
 }

@@ -1,7 +1,7 @@
 package com.harness.risk.infrastructure.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.harness.risk.domain.audit.AuditLog;
+import com.harness.risk.domain.model.entity.AuditLogEntity;
 
 /**
  * 审计日志 Mapper
@@ -11,5 +11,5 @@ import com.harness.risk.domain.audit.AuditLog;
  * @author harness-agent
  * @since 2026-04-27
  */
-public interface AuditLogMapper extends BaseMapper<AuditLog> {
+public interface AuditLogMapper extends BaseMapper<AuditLogEntity> {
 }

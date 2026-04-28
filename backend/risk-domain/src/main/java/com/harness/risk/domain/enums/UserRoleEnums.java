@@ -1,4 +1,4 @@
-package com.harness.risk.domain.user;
+package com.harness.risk.domain.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Getter
 @RequiredArgsConstructor
-public enum UserRole {
+public enum UserRoleEnums {
 
     /** 管理员 */
     ADMIN("admin"),

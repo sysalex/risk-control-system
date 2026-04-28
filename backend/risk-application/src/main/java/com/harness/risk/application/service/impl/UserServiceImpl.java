@@ -9,7 +9,7 @@ import com.harness.risk.application.dto.UserResponse;
 import com.harness.risk.application.service.UserService;
 import com.harness.risk.common.exception.AppException;
 import com.harness.risk.common.security.PasswordEncoder;
-import com.harness.risk.domain.user.User;
+import com.harness.risk.domain.model.entity.UserEntity;
 import com.harness.risk.infrastructure.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,20 +27,20 @@ import java.util.List;
  * @since 2026-04-27
  */
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
     public UserResponse me(Long userId) {
-        User user = findOrThrow(userId);
+        UserEntity user = findOrThrow(userId);
         return toResponse(user);
     }
 
     @Override
     public Page<UserResponse> list(int page, int limit) {
-        Page<User> result = page(new Page<>(page, limit));
+        Page<UserEntity> result = page(new Page<>(page, limit));
         List<UserResponse> records = result.getRecords().stream()
                 .map(this::toResponse)
                 .toList();
@@ -53,19 +53,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Transactional
     public UserResponse create(CreateUserRequest request) {
         long count = count(
-                new LambdaQueryWrapper<User>()
-                        .eq(User::getUsername, request.username())
+                new LambdaQueryWrapper<UserEntity>()
+                        .eq(UserEntity::getUsername, request.getUsername())
                         .or()
-                        .eq(User::getEmail, request.email()));
+                        .eq(UserEntity::getEmail, request.getEmail()));
         if (count > 0) {
             throw AppException.conflict("用户名或邮箱已存在");
         }
 
-        User user = new User();
-        user.setUsername(request.username());
-        user.setEmail(request.email());
-        user.setHashedPassword(passwordEncoder.encode(request.password()));
-        user.setRole(request.role());
+        UserEntity user = new UserEntity();
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setHashedPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(request.getRole());
         user.setActive(true);
         save(user);
 
@@ -75,15 +75,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     @Transactional
     public UserResponse update(Long id, UpdateUserRequest request) {
-        User user = findOrThrow(id);
-        if (request.email() != null) {
-            user.setEmail(request.email());
+        UserEntity user = findOrThrow(id);
+        if (request.getEmail() != null) {
+            user.setEmail(request.getEmail());
         }
-        if (request.role() != null) {
-            user.setRole(request.role());
+        if (request.getRole() != null) {
+            user.setRole(request.getRole());
         }
-        if (request.active() != null) {
-            user.setActive(request.active());
+        if (request.getActive() != null) {
+            user.setActive(request.getActive());
         }
         updateById(user);
         return toResponse(user);
@@ -96,15 +96,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         getBaseMapper().deleteById(id);
     }
 
-    private User findOrThrow(Long id) {
-        User user = getById(id);
+    private UserEntity findOrThrow(Long id) {
+        UserEntity user = getById(id);
         if (user == null) {
             throw AppException.notFound("User");
         }
         return user;
     }
 
-    private UserResponse toResponse(User user) {
+    private UserResponse toResponse(UserEntity user) {
         return new UserResponse(
                 user.getId(),
                 user.getUsername(),

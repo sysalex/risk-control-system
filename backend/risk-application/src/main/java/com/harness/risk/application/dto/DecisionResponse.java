@@ -1,6 +1,9 @@
 package com.harness.risk.application.dto;
 
-import com.harness.risk.domain.decision.DecisionType;
+import com.harness.risk.domain.enums.DecisionTypeEnums;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -10,50 +13,52 @@ import java.time.LocalDateTime;
  * @author harness-agent
  * @since 2026-04-28
  */
-public record DecisionResponse(
-        /**
-         * 决策 ID。
-         */
-        Long id,
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class DecisionResponse {
+    /**
+     * 决策 ID。
+     */
+    private Long id;
 
-        /**
-         * 关联事件 ID。
-         */
-        Long eventId,
+    /**
+     * 关联事件 ID。
+     */
+    private Long eventId;
 
-        /**
-         * 决策类型。
-         */
-        DecisionType decisionType,
+    /**
+     * 决策类型。
+     */
+    private DecisionTypeEnums decisionType;
 
-        /**
-         * 决策原因。
-         */
-        String reason,
+    /**
+     * 决策原因。
+     */
+    private String reason;
 
-        /**
-         * 备注。
-         */
-        String notes,
+    /**
+     * 备注。
+     */
+    private String notes;
 
-        /**
-         * 决策人用户 ID。
-         */
-        Long decidedBy,
+    /**
+     * 决策人用户 ID。
+     */
+    private Long decidedBy;
 
-        /**
-         * 决策时间。
-         */
-        LocalDateTime decidedAt,
+    /**
+     * 决策时间。
+     */
+    private LocalDateTime decidedAt;
 
-        /**
-         * 创建时间。
-         */
-        LocalDateTime createdAt,
+    /**
+     * 创建时间。
+     */
+    private LocalDateTime createdAt;
 
-        /**
-         * 更新时间。
-         */
-        LocalDateTime updatedAt
-) {
+    /**
+     * 更新时间。
+     */
+    private LocalDateTime updatedAt;
 }

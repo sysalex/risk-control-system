@@ -8,7 +8,7 @@ import com.harness.risk.application.dto.RuleResponse;
 import com.harness.risk.application.dto.UpdateRuleRequest;
 import com.harness.risk.application.service.RiskRuleService;
 import com.harness.risk.common.exception.AppException;
-import com.harness.risk.domain.rule.RiskRule;
+import com.harness.risk.domain.model.entity.RiskRuleEntity;
 import com.harness.risk.infrastructure.mapper.RiskRuleMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,23 +26,23 @@ import java.util.List;
  * @since 2026-04-27
  */
 @Service
-public class RiskRuleServiceImpl extends ServiceImpl<RiskRuleMapper, RiskRule> implements RiskRuleService {
+public class RiskRuleServiceImpl extends ServiceImpl<RiskRuleMapper, RiskRuleEntity> implements RiskRuleService {
 
     @Override
     @Transactional
     public RuleResponse create(CreateRuleRequest request, Long creatorId) {
         long count = getBaseMapper().selectCount(
-                new LambdaQueryWrapper<RiskRule>().eq(RiskRule::getName, request.name()));
+                new LambdaQueryWrapper<RiskRuleEntity>().eq(RiskRuleEntity::getName, request.getName()));
         if (count > 0) {
             throw AppException.conflict("规则名称已存在");
         }
 
-        RiskRule rule = new RiskRule();
-        rule.setName(request.name());
-        rule.setDescription(request.description());
-        rule.setConditions(request.conditions());
-        rule.setActions(request.actions());
-        rule.setPriority(request.priority());
+        RiskRuleEntity rule = new RiskRuleEntity();
+        rule.setName(request.getName());
+        rule.setDescription(request.getDescription());
+        rule.setConditions(request.getConditions());
+        rule.setActions(request.getActions());
+        rule.setPriority(request.getPriority());
         rule.setEnabled(true);
         rule.setCreatorId(creatorId);
         rule.setCreatedAt(LocalDateTime.now());
@@ -54,17 +54,17 @@ public class RiskRuleServiceImpl extends ServiceImpl<RiskRuleMapper, RiskRule> i
 
     @Override
     public RuleResponse getById(Long id) {
-        RiskRule rule = findOrThrow(id);
+        RiskRuleEntity rule = findOrThrow(id);
         return toResponse(rule);
     }
 
     @Override
     public Page<RuleResponse> list(int page, int limit) {
-        Page<RiskRule> result = page(
+        Page<RiskRuleEntity> result = page(
                 new Page<>(page, limit),
-                new LambdaQueryWrapper<RiskRule>()
-                        .orderByAsc(RiskRule::getPriority)
-                        .orderByDesc(RiskRule::getCreatedAt));
+                new LambdaQueryWrapper<RiskRuleEntity>()
+                        .orderByAsc(RiskRuleEntity::getPriority)
+                        .orderByDesc(RiskRuleEntity::getCreatedAt));
         List<RuleResponse> records = result.getRecords().stream()
                 .map(this::toResponse)
                 .toList();
@@ -76,27 +76,27 @@ public class RiskRuleServiceImpl extends ServiceImpl<RiskRuleMapper, RiskRule> i
     @Override
     @Transactional
     public RuleResponse update(Long id, UpdateRuleRequest request) {
-        RiskRule rule = findOrThrow(id);
+        RiskRuleEntity rule = findOrThrow(id);
 
-        if (request.name() != null && !request.name().equals(rule.getName())) {
+        if (request.getName() != null && !request.getName().equals(rule.getName())) {
             long count = getBaseMapper().selectCount(
-                    new LambdaQueryWrapper<RiskRule>().eq(RiskRule::getName, request.name()));
+                    new LambdaQueryWrapper<RiskRuleEntity>().eq(RiskRuleEntity::getName, request.getName()));
             if (count > 0) {
                 throw AppException.conflict("规则名称已存在");
             }
-            rule.setName(request.name());
+            rule.setName(request.getName());
         }
-        if (request.description() != null) {
-            rule.setDescription(request.description());
+        if (request.getDescription() != null) {
+            rule.setDescription(request.getDescription());
         }
-        if (request.conditions() != null) {
-            rule.setConditions(request.conditions());
+        if (request.getConditions() != null) {
+            rule.setConditions(request.getConditions());
         }
-        if (request.actions() != null) {
-            rule.setActions(request.actions());
+        if (request.getActions() != null) {
+            rule.setActions(request.getActions());
         }
-        if (request.priority() != null) {
-            rule.setPriority(request.priority());
+        if (request.getPriority() != null) {
+            rule.setPriority(request.getPriority());
         }
         rule.setUpdatedAt(LocalDateTime.now());
         updateById(rule);
@@ -114,7 +114,7 @@ public class RiskRuleServiceImpl extends ServiceImpl<RiskRuleMapper, RiskRule> i
     @Override
     @Transactional
     public RuleResponse enableRule(Long id) {
-        RiskRule rule = findOrThrow(id);
+        RiskRuleEntity rule = findOrThrow(id);
         rule.setEnabled(true);
         rule.setUpdatedAt(LocalDateTime.now());
         updateById(rule);
@@ -124,22 +124,22 @@ public class RiskRuleServiceImpl extends ServiceImpl<RiskRuleMapper, RiskRule> i
     @Override
     @Transactional
     public RuleResponse disableRule(Long id) {
-        RiskRule rule = findOrThrow(id);
+        RiskRuleEntity rule = findOrThrow(id);
         rule.setEnabled(false);
         rule.setUpdatedAt(LocalDateTime.now());
         updateById(rule);
         return toResponse(rule);
     }
 
-    private RiskRule findOrThrow(Long id) {
-        RiskRule rule = super.getById(id);
+    private RiskRuleEntity findOrThrow(Long id) {
+        RiskRuleEntity rule = super.getById(id);
         if (rule == null) {
             throw AppException.notFound("Rule");
         }
         return rule;
     }
 
-    private RuleResponse toResponse(RiskRule rule) {
+    private RuleResponse toResponse(RiskRuleEntity rule) {
         return new RuleResponse(
                 rule.getId(),
                 rule.getName(),

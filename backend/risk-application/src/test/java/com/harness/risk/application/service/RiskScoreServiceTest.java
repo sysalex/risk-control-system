@@ -5,7 +5,7 @@ import com.harness.risk.application.dto.CreateScoreRequest;
 import com.harness.risk.application.dto.ScoreResponse;
 import com.harness.risk.application.service.impl.RiskScoreServiceImpl;
 import com.harness.risk.common.exception.AppException;
-import com.harness.risk.domain.score.RiskScore;
+import com.harness.risk.domain.model.entity.RiskScoreEntity;
 import com.harness.risk.infrastructure.mapper.RiskScoreMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,8 +43,8 @@ class RiskScoreServiceTest {
         ReflectionTestUtils.setField(riskScoreService, "baseMapper", riskScoreMapper);
     }
 
-    private RiskScore sampleScore() {
-        RiskScore score = new RiskScore();
+    private RiskScoreEntity sampleScore() {
+        RiskScoreEntity score = new RiskScoreEntity();
         score.setId(1L);
         score.setEventId(10L);
         score.setSubjectType("user");
@@ -65,9 +65,9 @@ class RiskScoreServiceTest {
                 10L, "user", "user-123", new BigDecimal("86.50"), new BigDecimal("100.00"),
                 "{\"behavior\":40}", 2L));
 
-        assertEquals(10L, resp.eventId());
-        assertEquals(new BigDecimal("86.50"), resp.score());
-        verify(riskScoreMapper).insert(any(RiskScore.class));
+        assertEquals(10L, resp.getEventId());
+        assertEquals(new BigDecimal("86.50"), resp.getScore());
+        verify(riskScoreMapper).insert(any(RiskScoreEntity.class));
     }
 
     @Test
@@ -86,8 +86,8 @@ class RiskScoreServiceTest {
 
         ScoreResponse resp = riskScoreService.getById(1L);
 
-        assertEquals("user-123", resp.subjectId());
-        assertEquals(new BigDecimal("86.50"), resp.score());
+        assertEquals("user-123", resp.getSubjectId());
+        assertEquals(new BigDecimal("86.50"), resp.getScore());
     }
 
     @Test
@@ -100,7 +100,7 @@ class RiskScoreServiceTest {
 
     @Test
     void listReturnsPagedResults() {
-        Page<RiskScore> page = new Page<>(1, 20);
+        Page<RiskScoreEntity> page = new Page<>(1, 20);
         page.setRecords(List.of(sampleScore()));
         page.setTotal(1);
         when(riskScoreMapper.selectPage(any(), any())).thenReturn(page);
@@ -108,7 +108,7 @@ class RiskScoreServiceTest {
         Page<ScoreResponse> result = riskScoreService.list(1, 20);
 
         assertEquals(1, result.getTotal());
-        assertEquals("user-123", result.getRecords().get(0).subjectId());
+        assertEquals("user-123", result.getRecords().get(0).getSubjectId());
     }
 
     @Test
@@ -117,8 +117,8 @@ class RiskScoreServiceTest {
 
         ScoreResponse resp = riskScoreService.getLatestBySubject("user", "user-123");
 
-        assertEquals(10L, resp.eventId());
-        assertEquals("user", resp.subjectType());
+        assertEquals(10L, resp.getEventId());
+        assertEquals("user", resp.getSubjectType());
     }
 
     @Test

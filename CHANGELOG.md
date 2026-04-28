@@ -9,6 +9,10 @@
 ## [Unreleased]
 
 ### Docs
+- 补充 Java 命名规范：
+  - DTO 统一为 `class + @Data + @NoArgsConstructor + @AllArgsConstructor`，字段使用块级 Javadoc
+  - Entity 统一放在 `domain.model.entity` 包下，命名格式为 `XxxEntity`
+  - Enum 统一放在 `domain.enums` 包下，命名格式为 `XxxEnums`
 - 深度优化 Harness Engineering 规范可信度：
   - 区分 Claude Code Hook 自动化与 Codex/PowerShell 手动验证路径
   - 将 Java checkstyle/spotless 从“已自动执行”修正为“尚未配置的目标自动化”
@@ -121,6 +125,10 @@
 - 架构决策记录：docs/adr/decisions.md（技术栈选型、分层架构、认证方案、审计日志不可变）
 
 ### Changed
+- 统一后端命名结构：
+  - 领域实体迁移到 `com.harness.risk.domain.model.entity` 并改名为 `XxxEntity`
+  - 枚举迁移到 `com.harness.risk.domain.enums` 并改名为 `XxxEnums`
+  - DTO 从 record 调整为 Lombok JavaBean 风格，字段注释与实体字段格式保持一致
 - **后端技术栈切换**：FastAPI + PostgreSQL + SQLAlchemy → Spring Boot 3 + MySQL + MyBatis-Plus
 - **后端语言**：Python 3.12 → Java 17
 - **构建工具**：uv/pip → Maven 3.9+

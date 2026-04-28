@@ -8,7 +8,7 @@ import com.harness.risk.application.dto.DecisionResponse;
 import com.harness.risk.application.dto.UpdateDecisionRequest;
 import com.harness.risk.application.service.DecisionService;
 import com.harness.risk.common.exception.AppException;
-import com.harness.risk.domain.decision.Decision;
+import com.harness.risk.domain.model.entity.DecisionEntity;
 import com.harness.risk.infrastructure.mapper.DecisionMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,23 +23,23 @@ import java.util.List;
  * @since 2026-04-28
  */
 @Service
-public class DecisionServiceImpl extends ServiceImpl<DecisionMapper, Decision> implements DecisionService {
+public class DecisionServiceImpl extends ServiceImpl<DecisionMapper, DecisionEntity> implements DecisionService {
 
     @Override
     @Transactional
     public DecisionResponse create(CreateDecisionRequest request) {
         long count = getBaseMapper().selectCount(
-                new LambdaQueryWrapper<Decision>().eq(Decision::getEventId, request.eventId()));
+                new LambdaQueryWrapper<DecisionEntity>().eq(DecisionEntity::getEventId, request.getEventId()));
         if (count > 0) {
             throw AppException.conflict("事件已存在决策");
         }
 
-        Decision decision = new Decision();
-        decision.setEventId(request.eventId());
-        decision.setDecisionType(request.decisionType());
-        decision.setReason(request.reason());
-        decision.setNotes(request.notes());
-        decision.setDecidedBy(request.decidedBy());
+        DecisionEntity decision = new DecisionEntity();
+        decision.setEventId(request.getEventId());
+        decision.setDecisionType(request.getDecisionType());
+        decision.setReason(request.getReason());
+        decision.setNotes(request.getNotes());
+        decision.setDecidedBy(request.getDecidedBy());
         decision.setDecidedAt(LocalDateTime.now());
         decision.setCreatedAt(LocalDateTime.now());
         decision.setUpdatedAt(LocalDateTime.now());
@@ -55,9 +55,9 @@ public class DecisionServiceImpl extends ServiceImpl<DecisionMapper, Decision> i
 
     @Override
     public Page<DecisionResponse> list(int page, int limit) {
-        Page<Decision> result = page(
+        Page<DecisionEntity> result = page(
                 new Page<>(page, limit),
-                new LambdaQueryWrapper<Decision>().orderByDesc(Decision::getDecidedAt));
+                new LambdaQueryWrapper<DecisionEntity>().orderByDesc(DecisionEntity::getDecidedAt));
         List<DecisionResponse> records = result.getRecords().stream()
                 .map(this::toResponse)
                 .toList();
@@ -69,15 +69,15 @@ public class DecisionServiceImpl extends ServiceImpl<DecisionMapper, Decision> i
     @Override
     @Transactional
     public DecisionResponse update(Long id, UpdateDecisionRequest request) {
-        Decision decision = findOrThrow(id);
-        if (request.decisionType() != null) {
-            decision.setDecisionType(request.decisionType());
+        DecisionEntity decision = findOrThrow(id);
+        if (request.getDecisionType() != null) {
+            decision.setDecisionType(request.getDecisionType());
         }
-        if (request.reason() != null) {
-            decision.setReason(request.reason());
+        if (request.getReason() != null) {
+            decision.setReason(request.getReason());
         }
-        if (request.notes() != null) {
-            decision.setNotes(request.notes());
+        if (request.getNotes() != null) {
+            decision.setNotes(request.getNotes());
         }
         decision.setUpdatedAt(LocalDateTime.now());
         updateById(decision);
@@ -85,15 +85,15 @@ public class DecisionServiceImpl extends ServiceImpl<DecisionMapper, Decision> i
         return toResponse(decision);
     }
 
-    private Decision findOrThrow(Long id) {
-        Decision decision = super.getById(id);
+    private DecisionEntity findOrThrow(Long id) {
+        DecisionEntity decision = super.getById(id);
         if (decision == null) {
             throw AppException.notFound("Decision");
         }
         return decision;
     }
 
-    private DecisionResponse toResponse(Decision decision) {
+    private DecisionResponse toResponse(DecisionEntity decision) {
         return new DecisionResponse(
                 decision.getId(),
                 decision.getEventId(),

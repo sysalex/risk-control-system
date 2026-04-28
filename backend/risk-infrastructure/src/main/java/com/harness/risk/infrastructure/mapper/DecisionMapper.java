@@ -1,7 +1,7 @@
 package com.harness.risk.infrastructure.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.harness.risk.domain.decision.Decision;
+import com.harness.risk.domain.model.entity.DecisionEntity;
 
 /**
  * 决策记录 Mapper
@@ -11,5 +11,5 @@ import com.harness.risk.domain.decision.Decision;
  * @author harness-agent
  * @since 2026-04-27
  */
-public interface DecisionMapper extends BaseMapper<Decision> {
+public interface DecisionMapper extends BaseMapper<DecisionEntity> {
 }

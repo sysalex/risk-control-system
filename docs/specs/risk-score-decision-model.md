@@ -55,7 +55,7 @@
 ## 验收标准
 
 - `RiskScore`、`Decision` 包含 MyBatis-Plus 表名和字段映射。
-- `DecisionType` 能输出数据库存储值。
+- `DecisionTypeEnums` 能输出数据库存储值。
 - `RiskScoreMapper`、`DecisionMapper` 继承对应实体的 `BaseMapper`。
 - Flyway V3 迁移文件创建两张表、外键、唯一约束和查询索引。
 - 后端 `mvn test` 通过，最终 `scripts/check.ps1` 通过。

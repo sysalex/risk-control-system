@@ -1,7 +1,7 @@
 package com.harness.risk.infrastructure.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.harness.risk.domain.user.User;
+import com.harness.risk.domain.model.entity.UserEntity;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.ParameterizedType;
@@ -26,6 +26,6 @@ class UserMapperTest {
 
         assertTrue(BaseMapper.class.isAssignableFrom(UserMapper.class));
         assertInstanceOf(ParameterizedType.class, genericInterface);
-        assertEquals(User.class, ((ParameterizedType) genericInterface).getActualTypeArguments()[0]);
+        assertEquals(UserEntity.class, ((ParameterizedType) genericInterface).getActualTypeArguments()[0]);
     }
 }

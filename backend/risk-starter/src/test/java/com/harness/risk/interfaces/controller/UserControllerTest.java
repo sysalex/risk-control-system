@@ -7,7 +7,7 @@ import com.harness.risk.application.dto.UpdateUserRequest;
 import com.harness.risk.application.dto.UserResponse;
 import com.harness.risk.application.service.UserService;
 import com.harness.risk.common.security.JwtUtil;
-import com.harness.risk.domain.user.UserRole;
+import com.harness.risk.domain.enums.UserRoleEnums;
 import com.harness.risk.starter.RiskApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +56,7 @@ class UserControllerTest {
     }
 
     private UserResponse sampleUser() {
-        return new UserResponse(1L, "alice", "alice@test.com", UserRole.ADMIN, true, LocalDateTime.now());
+        return new UserResponse(1L, "alice", "alice@test.com", UserRoleEnums.ADMIN, true, LocalDateTime.now());
     }
 
     @Test
@@ -90,7 +90,7 @@ class UserControllerTest {
                         .header("Authorization", adminToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                new CreateUserRequest("alice", "alice@test.com", "password123", UserRole.ADMIN))))
+                                new CreateUserRequest("alice", "alice@test.com", "password123", UserRoleEnums.ADMIN))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.username").value("alice"));
     }
@@ -103,7 +103,7 @@ class UserControllerTest {
                         .header("Authorization", adminToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                new UpdateUserRequest("new@test.com", UserRole.RISK_ANALYST, false))))
+                                new UpdateUserRequest("new@test.com", UserRoleEnums.RISK_ANALYST, false))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.username").value("alice"));
     }

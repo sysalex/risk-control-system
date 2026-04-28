@@ -1,7 +1,7 @@
 package com.harness.risk.infrastructure.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.harness.risk.domain.rule.RiskRule;
+import com.harness.risk.domain.model.entity.RiskRuleEntity;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.ParameterizedType;
@@ -26,6 +26,6 @@ class RiskRuleMapperTest {
 
         assertTrue(BaseMapper.class.isAssignableFrom(RiskRuleMapper.class));
         assertInstanceOf(ParameterizedType.class, genericInterface);
-        assertEquals(RiskRule.class, ((ParameterizedType) genericInterface).getActualTypeArguments()[0]);
+        assertEquals(RiskRuleEntity.class, ((ParameterizedType) genericInterface).getActualTypeArguments()[0]);
     }
 }

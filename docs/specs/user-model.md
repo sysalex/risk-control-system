@@ -34,7 +34,7 @@
 ## 验收标准
 
 - `User` 模型包含 MyBatis-Plus 表名和字段映射。
-- `UserRole` 能输出数据库存储值。
+- `UserRoleEnums` 能输出数据库存储值。
 - `UserMapper` 继承 `BaseMapper<User>`。
 - Flyway 迁移文件创建 `users` 表、唯一索引和字段注释。
 - 后端 `mvn test` 通过。

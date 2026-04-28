@@ -1,15 +1,16 @@
-package com.harness.risk.domain.decision;
+package com.harness.risk.domain.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.harness.risk.domain.enums.DecisionTypeEnums;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 /**
- * 决策记录实体。
+ * 决策记录实体（DecisionEntity）。
  * <p>
  * 同一风险事件只能生成一条最终决策，后续审计模块负责记录变更轨迹。
  *
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @TableName("decisions")
-public class Decision {
+public class DecisionEntity {
 
     /**
      * 主键。
@@ -36,7 +37,7 @@ public class Decision {
      * 决策类型。
      */
     @TableField("decision_type")
-    private DecisionType decisionType;
+    private DecisionTypeEnums decisionType;
 
     /**
      * 决策原因。

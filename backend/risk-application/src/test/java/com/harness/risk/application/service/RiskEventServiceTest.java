@@ -7,9 +7,9 @@ import com.harness.risk.application.dto.EventResponse;
 import com.harness.risk.application.dto.UpdateEventRequest;
 import com.harness.risk.application.service.impl.RiskEventServiceImpl;
 import com.harness.risk.common.exception.AppException;
-import com.harness.risk.domain.event.RiskEvent;
-import com.harness.risk.domain.event.RiskEventStatus;
-import com.harness.risk.domain.event.RiskLevel;
+import com.harness.risk.domain.enums.RiskEventStatusEnums;
+import com.harness.risk.domain.enums.RiskLevelEnums;
+import com.harness.risk.domain.model.entity.RiskEventEntity;
 import com.harness.risk.infrastructure.mapper.RiskEventMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,14 +46,14 @@ class RiskEventServiceTest {
         ReflectionTestUtils.setField(riskEventService, "baseMapper", riskEventMapper);
     }
 
-    private RiskEvent sampleEvent() {
-        RiskEvent event = new RiskEvent();
+    private RiskEventEntity sampleEvent() {
+        RiskEventEntity event = new RiskEventEntity();
         event.setId(1L);
         event.setRuleId(10L);
         event.setSubjectType("user");
         event.setSubjectId("user-123");
-        event.setRiskLevel(RiskLevel.HIGH);
-        event.setStatus(RiskEventStatus.PENDING);
+        event.setRiskLevel(RiskLevelEnums.HIGH);
+        event.setStatus(RiskEventStatusEnums.PENDING);
         event.setDescription("大额交易异常");
         return event;
     }
@@ -63,12 +63,12 @@ class RiskEventServiceTest {
         when(riskEventMapper.insert(any())).thenReturn(1);
 
         EventResponse resp = riskEventService.create(
-                new CreateEventRequest(10L, "user", "user-123", RiskLevel.HIGH, "大额交易异常"));
+                new CreateEventRequest(10L, "user", "user-123", RiskLevelEnums.HIGH, "大额交易异常"));
 
-        assertEquals(10L, resp.ruleId());
-        assertEquals(RiskLevel.HIGH, resp.riskLevel());
-        assertEquals(RiskEventStatus.PENDING, resp.status());
-        verify(riskEventMapper).insert(any(RiskEvent.class));
+        assertEquals(10L, resp.getRuleId());
+        assertEquals(RiskLevelEnums.HIGH, resp.getRiskLevel());
+        assertEquals(RiskEventStatusEnums.PENDING, resp.getStatus());
+        verify(riskEventMapper).insert(any(RiskEventEntity.class));
     }
 
     @Test
@@ -77,8 +77,8 @@ class RiskEventServiceTest {
 
         EventResponse resp = riskEventService.getById(1L);
 
-        assertEquals("大额交易异常", resp.description());
-        assertEquals(RiskEventStatus.PENDING, resp.status());
+        assertEquals("大额交易异常", resp.getDescription());
+        assertEquals(RiskEventStatusEnums.PENDING, resp.getStatus());
     }
 
     @Test
@@ -91,7 +91,7 @@ class RiskEventServiceTest {
 
     @Test
     void listReturnsPagedResults() {
-        Page<RiskEvent> page = new Page<>(1, 20);
+        Page<RiskEventEntity> page = new Page<>(1, 20);
         page.setRecords(List.of(sampleEvent()));
         page.setTotal(1);
         when(riskEventMapper.selectPage(any(), any())).thenReturn(page);
@@ -99,34 +99,34 @@ class RiskEventServiceTest {
         Page<EventResponse> result = riskEventService.list(1, 20, null, null);
 
         assertEquals(1, result.getTotal());
-        assertEquals("大额交易异常", result.getRecords().get(0).description());
+        assertEquals("大额交易异常", result.getRecords().get(0).getDescription());
     }
 
     @Test
     void listWithFiltersReturnsFilteredResults() {
-        Page<RiskEvent> page = new Page<>(1, 20);
+        Page<RiskEventEntity> page = new Page<>(1, 20);
         page.setRecords(List.of(sampleEvent()));
         page.setTotal(1);
         when(riskEventMapper.selectPage(any(), any())).thenReturn(page);
 
-        Page<EventResponse> result = riskEventService.list(1, 20, RiskLevel.HIGH, RiskEventStatus.PENDING);
+        Page<EventResponse> result = riskEventService.list(1, 20, RiskLevelEnums.HIGH, RiskEventStatusEnums.PENDING);
 
         assertEquals(1, result.getTotal());
-        ArgumentCaptor<LambdaQueryWrapper<RiskEvent>> wrapperCaptor = ArgumentCaptor.forClass(LambdaQueryWrapper.class);
+        ArgumentCaptor<LambdaQueryWrapper<RiskEventEntity>> wrapperCaptor = ArgumentCaptor.forClass(LambdaQueryWrapper.class);
         verify(riskEventMapper).selectPage(any(), wrapperCaptor.capture());
     }
 
     @Test
     void updateSuccessReturnsUpdatedEvent() {
-        RiskEvent event = sampleEvent();
+        RiskEventEntity event = sampleEvent();
         when(riskEventMapper.selectById(1L)).thenReturn(event);
 
         EventResponse resp = riskEventService.update(1L,
-                new UpdateEventRequest(RiskEventStatus.INVESTIGATING, "补充说明"));
+                new UpdateEventRequest(RiskEventStatusEnums.INVESTIGATING, "补充说明"));
 
-        assertEquals(RiskEventStatus.INVESTIGATING, resp.status());
-        assertEquals("补充说明", resp.description());
-        verify(riskEventMapper).updateById(any(RiskEvent.class));
+        assertEquals(RiskEventStatusEnums.INVESTIGATING, resp.getStatus());
+        assertEquals("补充说明", resp.getDescription());
+        verify(riskEventMapper).updateById(any(RiskEventEntity.class));
     }
 
     @Test
@@ -134,34 +134,34 @@ class RiskEventServiceTest {
         when(riskEventMapper.selectById(1L)).thenReturn(null);
 
         AppException e = assertThrows(AppException.class,
-                () -> riskEventService.update(1L, new UpdateEventRequest(RiskEventStatus.INVESTIGATING, null)));
+                () -> riskEventService.update(1L, new UpdateEventRequest(RiskEventStatusEnums.INVESTIGATING, null)));
         assertEquals(404, e.getCode());
     }
 
     @Test
     void resolveEventSetsResolvedStatus() {
-        RiskEvent event = sampleEvent();
+        RiskEventEntity event = sampleEvent();
         when(riskEventMapper.selectById(1L)).thenReturn(event);
 
         EventResponse resp = riskEventService.resolveEvent(1L, 2L);
 
-        assertEquals(RiskEventStatus.RESOLVED, resp.status());
-        assertEquals(2L, resp.resolvedBy());
-        assertNotNull(resp.resolvedAt());
-        verify(riskEventMapper).updateById(any(RiskEvent.class));
+        assertEquals(RiskEventStatusEnums.RESOLVED, resp.getStatus());
+        assertEquals(2L, resp.getResolvedBy());
+        assertNotNull(resp.getResolvedAt());
+        verify(riskEventMapper).updateById(any(RiskEventEntity.class));
     }
 
     @Test
     void resolveAlreadyResolvedEventIsIdempotent() {
-        RiskEvent event = sampleEvent();
-        event.setStatus(RiskEventStatus.RESOLVED);
+        RiskEventEntity event = sampleEvent();
+        event.setStatus(RiskEventStatusEnums.RESOLVED);
         event.setResolvedBy(3L);
         when(riskEventMapper.selectById(1L)).thenReturn(event);
 
         EventResponse resp = riskEventService.resolveEvent(1L, 2L);
 
-        assertEquals(RiskEventStatus.RESOLVED, resp.status());
-        assertEquals(3L, resp.resolvedBy());
+        assertEquals(RiskEventStatusEnums.RESOLVED, resp.getStatus());
+        assertEquals(3L, resp.getResolvedBy());
     }
 
     @Test

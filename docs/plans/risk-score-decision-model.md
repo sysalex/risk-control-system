@@ -7,7 +7,7 @@
 ## 文件计划
 
 - `backend/risk-domain/src/main/java/com/harness/risk/domain/score/RiskScore.java`
-- `backend/risk-domain/src/main/java/com/harness/risk/domain/decision/DecisionType.java`
+- `backend/risk-domain/src/main/java/com/harness/risk/domain/decision/DecisionTypeEnums.java`
 - `backend/risk-domain/src/main/java/com/harness/risk/domain/decision/Decision.java`
 - `backend/risk-domain/src/test/java/com/harness/risk/domain/score/RiskScoreTest.java`
 - `backend/risk-domain/src/test/java/com/harness/risk/domain/decision/DecisionTest.java`

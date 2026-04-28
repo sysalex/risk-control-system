@@ -1,4 +1,4 @@
-package com.harness.risk.domain.score;
+package com.harness.risk.domain.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -11,12 +11,12 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * {@link RiskScore} 模型测试
+ * {@link RiskScoreEntity} 模型测试
  *
  * @author harness-agent
  * @since 2026-04-27
  */
-class RiskScoreTest {
+class RiskScoreEntityTest {
 
     /**
      * 验证风险评分模型映射到 risk_scores 表
@@ -25,12 +25,12 @@ class RiskScoreTest {
      */
     @Test
     void mapsRiskScoreToRiskScoresTable() throws NoSuchFieldException {
-        TableName tableName = RiskScore.class.getAnnotation(TableName.class);
-        Field id = RiskScore.class.getDeclaredField("id");
-        Field eventId = RiskScore.class.getDeclaredField("eventId");
-        Field maxScore = RiskScore.class.getDeclaredField("maxScore");
-        Field dimensions = RiskScore.class.getDeclaredField("dimensions");
-        Field evaluatorId = RiskScore.class.getDeclaredField("evaluatorId");
+        TableName tableName = RiskScoreEntity.class.getAnnotation(TableName.class);
+        Field id = RiskScoreEntity.class.getDeclaredField("id");
+        Field eventId = RiskScoreEntity.class.getDeclaredField("eventId");
+        Field maxScore = RiskScoreEntity.class.getDeclaredField("maxScore");
+        Field dimensions = RiskScoreEntity.class.getDeclaredField("dimensions");
+        Field evaluatorId = RiskScoreEntity.class.getDeclaredField("evaluatorId");
 
         assertNotNull(tableName);
         assertEquals("risk_scores", tableName.value());
@@ -46,7 +46,7 @@ class RiskScoreTest {
      */
     @Test
     void defaultsToOneHundredMaxScore() {
-        RiskScore riskScore = new RiskScore();
+        RiskScoreEntity riskScore = new RiskScoreEntity();
 
         assertEquals(new BigDecimal("100.00"), riskScore.getMaxScore());
     }

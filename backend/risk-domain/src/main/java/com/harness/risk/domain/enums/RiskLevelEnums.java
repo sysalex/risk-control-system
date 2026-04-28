@@ -1,4 +1,4 @@
-package com.harness.risk.domain.event;
+package com.harness.risk.domain.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Getter
 @RequiredArgsConstructor
-public enum RiskLevel {
+public enum RiskLevelEnums {
 
     /** 低风险 */
     LOW("low"),

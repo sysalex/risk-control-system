@@ -1,4 +1,4 @@
-package com.harness.risk.domain.audit;
+package com.harness.risk.domain.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -10,12 +10,12 @@ import java.lang.reflect.Field;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * {@link AuditLog} 模型测试
+ * {@link AuditLogEntity} 模型测试
  *
  * @author harness-agent
  * @since 2026-04-27
  */
-class AuditLogTest {
+class AuditLogEntityTest {
 
     /**
      * 验证审计日志模型映射到 audit_logs 表
@@ -24,16 +24,16 @@ class AuditLogTest {
      */
     @Test
     void mapsAuditLogToAuditLogsTable() throws NoSuchFieldException {
-        TableName tableName = AuditLog.class.getAnnotation(TableName.class);
-        Field id = AuditLog.class.getDeclaredField("id");
-        Field userId = AuditLog.class.getDeclaredField("userId");
-        Field action = AuditLog.class.getDeclaredField("action");
-        Field resourceType = AuditLog.class.getDeclaredField("resourceType");
-        Field resourceId = AuditLog.class.getDeclaredField("resourceId");
-        Field oldValues = AuditLog.class.getDeclaredField("oldValues");
-        Field newValues = AuditLog.class.getDeclaredField("newValues");
-        Field createdAt = AuditLog.class.getDeclaredField("createdAt");
-        Field ipAddress = AuditLog.class.getDeclaredField("ipAddress");
+        TableName tableName = AuditLogEntity.class.getAnnotation(TableName.class);
+        Field id = AuditLogEntity.class.getDeclaredField("id");
+        Field userId = AuditLogEntity.class.getDeclaredField("userId");
+        Field action = AuditLogEntity.class.getDeclaredField("action");
+        Field resourceType = AuditLogEntity.class.getDeclaredField("resourceType");
+        Field resourceId = AuditLogEntity.class.getDeclaredField("resourceId");
+        Field oldValues = AuditLogEntity.class.getDeclaredField("oldValues");
+        Field newValues = AuditLogEntity.class.getDeclaredField("newValues");
+        Field createdAt = AuditLogEntity.class.getDeclaredField("createdAt");
+        Field ipAddress = AuditLogEntity.class.getDeclaredField("ipAddress");
 
         assertNotNull(tableName);
         assertEquals("audit_logs", tableName.value());

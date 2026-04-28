@@ -1,7 +1,7 @@
 package com.harness.risk.infrastructure.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.harness.risk.domain.rule.RiskRule;
+import com.harness.risk.domain.model.entity.RiskRuleEntity;
 
 /**
  * 风控规则 Mapper
@@ -11,5 +11,5 @@ import com.harness.risk.domain.rule.RiskRule;
  * @author harness-agent
  * @since 2026-04-27
  */
-public interface RiskRuleMapper extends BaseMapper<RiskRule> {
+public interface RiskRuleMapper extends BaseMapper<RiskRuleEntity> {
 }

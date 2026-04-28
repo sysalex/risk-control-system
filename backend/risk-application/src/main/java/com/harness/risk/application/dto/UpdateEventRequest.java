@@ -1,7 +1,10 @@
 package com.harness.risk.application.dto;
 
-import com.harness.risk.domain.event.RiskEventStatus;
+import com.harness.risk.domain.enums.RiskEventStatusEnums;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 更新风险事件请求 DTO。
@@ -9,16 +12,18 @@ import jakarta.validation.constraints.Size;
  * @author harness-agent
  * @since 2026-04-27
  */
-public record UpdateEventRequest(
-        /**
-         * 事件状态。
-         */
-        RiskEventStatus status,
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UpdateEventRequest {
+    /**
+     * 事件状态。
+     */
+    private RiskEventStatusEnums status;
 
-        /**
-         * 事件描述。
-         */
-        @Size(max = 1024, message = "事件描述长度不能超过 1024")
-        String description
-) {
+    /**
+     * 事件描述。
+     */
+    @Size(max = 1024, message = "事件描述长度不能超过 1024")
+    private String description;
 }

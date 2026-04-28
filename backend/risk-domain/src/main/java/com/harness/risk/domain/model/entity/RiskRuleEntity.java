@@ -1,4 +1,4 @@
-package com.harness.risk.domain.rule;
+package com.harness.risk.domain.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -9,7 +9,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * 风控规则实体。
+ * 风控规则实体（RiskRuleEntity）。
  * <p>
  * 条件和动作暂以 JSON 文本保存，规则引擎落地后再演进为类型化表达式。
  *
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @TableName("risk_rules")
-public class RiskRule {
+public class RiskRuleEntity {
 
     /**
      * 主键。

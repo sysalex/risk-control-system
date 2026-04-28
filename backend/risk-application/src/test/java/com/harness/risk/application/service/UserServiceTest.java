@@ -6,8 +6,8 @@ import com.harness.risk.application.dto.UpdateUserRequest;
 import com.harness.risk.application.dto.UserResponse;
 import com.harness.risk.common.exception.AppException;
 import com.harness.risk.common.security.PasswordEncoder;
-import com.harness.risk.domain.user.User;
-import com.harness.risk.domain.user.UserRole;
+import com.harness.risk.domain.model.entity.UserEntity;
+import com.harness.risk.domain.enums.UserRoleEnums;
 import com.harness.risk.application.service.impl.UserServiceImpl;
 import com.harness.risk.infrastructure.mapper.UserMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,13 +46,13 @@ class UserServiceTest {
         ReflectionTestUtils.setField(userService, "passwordEncoder", passwordEncoder);
     }
 
-    private User sampleUser() {
-        User user = new User();
+    private UserEntity sampleUser() {
+        UserEntity user = new UserEntity();
         user.setId(1L);
         user.setUsername("alice");
         user.setEmail("alice@test.com");
         user.setHashedPassword("encoded");
-        user.setRole(UserRole.ADMIN);
+        user.setRole(UserRoleEnums.ADMIN);
         user.setActive(true);
         return user;
     }
@@ -63,8 +63,8 @@ class UserServiceTest {
 
         UserResponse resp = userService.me(1L);
 
-        assertEquals("alice", resp.username());
-        assertEquals("alice@test.com", resp.email());
+        assertEquals("alice", resp.getUsername());
+        assertEquals("alice@test.com", resp.getEmail());
     }
 
     @Test
@@ -77,7 +77,7 @@ class UserServiceTest {
 
     @Test
     void listReturnsPagedResults() {
-        Page<User> page = new Page<>(1, 20);
+        Page<UserEntity> page = new Page<>(1, 20);
         page.setRecords(List.of(sampleUser()));
         page.setTotal(1);
         when(userMapper.selectPage(any(), any())).thenReturn(page);
@@ -85,7 +85,7 @@ class UserServiceTest {
         Page<UserResponse> result = userService.list(1, 20);
 
         assertEquals(1, result.getTotal());
-        assertEquals("alice", result.getRecords().get(0).username());
+        assertEquals("alice", result.getRecords().get(0).getUsername());
     }
 
     @Test
@@ -94,10 +94,10 @@ class UserServiceTest {
         when(passwordEncoder.encode("password123")).thenReturn("encoded");
 
         UserResponse resp = userService.create(
-                new CreateUserRequest("alice", "alice@test.com", "password123", UserRole.OPERATOR));
+                new CreateUserRequest("alice", "alice@test.com", "password123", UserRoleEnums.OPERATOR));
 
-        assertEquals("alice", resp.username());
-        verify(userMapper).insert(any(User.class));
+        assertEquals("alice", resp.getUsername());
+        verify(userMapper).insert(any(UserEntity.class));
     }
 
     @Test
@@ -105,22 +105,22 @@ class UserServiceTest {
         when(userMapper.selectCount(any())).thenReturn(1L);
 
         AppException e = assertThrows(AppException.class,
-                () -> userService.create(new CreateUserRequest("alice", "a@test.com", "password123", UserRole.OPERATOR)));
+                () -> userService.create(new CreateUserRequest("alice", "a@test.com", "password123", UserRoleEnums.OPERATOR)));
         assertEquals(409, e.getCode());
     }
 
     @Test
     void updateSuccessReturnsUpdatedUser() {
-        User user = sampleUser();
+        UserEntity user = sampleUser();
         when(userMapper.selectById(1L)).thenReturn(user);
 
         UserResponse resp = userService.update(1L,
-                new UpdateUserRequest("new@test.com", UserRole.RISK_ANALYST, false));
+                new UpdateUserRequest("new@test.com", UserRoleEnums.RISK_ANALYST, false));
 
-        assertEquals("new@test.com", resp.email());
-        assertEquals(UserRole.RISK_ANALYST, resp.role());
-        assertFalse(resp.active());
-        verify(userMapper).updateById(any(User.class));
+        assertEquals("new@test.com", resp.getEmail());
+        assertEquals(UserRoleEnums.RISK_ANALYST, resp.getRole());
+        assertFalse(resp.isActive());
+        verify(userMapper).updateById(any(UserEntity.class));
     }
 
     @Test

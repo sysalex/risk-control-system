@@ -1,8 +1,9 @@
-package com.harness.risk.domain.decision;
+package com.harness.risk.domain.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.harness.risk.domain.enums.DecisionTypeEnums;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
@@ -10,12 +11,12 @@ import java.lang.reflect.Field;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * {@link Decision} 模型测试
+ * {@link DecisionEntity} 模型测试
  *
  * @author harness-agent
  * @since 2026-04-27
  */
-class DecisionTest {
+class DecisionEntityTest {
 
     /**
      * 验证决策模型映射到 decisions 表
@@ -24,12 +25,12 @@ class DecisionTest {
      */
     @Test
     void mapsDecisionToDecisionsTable() throws NoSuchFieldException {
-        TableName tableName = Decision.class.getAnnotation(TableName.class);
-        Field id = Decision.class.getDeclaredField("id");
-        Field eventId = Decision.class.getDeclaredField("eventId");
-        Field decisionType = Decision.class.getDeclaredField("decisionType");
-        Field decidedBy = Decision.class.getDeclaredField("decidedBy");
-        Field decidedAt = Decision.class.getDeclaredField("decidedAt");
+        TableName tableName = DecisionEntity.class.getAnnotation(TableName.class);
+        Field id = DecisionEntity.class.getDeclaredField("id");
+        Field eventId = DecisionEntity.class.getDeclaredField("eventId");
+        Field decisionType = DecisionEntity.class.getDeclaredField("decisionType");
+        Field decidedBy = DecisionEntity.class.getDeclaredField("decidedBy");
+        Field decidedAt = DecisionEntity.class.getDeclaredField("decidedAt");
 
         assertNotNull(tableName);
         assertEquals("decisions", tableName.value());
@@ -45,9 +46,9 @@ class DecisionTest {
      */
     @Test
     void decisionTypeValuesMatchDatabaseValues() {
-        assertEquals("approve", DecisionType.APPROVE.getValue());
-        assertEquals("reject", DecisionType.REJECT.getValue());
-        assertEquals("manual_review", DecisionType.MANUAL_REVIEW.getValue());
-        assertEquals("escalate", DecisionType.ESCALATE.getValue());
+        assertEquals("approve", DecisionTypeEnums.APPROVE.getValue());
+        assertEquals("reject", DecisionTypeEnums.REJECT.getValue());
+        assertEquals("manual_review", DecisionTypeEnums.MANUAL_REVIEW.getValue());
+        assertEquals("escalate", DecisionTypeEnums.ESCALATE.getValue());
     }
 }

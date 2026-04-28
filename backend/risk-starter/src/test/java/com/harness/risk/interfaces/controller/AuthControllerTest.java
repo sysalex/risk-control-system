@@ -7,7 +7,7 @@ import com.harness.risk.application.dto.RegisterRequest;
 import com.harness.risk.application.dto.TokenResponse;
 import com.harness.risk.application.dto.UserResponse;
 import com.harness.risk.application.service.AuthService;
-import com.harness.risk.domain.user.UserRole;
+import com.harness.risk.domain.enums.UserRoleEnums;
 import com.harness.risk.starter.RiskApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +59,7 @@ class AuthControllerTest {
     @Test
     void registerReturnsUserResponse() throws Exception {
         when(authService.register(any())).thenReturn(
-                new UserResponse(1L, "alice", "alice@test.com", UserRole.OPERATOR, true, LocalDateTime.now()));
+                new UserResponse(1L, "alice", "alice@test.com", UserRoleEnums.OPERATOR, true, LocalDateTime.now()));
 
         mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)

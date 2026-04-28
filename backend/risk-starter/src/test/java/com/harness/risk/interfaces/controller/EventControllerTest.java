@@ -7,8 +7,8 @@ import com.harness.risk.application.dto.EventResponse;
 import com.harness.risk.application.dto.UpdateEventRequest;
 import com.harness.risk.application.service.RiskEventService;
 import com.harness.risk.common.security.JwtUtil;
-import com.harness.risk.domain.event.RiskEventStatus;
-import com.harness.risk.domain.event.RiskLevel;
+import com.harness.risk.domain.enums.RiskEventStatusEnums;
+import com.harness.risk.domain.enums.RiskLevelEnums;
 import com.harness.risk.starter.RiskApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ class EventControllerTest {
     private EventResponse sampleEvent() {
         return new EventResponse(
                 1L, 10L, "user", "user-123",
-                RiskLevel.HIGH, RiskEventStatus.PENDING,
+                RiskLevelEnums.HIGH, RiskEventStatusEnums.PENDING,
                 "大额交易异常", LocalDateTime.now(),
                 null, null, LocalDateTime.now(), LocalDateTime.now());
     }
@@ -85,7 +85,7 @@ class EventControllerTest {
         Page<EventResponse> page = new Page<>();
         page.setRecords(List.of(sampleEvent()));
         page.setTotal(1);
-        when(riskEventService.list(1, 20, RiskLevel.HIGH, RiskEventStatus.PENDING)).thenReturn(page);
+        when(riskEventService.list(1, 20, RiskLevelEnums.HIGH, RiskEventStatusEnums.PENDING)).thenReturn(page);
 
         mockMvc.perform(get("/api/v1/events?page=1&limit=20&riskLevel=HIGH&status=PENDING")
                         .header("Authorization", analystToken()))
@@ -111,7 +111,7 @@ class EventControllerTest {
                         .header("Authorization", adminToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                new CreateEventRequest(10L, "user", "user-123", RiskLevel.HIGH, "大额交易异常"))))
+                                new CreateEventRequest(10L, "user", "user-123", RiskLevelEnums.HIGH, "大额交易异常"))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.riskLevel").value("HIGH"));
     }
@@ -122,7 +122,7 @@ class EventControllerTest {
                         .header("Authorization", analystToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                new CreateEventRequest(10L, "user", "user-123", RiskLevel.HIGH, "大额交易异常"))))
+                                new CreateEventRequest(10L, "user", "user-123", RiskLevelEnums.HIGH, "大额交易异常"))))
                 .andExpect(status().isForbidden());
     }
 
@@ -134,7 +134,7 @@ class EventControllerTest {
                         .header("Authorization", adminToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                new UpdateEventRequest(RiskEventStatus.INVESTIGATING, "补充说明"))))
+                                new UpdateEventRequest(RiskEventStatusEnums.INVESTIGATING, "补充说明"))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.description").value("大额交易异常"));
     }
@@ -143,7 +143,7 @@ class EventControllerTest {
     void resolveEventReturnsResolvedEvent() throws Exception {
         EventResponse resolved = new EventResponse(
                 1L, 10L, "user", "user-123",
-                RiskLevel.HIGH, RiskEventStatus.RESOLVED,
+                RiskLevelEnums.HIGH, RiskEventStatusEnums.RESOLVED,
                 "大额交易异常", LocalDateTime.now(),
                 LocalDateTime.now(), 1L, LocalDateTime.now(), LocalDateTime.now());
         when(riskEventService.resolveEvent(1L, 1L)).thenReturn(resolved);

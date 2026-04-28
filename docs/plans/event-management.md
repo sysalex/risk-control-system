@@ -74,7 +74,7 @@
 
 | 风险 | 影响 | 应对 |
 |------|------|------|
-| RiskLevel / RiskEventStatus 枚举在 DTO 中的序列化 | 低 | 使用枚举类型，MyBatis-Plus @EnumValue 已配置，Spring 默认支持枚举序列化 |
+| RiskLevelEnums / RiskEventStatusEnums 枚举在 DTO 中的序列化 | 低 | 使用枚举类型，MyBatis-Plus @EnumValue 已配置，Spring 默认支持枚举序列化 |
 | 列表查询带多个可选筛选参数，Wrapper 构建复杂 | 低 | 使用条件链式构造，null 参数跳过条件拼接 |
 
 ---

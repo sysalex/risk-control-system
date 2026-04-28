@@ -1,4 +1,4 @@
-package com.harness.risk.domain.score;
+package com.harness.risk.domain.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 风险评分实体。
+ * 风险评分实体（RiskScoreEntity）。
  * <p>
  * 每条风险事件只保留一份最终评分结果，维度明细暂以 JSON 文本保存。
  *
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @TableName("risk_scores")
-public class RiskScore {
+public class RiskScoreEntity {
 
     /**
      * 主键。

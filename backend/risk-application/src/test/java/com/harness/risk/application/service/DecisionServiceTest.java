@@ -6,8 +6,8 @@ import com.harness.risk.application.dto.DecisionResponse;
 import com.harness.risk.application.dto.UpdateDecisionRequest;
 import com.harness.risk.application.service.impl.DecisionServiceImpl;
 import com.harness.risk.common.exception.AppException;
-import com.harness.risk.domain.decision.Decision;
-import com.harness.risk.domain.decision.DecisionType;
+import com.harness.risk.domain.model.entity.DecisionEntity;
+import com.harness.risk.domain.enums.DecisionTypeEnums;
 import com.harness.risk.infrastructure.mapper.DecisionMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,11 +44,11 @@ class DecisionServiceTest {
         ReflectionTestUtils.setField(decisionService, "baseMapper", decisionMapper);
     }
 
-    private Decision sampleDecision() {
-        Decision decision = new Decision();
+    private DecisionEntity sampleDecision() {
+        DecisionEntity decision = new DecisionEntity();
         decision.setId(1L);
         decision.setEventId(10L);
-        decision.setDecisionType(DecisionType.MANUAL_REVIEW);
+        decision.setDecisionType(DecisionTypeEnums.MANUAL_REVIEW);
         decision.setReason("风险评分过高");
         decision.setNotes("需要人工复核");
         decision.setDecidedBy(2L);
@@ -61,11 +61,11 @@ class DecisionServiceTest {
         when(decisionMapper.insert(any())).thenReturn(1);
 
         DecisionResponse resp = decisionService.create(new CreateDecisionRequest(
-                10L, DecisionType.MANUAL_REVIEW, "风险评分过高", "需要人工复核", 2L));
+                10L, DecisionTypeEnums.MANUAL_REVIEW, "风险评分过高", "需要人工复核", 2L));
 
-        assertEquals(10L, resp.eventId());
-        assertEquals(DecisionType.MANUAL_REVIEW, resp.decisionType());
-        verify(decisionMapper).insert(any(Decision.class));
+        assertEquals(10L, resp.getEventId());
+        assertEquals(DecisionTypeEnums.MANUAL_REVIEW, resp.getDecisionType());
+        verify(decisionMapper).insert(any(DecisionEntity.class));
     }
 
     @Test
@@ -73,7 +73,7 @@ class DecisionServiceTest {
         when(decisionMapper.selectCount(any())).thenReturn(1L);
 
         AppException e = assertThrows(AppException.class, () -> decisionService.create(
-                new CreateDecisionRequest(10L, DecisionType.REJECT, "拒绝", null, 2L)));
+                new CreateDecisionRequest(10L, DecisionTypeEnums.REJECT, "拒绝", null, 2L)));
 
         assertEquals(409, e.getCode());
     }
@@ -84,8 +84,8 @@ class DecisionServiceTest {
 
         DecisionResponse resp = decisionService.getById(1L);
 
-        assertEquals("风险评分过高", resp.reason());
-        assertEquals(2L, resp.decidedBy());
+        assertEquals("风险评分过高", resp.getReason());
+        assertEquals(2L, resp.getDecidedBy());
     }
 
     @Test
@@ -98,7 +98,7 @@ class DecisionServiceTest {
 
     @Test
     void listReturnsPagedResults() {
-        Page<Decision> page = new Page<>(1, 20);
+        Page<DecisionEntity> page = new Page<>(1, 20);
         page.setRecords(List.of(sampleDecision()));
         page.setTotal(1);
         when(decisionMapper.selectPage(any(), any())).thenReturn(page);
@@ -106,21 +106,21 @@ class DecisionServiceTest {
         Page<DecisionResponse> result = decisionService.list(1, 20);
 
         assertEquals(1, result.getTotal());
-        assertEquals(DecisionType.MANUAL_REVIEW, result.getRecords().get(0).decisionType());
+        assertEquals(DecisionTypeEnums.MANUAL_REVIEW, result.getRecords().get(0).getDecisionType());
     }
 
     @Test
     void updateSuccessDoesNotChangeDecidedBy() {
-        Decision decision = sampleDecision();
+        DecisionEntity decision = sampleDecision();
         when(decisionMapper.selectById(1L)).thenReturn(decision);
 
         DecisionResponse resp = decisionService.update(1L,
-                new UpdateDecisionRequest(DecisionType.ESCALATE, "升级处理", "转高级审核"));
+                new UpdateDecisionRequest(DecisionTypeEnums.ESCALATE, "升级处理", "转高级审核"));
 
-        assertEquals(DecisionType.ESCALATE, resp.decisionType());
-        assertEquals("升级处理", resp.reason());
-        assertEquals(2L, resp.decidedBy());
-        verify(decisionMapper).updateById(any(Decision.class));
+        assertEquals(DecisionTypeEnums.ESCALATE, resp.getDecisionType());
+        assertEquals("升级处理", resp.getReason());
+        assertEquals(2L, resp.getDecidedBy());
+        verify(decisionMapper).updateById(any(DecisionEntity.class));
     }
 
     @Test
@@ -128,7 +128,7 @@ class DecisionServiceTest {
         when(decisionMapper.selectById(1L)).thenReturn(null);
 
         AppException e = assertThrows(AppException.class,
-                () -> decisionService.update(1L, new UpdateDecisionRequest(DecisionType.APPROVE, "通过", null)));
+                () -> decisionService.update(1L, new UpdateDecisionRequest(DecisionTypeEnums.APPROVE, "通过", null)));
         assertEquals(404, e.getCode());
     }
 }
