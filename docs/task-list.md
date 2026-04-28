@@ -101,10 +101,24 @@
 
 ## 阶段 4：后端 API — 风险事件
 
-- [ ] 4.1 RiskEventRepository
-- [ ] 4.2 RiskEventService（创建、查询、解决事件）
-- [ ] 4.3 /events 路由
-- [ ] 4.4 事件模块测试
+- [x] 4.1 RiskEventRepository
+  - 完成时间：2026-04-28
+  - 新增 `RiskEventMapper` 继承 `BaseMapper<RiskEvent>`
+- [x] 4.2 RiskEventService（创建、查询、解决事件）
+  - 完成时间：2026-04-28
+  - 新增 `RiskEventService` 接口 + `RiskEventServiceImpl`
+  - 包含：create / getById / list（支持 riskLevel + status 筛选）/ update / resolveEvent
+  - 解决事件幂等：已解决的事件不重复修改 resolvedBy
+- [x] 4.3 /events 路由
+  - 完成时间：2026-04-28
+  - 新增 `EventController`：GET /events、GET /events/{id}、POST /events、PUT /events/{id}、POST /events/{id}/resolve
+  - 权限：list/get 对所有认证用户开放；写操作仅限 ADMIN
+- [x] 4.4 事件模块测试
+  - 完成时间：2026-04-28
+  - 后端全量测试：91 个用例，0 失败
+  - risk-application：`RiskEventServiceTest` (10) — Mockito 单元测试
+  - risk-starter：`EventControllerTest` (8) — `@SpringBootTest` + `MockMvc` 集成测试
+  - 审查状态：代码审查通过
 
 依赖：阶段 3 完成
 

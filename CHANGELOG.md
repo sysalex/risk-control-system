@@ -9,6 +9,13 @@
 ## [Unreleased]
 
 ### Added
+- 风险事件 API（Stage 4）：
+  - `RiskEventMapper`（risk-infrastructure）：MyBatis-Plus `BaseMapper<RiskEvent>` 基础数据访问
+  - `RiskEventService` + `RiskEventServiceImpl`（risk-application）：事件 CRUD、状态更新、解决事件（幂等处理）
+  - `EventController`（risk-interfaces）：`/api/v1/events` 完整 REST 端点，支持 riskLevel / status 筛选，list/get 对所有认证用户开放，写操作仅限 ADMIN
+  - DTO（risk-application）：`CreateEventRequest`、`UpdateEventRequest`、`EventResponse`
+  - 测试：`RiskEventServiceTest` (10) Mockito 单元测试 + `EventControllerTest` (8) MockMvc 集成测试
+  - SDD 产物：`docs/specs/event-management.md`、`docs/plans/event-management.md`
 - 规则管理 API（Stage 3）：
   - `RiskRuleMapper`（risk-infrastructure）：MyBatis-Plus `BaseMapper<RiskRule>` 基础数据访问
   - `RiskRuleService` + `RiskRuleServiceImpl`（risk-application）：规则 CRUD、启停、分页查询（按 priority 升序 + createdAt 降序）

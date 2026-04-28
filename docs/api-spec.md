@@ -114,11 +114,78 @@ Authorization: Bearer <JWT>
 ## 风险事件接口
 
 ```
-GET    /events                      # 事件列表（支持级别/状态筛选）
-POST   /events                      # 创建事件（规则引擎自动触发）
-GET    /events/{id}                 # 事件详情
-PUT    /events/{id}                 # 更新事件状态
-POST   /events/{id}/resolve         # 解决事件
+GET    /events                      # 事件列表（支持级别/状态筛选，所有认证用户）
+POST   /events                      # 创建事件（admin）
+GET    /events/{id}                 # 事件详情（所有认证用户）
+PUT    /events/{id}                 # 更新事件状态（admin）
+POST   /events/{id}/resolve         # 解决事件（admin）
+```
+
+### 请求/响应示例
+
+**创建事件**
+```http
+POST /api/v1/events
+Authorization: Bearer <JWT>
+Content-Type: application/json
+
+{
+  "ruleId": 1,
+  "subjectType": "user",
+  "subjectId": "user-123",
+  "riskLevel": "HIGH",
+  "description": "单笔交易超过 10 万元"
+}
+```
+
+**响应**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "ruleId": 1,
+    "subjectType": "user",
+    "subjectId": "user-123",
+    "riskLevel": "HIGH",
+    "status": "PENDING",
+    "description": "单笔交易超过 10 万元",
+    "triggeredAt": "2026-04-28T09:00:00",
+    "resolvedAt": null,
+    "resolvedBy": null,
+    "createdAt": "2026-04-28T09:00:00",
+    "updatedAt": "2026-04-28T09:00:00"
+  },
+  "message": null,
+  "meta": null
+}
+```
+
+**事件列表（带筛选）**
+```http
+GET /api/v1/events?page=1&limit=20&riskLevel=HIGH&status=PENDING
+Authorization: Bearer <JWT>
+```
+
+**解决事件**
+```http
+POST /api/v1/events/1/resolve
+Authorization: Bearer <JWT>
+```
+
+**响应**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "status": "RESOLVED",
+    "resolvedAt": "2026-04-28T10:00:00",
+    "resolvedBy": 1
+  },
+  "message": null,
+  "meta": null
+}
 ```
 
 ## 风险评分接口
