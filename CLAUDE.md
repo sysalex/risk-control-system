@@ -258,9 +258,11 @@ View → Store (Pinia) → API Layer → Backend
 
 - 领域模型、领域服务、Application Service、Controller 和对外公共工具类必须有 `/** */` 类级 Javadoc，包含职责描述、`@author harness-agent`、`@since YYYY-MM-DD`
 - public 方法在以下场景必须有 Javadoc：对外 API、复杂业务规则、非显然边界条件、被跨模块复用的工具方法
-- 简单 DTO、测试类、配置类、私有辅助方法可不写 Javadoc，避免低信息量注释
+- “实体类”特指 `risk-domain` 下映射数据库表或承载领域状态的类；实体类类级 Javadoc 必须写明职责，字段必须逐项添加 `/** */` 块级 Javadoc
+- `application.dto` 下的 `*Request` / `*Response` record 属于 DTO，不按实体字段注释规范处理；简单 DTO 推荐一句话类级说明即可
+- 复杂对外 DTO 契约优先在 `docs/api-spec.md` 描述字段含义；只有存在非显然边界、兼容性约束或安全约束时，才在 DTO 内补充必要 Javadoc
+- 简单测试类、配置类、私有辅助方法可不写 Javadoc，避免低信息量注释
 - 内部类/嵌套类按其可见性和职责适用上述规则
-- 实体类字段必须添加注释，统一使用 `/** */` Javadoc 格式
 - 方法内部的代码注释使用 `//` 单行格式，仅在解释原因、边界、约束或非显然决策时添加
 - 注释使用中文，描述职责和用途，不描述实现细节
 - 禁止无信息量的注释（如 `// 构造函数`、`// 设置值`）
