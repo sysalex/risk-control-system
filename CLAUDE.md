@@ -22,89 +22,13 @@ Web 版风控系统，支持规则引擎、风险事件管理、风险评分、�
 
 ## 本地开发环境配置
 
-### 端口锁定规则
-
 **前端端口**: `5173`（固定）
 **后端端口**: `8080`（固定）
 
-> **重要**: 端口被占用时，必须先杀掉占用端口的进程，再重新启动服务。禁止自动切换到其他端口。
+详细配置（端口清理、镜像源、MySQL、本机特殊路径、种子数据）见 `docs/dev-setup.md`。
 
-```bash
-# Windows - 查找占用端口的进程
-netstat -ano | findstr ":5173"
-netstat -ano | findstr ":8080"
-
-# Windows - 杀掉进程（替换 PID 为实际进程 ID）
-taskkill /F /PID <PID>
-
-# PowerShell - 一键清理
-Get-NetTCPConnection -LocalPort 5173,8080 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }
-```
-
-### 镜像源配置（中国大陆地区）
-
-> **重要**：在中国大陆地区开发时，必须配置国内镜像源，否则依赖下载可能超时或失败。
-
-**后端 Maven 依赖**：使用阿里云 Maven 镜像
-
-文件 `backend/pom.xml`（已配置）:
-```xml
-<repositories>
-    <repository>
-        <id>aliyun</id>
-        <url>https://maven.aliyun.com/repository/public</url>
-    </repository>
-</repositories>
-```
-
-安装命令示例：
-```bash
-mvn install -s settings.xml
-```
-
-**前端 npm 依赖**：可配置淘宝镜像
-
-文件 `frontend/.npmrc`（已创建）:
-```ini
-registry = https://registry.npmmirror.com
-```
-
-安装命令示例：
-```bash
-npm install --registry=https://registry.npmmirror.com
-```
-
-### MySQL 配置
-
-本地开发环境使用 root 用户，密码 `root`。
-**生产环境必须创建独立用户并设置强密码**。
-
-### 配置文件
-
-`backend/risk-starter/src/main/resources/application.yml`（提交到 Git，只允许保留本地开发默认值和环境变量占位符）:
-```yaml
-spring:
-  application:
-    name: risk-control-system
-  datasource:
-    url: jdbc:mysql://localhost:3306/risk_db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
-    username: root
-    password:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-app:
-  name: 风控系统
-  debug: true
-  jwt:
-    secret: <随机生成的安全密钥>
-    access-token-expire-minutes: 30
-    refresh-token-expire-days: 7
-  cors:
-    allowed-origins: http://localhost:5173
-```
-
-`frontend/.env`（不提交到 Git）:
 ```env
+# frontend/.env（不提交到 Git）
 VITE_API_BASE_URL=http://localhost:8080
 ```
 
@@ -285,6 +209,7 @@ View → Store (Pinia) → API Layer → Backend
 ## 安全规范
 
 - 所有 API 端点（除登录/注册）必须 JWT 认证（`@JwtInterceptor`）
+- JWT 拦截器必须对 `OPTIONS` 预检请求直接放行，否则浏览器 CORS 机制会失效
 - 密码使用 BCrypt 哈希，禁止明文存储
 - SQL 操作全部通过 MyBatis-Plus，禁止 `${}` 拼接 SQL（使用 `#{}` 参数化）
 - 敏感配置通过环境变量或 `@Value` 注入，禁止硬编码

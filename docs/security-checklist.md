@@ -9,6 +9,7 @@
 - [ ] 敏感操作有角色权限检查（`@RequireRole` / 拦截器）
 - [ ] IDOR 防护：用户只能访问自己的资源或授权范围内的资源
 - [ ] CORS 配置限制，只允许前端域名
+- [ ] JWT 拦截器对 `OPTIONS` 预检请求直接放行（否则浏览器 CORS 机制失效）
 
 ### 2. Cryptographic Failures（密码学失效）
 - [ ] 密码使用 bcrypt 哈希（cost factor >= 12）
