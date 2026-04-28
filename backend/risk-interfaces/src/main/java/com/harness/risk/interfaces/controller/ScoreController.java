@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.harness.risk.application.dto.CreateScoreRequest;
 import com.harness.risk.application.dto.ScoreResponse;
 import com.harness.risk.application.service.RiskScoreService;
+import com.harness.risk.common.annotation.AuditOperation;
 import com.harness.risk.common.annotation.RequireRole;
 import com.harness.risk.common.response.ApiResponse;
 import jakarta.validation.Valid;
@@ -51,6 +52,7 @@ public class ScoreController {
      */
     @PostMapping("/evaluate")
     @RequireRole("admin")
+    @AuditOperation(action = "evaluate", resourceType = "score")
     public ApiResponse<ScoreResponse> create(@Valid @RequestBody CreateScoreRequest request) {
         return ApiResponse.ok(riskScoreService.create(request));
     }

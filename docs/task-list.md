@@ -153,11 +153,14 @@
 
 ## 阶段 6：后端 API — 审计日志
 
-- [ ] 6.1 AuditLogRepository
-- [ ] 6.2 AuditLogService
-- [ ] 6.3 /audit-logs 路由
-- [ ] 6.4 审计日志自动注入（所有写操作自动记录）
-- [ ] 6.5 审计模块测试
+- [x] 6.1 AuditLogRepository
+- [x] 6.2 AuditLogService
+- [x] 6.3 /audit-logs 路由
+- [x] 6.4 审计日志自动注入（所有写操作自动记录）
+- [x] 6.5 审计模块测试
+  - 完成时间：2026-04-28
+  - 测试覆盖率：新增 `AuditLogServiceTest`、`AuditLogControllerTest`、`AuditOperationAspectTest`，后端 `mvn -pl risk-starter -am test` 通过
+  - 审查状态：本地代码/安全自检通过
 
 依赖：阶段 5 完成
 

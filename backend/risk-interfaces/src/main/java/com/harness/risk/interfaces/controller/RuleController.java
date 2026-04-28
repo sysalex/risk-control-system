@@ -5,6 +5,7 @@ import com.harness.risk.application.dto.CreateRuleRequest;
 import com.harness.risk.application.dto.RuleResponse;
 import com.harness.risk.application.dto.UpdateRuleRequest;
 import com.harness.risk.application.service.RiskRuleService;
+import com.harness.risk.common.annotation.AuditOperation;
 import com.harness.risk.common.annotation.RequireRole;
 import com.harness.risk.common.response.ApiResponse;
 import com.harness.risk.common.security.AuthConstants;
@@ -71,6 +72,7 @@ public class RuleController {
      */
     @PostMapping
     @RequireRole("admin")
+    @AuditOperation(action = "create", resourceType = "rule")
     public ApiResponse<RuleResponse> create(
             @Valid @RequestBody CreateRuleRequest request,
             HttpServletRequest httpRequest) {
@@ -87,6 +89,7 @@ public class RuleController {
      */
     @PutMapping("/{id}")
     @RequireRole("admin")
+    @AuditOperation(action = "update", resourceType = "rule")
     public ApiResponse<RuleResponse> update(
             @PathVariable Long id,
             @Valid @RequestBody UpdateRuleRequest request) {
@@ -101,6 +104,7 @@ public class RuleController {
      */
     @DeleteMapping("/{id}")
     @RequireRole("admin")
+    @AuditOperation(action = "delete", resourceType = "rule")
     public ApiResponse<Void> delete(@PathVariable Long id) {
         riskRuleService.delete(id);
         return ApiResponse.ok(null);
@@ -114,6 +118,7 @@ public class RuleController {
      */
     @PostMapping("/{id}/enable")
     @RequireRole("admin")
+    @AuditOperation(action = "enable", resourceType = "rule")
     public ApiResponse<RuleResponse> enable(@PathVariable Long id) {
         return ApiResponse.ok(riskRuleService.enableRule(id));
     }
@@ -126,6 +131,7 @@ public class RuleController {
      */
     @PostMapping("/{id}/disable")
     @RequireRole("admin")
+    @AuditOperation(action = "disable", resourceType = "rule")
     public ApiResponse<RuleResponse> disable(@PathVariable Long id) {
         return ApiResponse.ok(riskRuleService.disableRule(id));
     }

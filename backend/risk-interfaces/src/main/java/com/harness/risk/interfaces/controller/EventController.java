@@ -5,6 +5,7 @@ import com.harness.risk.application.dto.CreateEventRequest;
 import com.harness.risk.application.dto.EventResponse;
 import com.harness.risk.application.dto.UpdateEventRequest;
 import com.harness.risk.application.service.RiskEventService;
+import com.harness.risk.common.annotation.AuditOperation;
 import com.harness.risk.common.annotation.RequireRole;
 import com.harness.risk.common.response.ApiResponse;
 import com.harness.risk.common.security.AuthConstants;
@@ -75,6 +76,7 @@ public class EventController {
      */
     @PostMapping
     @RequireRole("admin")
+    @AuditOperation(action = "create", resourceType = "event")
     public ApiResponse<EventResponse> create(@Valid @RequestBody CreateEventRequest request) {
         return ApiResponse.ok(riskEventService.create(request));
     }
@@ -88,6 +90,7 @@ public class EventController {
      */
     @PutMapping("/{id}")
     @RequireRole("admin")
+    @AuditOperation(action = "update", resourceType = "event")
     public ApiResponse<EventResponse> update(
             @PathVariable Long id,
             @Valid @RequestBody UpdateEventRequest request) {
@@ -103,6 +106,7 @@ public class EventController {
      */
     @PostMapping("/{id}/resolve")
     @RequireRole("admin")
+    @AuditOperation(action = "resolve", resourceType = "event")
     public ApiResponse<EventResponse> resolve(
             @PathVariable Long id,
             HttpServletRequest httpRequest) {

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harness.risk.application.dto.CreateEventRequest;
 import com.harness.risk.application.dto.EventResponse;
 import com.harness.risk.application.dto.UpdateEventRequest;
+import com.harness.risk.application.service.AuditLogService;
 import com.harness.risk.application.service.RiskEventService;
 import com.harness.risk.common.security.JwtUtil;
 import com.harness.risk.domain.enums.RiskEventStatusEnums;
@@ -50,6 +51,8 @@ class EventControllerTest {
     private JwtUtil jwtUtil;
     @MockBean
     private RiskEventService riskEventService;
+    @MockBean
+    private AuditLogService auditLogService;
 
     private String adminToken() {
         return "Bearer " + jwtUtil.generateAccessToken(1L, "alice", "admin");

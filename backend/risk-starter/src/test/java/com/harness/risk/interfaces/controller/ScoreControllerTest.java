@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harness.risk.application.dto.CreateScoreRequest;
 import com.harness.risk.application.dto.ScoreResponse;
+import com.harness.risk.application.service.AuditLogService;
 import com.harness.risk.application.service.RiskScoreService;
 import com.harness.risk.common.security.JwtUtil;
 import com.harness.risk.starter.RiskApplication;
@@ -46,6 +47,8 @@ class ScoreControllerTest {
     private JwtUtil jwtUtil;
     @MockBean
     private RiskScoreService riskScoreService;
+    @MockBean
+    private AuditLogService auditLogService;
 
     private String adminToken() {
         return "Bearer " + jwtUtil.generateAccessToken(1L, "alice", "admin");

@@ -5,6 +5,7 @@ import com.harness.risk.application.dto.CreateUserRequest;
 import com.harness.risk.application.dto.UpdateUserRequest;
 import com.harness.risk.application.dto.UserResponse;
 import com.harness.risk.application.service.UserService;
+import com.harness.risk.common.annotation.AuditOperation;
 import com.harness.risk.common.annotation.RequireRole;
 import com.harness.risk.common.response.ApiResponse;
 import com.harness.risk.common.security.AuthConstants;
@@ -71,6 +72,7 @@ public class UserController {
      */
     @PostMapping
     @RequireRole("admin")
+    @AuditOperation(action = "create", resourceType = "user")
     public ApiResponse<UserResponse> create(@Valid @RequestBody CreateUserRequest request) {
         return ApiResponse.ok(userService.create(request));
     }
@@ -84,6 +86,7 @@ public class UserController {
      */
     @PutMapping("/{id}")
     @RequireRole("admin")
+    @AuditOperation(action = "update", resourceType = "user")
     public ApiResponse<UserResponse> update(
             @PathVariable Long id,
             @Valid @RequestBody UpdateUserRequest request) {
@@ -98,6 +101,7 @@ public class UserController {
      */
     @DeleteMapping("/{id}")
     @RequireRole("admin")
+    @AuditOperation(action = "delete", resourceType = "user")
     public ApiResponse<Void> delete(@PathVariable Long id) {
         userService.delete(id);
         return ApiResponse.ok(null);

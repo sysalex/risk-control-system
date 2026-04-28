@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harness.risk.application.dto.CreateUserRequest;
 import com.harness.risk.application.dto.UpdateUserRequest;
 import com.harness.risk.application.dto.UserResponse;
+import com.harness.risk.application.service.AuditLogService;
 import com.harness.risk.application.service.UserService;
 import com.harness.risk.common.security.JwtUtil;
 import com.harness.risk.domain.enums.UserRoleEnums;
@@ -50,6 +51,8 @@ class UserControllerTest {
     private JwtUtil jwtUtil;
     @MockBean
     private UserService userService;
+    @MockBean
+    private AuditLogService auditLogService;
 
     private String adminToken() {
         return "Bearer " + jwtUtil.generateAccessToken(1L, "alice", "admin");

@@ -6,6 +6,7 @@ import com.harness.risk.application.dto.RefreshRequest;
 import com.harness.risk.application.dto.RegisterRequest;
 import com.harness.risk.application.dto.TokenResponse;
 import com.harness.risk.application.dto.UserResponse;
+import com.harness.risk.application.service.AuditLogService;
 import com.harness.risk.application.service.AuthService;
 import com.harness.risk.domain.enums.UserRoleEnums;
 import com.harness.risk.starter.RiskApplication;
@@ -43,6 +44,8 @@ class AuthControllerTest {
     private ObjectMapper objectMapper;
     @MockBean
     private AuthService authService;
+    @MockBean
+    private AuditLogService auditLogService;
 
     @Test
     void loginReturnsTokenResponse() throws Exception {

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harness.risk.application.dto.CreateRuleRequest;
 import com.harness.risk.application.dto.RuleResponse;
 import com.harness.risk.application.dto.UpdateRuleRequest;
+import com.harness.risk.application.service.AuditLogService;
 import com.harness.risk.application.service.RiskRuleService;
 import com.harness.risk.common.security.JwtUtil;
 import com.harness.risk.starter.RiskApplication;
@@ -49,6 +50,8 @@ class RuleControllerTest {
     private JwtUtil jwtUtil;
     @MockBean
     private RiskRuleService riskRuleService;
+    @MockBean
+    private AuditLogService auditLogService;
 
     private String adminToken() {
         return "Bearer " + jwtUtil.generateAccessToken(1L, "alice", "admin");

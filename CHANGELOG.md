@@ -27,6 +27,14 @@
   - 更新会话交接状态到阶段 4 完成、阶段 5 待开始
 
 ### Added
+- 审计日志 API（Stage 6）：
+  - `AuditLogService` + `AuditLogServiceImpl`（risk-application）：审计日志记录、详情、分页查询，支持 userId/action/resourceType 筛选
+  - `AuditLogController`（risk-interfaces）：`/api/v1/audit-logs` 查询端点，仅 ADMIN 可访问
+  - `AuditOperation` 注解 + `AuditOperationAspect`：写操作成功后自动记录审计日志，审计失败不影响主业务响应
+  - 在用户、规则、事件、评分、决策和登出写接口补充自动审计标记
+  - DTO（risk-application）：`CreateAuditLogRequest`、`AuditLogResponse`
+  - 测试：`AuditLogServiceTest` (4) + `AuditLogControllerTest` (4) + `AuditOperationAspectTest` (1)
+  - SDD 产物：`docs/specs/audit-log-api.md`、`docs/plans/audit-log-api.md`
 - 风险评分与决策 API（Stage 5）：
   - `RiskScoreService` + `RiskScoreServiceImpl`（risk-application）：评分创建、详情、分页、主体最新评分查询
   - `DecisionService` + `DecisionServiceImpl`（risk-application）：决策创建、详情、分页、更新

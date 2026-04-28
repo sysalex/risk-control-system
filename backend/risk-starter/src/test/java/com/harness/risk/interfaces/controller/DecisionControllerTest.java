@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harness.risk.application.dto.CreateDecisionRequest;
 import com.harness.risk.application.dto.DecisionResponse;
 import com.harness.risk.application.dto.UpdateDecisionRequest;
+import com.harness.risk.application.service.AuditLogService;
 import com.harness.risk.application.service.DecisionService;
 import com.harness.risk.common.security.JwtUtil;
 import com.harness.risk.domain.enums.DecisionTypeEnums;
@@ -49,6 +50,8 @@ class DecisionControllerTest {
     private JwtUtil jwtUtil;
     @MockBean
     private DecisionService decisionService;
+    @MockBean
+    private AuditLogService auditLogService;
 
     private String adminToken() {
         return "Bearer " + jwtUtil.generateAccessToken(1L, "alice", "admin");

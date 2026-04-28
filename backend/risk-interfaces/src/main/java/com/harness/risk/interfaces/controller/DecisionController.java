@@ -5,6 +5,7 @@ import com.harness.risk.application.dto.CreateDecisionRequest;
 import com.harness.risk.application.dto.DecisionResponse;
 import com.harness.risk.application.dto.UpdateDecisionRequest;
 import com.harness.risk.application.service.DecisionService;
+import com.harness.risk.common.annotation.AuditOperation;
 import com.harness.risk.common.annotation.RequireRole;
 import com.harness.risk.common.response.ApiResponse;
 import jakarta.validation.Valid;
@@ -53,6 +54,7 @@ public class DecisionController {
      */
     @PostMapping
     @RequireRole("admin")
+    @AuditOperation(action = "create", resourceType = "decision")
     public ApiResponse<DecisionResponse> create(@Valid @RequestBody CreateDecisionRequest request) {
         return ApiResponse.ok(decisionService.create(request));
     }
@@ -77,6 +79,7 @@ public class DecisionController {
      */
     @PutMapping("/{id}")
     @RequireRole("admin")
+    @AuditOperation(action = "update", resourceType = "decision")
     public ApiResponse<DecisionResponse> update(
             @PathVariable Long id,
             @Valid @RequestBody UpdateDecisionRequest request) {

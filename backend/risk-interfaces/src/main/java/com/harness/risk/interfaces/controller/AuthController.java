@@ -6,6 +6,7 @@ import com.harness.risk.application.dto.RegisterRequest;
 import com.harness.risk.application.dto.TokenResponse;
 import com.harness.risk.application.dto.UserResponse;
 import com.harness.risk.application.service.AuthService;
+import com.harness.risk.common.annotation.AuditOperation;
 import com.harness.risk.common.response.ApiResponse;
 import com.harness.risk.common.security.AuthConstants;
 import jakarta.servlet.http.HttpServletRequest;
@@ -61,6 +62,7 @@ public class AuthController {
      * @return 成功响应
      */
     @PostMapping("/logout")
+    @AuditOperation(action = "logout", resourceType = "auth")
     public ApiResponse<Void> logout(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute(AuthConstants.ATTR_USER_ID);
         authService.logout(userId);
