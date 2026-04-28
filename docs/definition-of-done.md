@@ -14,14 +14,14 @@
 - [ ] 完整 SDD：已完成 Specify → Clarify → Plan → Tasks，用户确认已记录，`task-list.md` 已拆分可验证子任务
 
 ### 代码质量
-- [ ] `checkstyle` 零警告（Java）/ `eslint` 零错误（TypeScript/Vue）
-- [ ] `javac` 编译通过，无 `@SuppressWarnings` 滥用 / `vue-tsc` 类型检查通过
+- [ ] Java 编译通过；当前 Maven 未配置 checkstyle/spotless 时，Java 代码规范以代码审查和现有风格一致性核对为准
+- [ ] TypeScript/Vue：`eslint` 零错误，`vue-tsc` 类型检查通过
 - [ ] 方法长度 ≤ 50 行，文件长度 ≤ 800 行
 - [ ] 无硬编码的密钥、URL、魔法数字
 
 ### 测试
 - [ ] 新增代码有对应测试（TDD：先写测试再实现）
-- [ ] 测试覆盖率满足分层要求（`jacoco` / `vitest --coverage`）
+- [ ] 测试覆盖率满足分层目标（`jacoco` / `vitest --coverage`）；当前后端 Jacoco 阈值未自动 fail，必须人工核对报告
   - `risk-domain` / `risk-application`（核心逻辑）：≥ 85%
   - `risk-interfaces`（Controller 薄层）：≥ 70%
   - `risk-starter`（配置、入口）：≥ 60%，纯配置类可用 Lombok `@Generated` 排除
@@ -97,8 +97,8 @@
 ## 阶段完成 DoD（每个开发阶段结束时）
 
 - [ ] 阶段内所有任务均满足通用 DoD
-- [ ] 后端：`mvn test` 全量通过，jacoco 覆盖率报告存入 `docs/coverage/`
-- [ ] 前端：`vitest --coverage` 全量通过
+- [ ] 后端：`mvn test` 全量通过，jacoco 覆盖率报告已人工核对；若需要留档，可在 `docs/coverage/` 存放摘要而非完整 HTML
+- [ ] 前端：`pnpm coverage` 全量通过并满足覆盖率目标
 - [ ] `git` 提交信息符合 Conventional Commits 格式
 - [ ] 代码已推送到远程仓库
 - [ ] `CHANGELOG.md` 已记录本阶段变更
@@ -111,7 +111,7 @@ Agent 发现以下情况时，**必须停止当前任务并上报**，不得绕�
 
 | 违规类型 | 处理方式 |
 |---------|---------|
-| 测试覆盖率 < 80% | 补写测试，不得标记完成 |
+| 测试覆盖率低于目标 | 补写测试或记录明确豁免原因，不得无说明标记完成 |
 | 编译失败 | 修复类型错误，不得用 `@SuppressWarnings` 掩盖 |
 | 安全漏洞（SQL注入/XSS等） | 立即修复，记录到 `docs/adr/` |
 | 跨层调用（Controller→Mapper） | 重构，不得以"临时方案"提交 |

@@ -9,6 +9,12 @@
 ## [Unreleased]
 
 ### Docs
+- 深度优化 Harness Engineering 规范可信度：
+  - 区分 Claude Code Hook 自动化与 Codex/PowerShell 手动验证路径
+  - 将 Java checkstyle/spotless 从“已自动执行”修正为“尚未配置的目标自动化”
+  - 明确后端 Jacoco 当前只生成报告，覆盖率阈值需要人工核对
+  - 放宽 Javadoc 规则，避免 DTO、测试、简单配置类产生低价值注释
+  - 新增技术债务 TD-002、TD-003 跟踪覆盖率阈值和 Java 代码风格自动化
 - 优化 Harness Engineering 规范：
   - 明确规范优先级，减少 `AGENTS.md`、`CLAUDE.md`、DoD、历史记录之间的冲突判定成本
   - 将任务收尾从“一律默认 commit + push”调整为按代码、文档/配置、只读分析任务分流

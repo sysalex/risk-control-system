@@ -256,11 +256,12 @@ View → Store (Pinia) → API Layer → Backend
 
 ### Java 注释规范（Javadoc）
 
-- 每个类必须有 `/** */` 类级 Javadoc，包含职责描述、`@author harness-agent`、`@since YYYY-MM-DD`
-- 每个 public 方法必须有 Javadoc：作用描述 + `@param` + `@return`
-- 内部类/嵌套类同 public 类规范
+- 领域模型、领域服务、Application Service、Controller 和对外公共工具类必须有 `/** */` 类级 Javadoc，包含职责描述、`@author harness-agent`、`@since YYYY-MM-DD`
+- public 方法在以下场景必须有 Javadoc：对外 API、复杂业务规则、非显然边界条件、被跨模块复用的工具方法
+- 简单 DTO、测试类、配置类、私有辅助方法可不写 Javadoc，避免低信息量注释
+- 内部类/嵌套类按其可见性和职责适用上述规则
 - 实体类字段必须添加注释，统一使用 `/** */` Javadoc 格式
-- 方法内部的代码注释使用 `//` 单行格式，能添加注释的尽量添加
+- 方法内部的代码注释使用 `//` 单行格式，仅在解释原因、边界、约束或非显然决策时添加
 - 注释使用中文，描述职责和用途，不描述实现细节
 - 禁止无信息量的注释（如 `// 构造函数`、`// 设置值`）
 
@@ -287,7 +288,7 @@ View → Store (Pinia) → API Layer → Backend
 
 ## 测试要求
 
-- 后端覆盖率 ≥ 80%（jacoco-maven-plugin）
+- 后端覆盖率目标 ≥ 80%（当前 Jacoco 生成报告，阈值需人工核对；自动阈值见技术债务）
 - 前端覆盖率 ≥ 80%（vitest --coverage）
 - E2E 测试覆盖核心用户流程（Playwright）
 - 新功能必须先写测试（TDD）
@@ -330,7 +331,7 @@ View → Store (Pinia) → API Layer → Backend
 **任何任务在标记 `[x]` 之前，必须逐项核对 `docs/definition-of-done.md` 对应清单。**
 
 核心要求：
-- 测试覆盖率 ≥ 80%，所有测试通过
+- 测试覆盖率目标 ≥ 80%，所有测试通过；当前后端覆盖率阈值未自动 fail，必须人工核对报告
 - lint + 编译零错误
 - 关键操作有日志（含 requestId）
 - `docs/task-list.md` 状态已更新，`CHANGELOG.md` 已更新
@@ -346,9 +347,9 @@ View → Store (Pinia) → API Layer → Backend
 ## 循环机制
 
 四层反馈循环，详见 `docs/feedback-loop.md`：
-- **L1 工具级**：Write/Edit 后自动 lint/format；危险命令 PreToolUse 拦截
+- **L1 工具级**：Claude 环境按 `.claude/settings.json` 触发 Hook；Codex/PowerShell 环境以手动验证命令和 `scripts/check.ps1` 为准
 - **L2 任务级**：写测试 → 实现 → 测试通过 → DoD 核查 → 标记完成
-- **L3 会话级**：Stop Hook 自动运行 lint + 编译 + DoD 提醒
+- **L3 会话级**：Claude Stop Hook 运行轻量检查和 DoD 提醒；非 Claude 环境需要手动运行质量门禁
 - **L4 阶段级**：阶段完成后在 `docs/retrospectives/` 创建回顾文档
 
 ## AI Agent 行为规范
@@ -386,10 +387,18 @@ main (稳定)
 
 ## Hooks 自动化
 
-详见 `.claude/settings.json`：
-- 保存 Java 文件后自动运行 checkstyle + spotless check
-- 保存 Vue/TS 文件后自动运行 prettier + eslint
-- 会话结束时运行编译 + 测试质量门禁
+`.claude/settings.json` 仅适用于 Claude Code 环境；Codex/PowerShell 环境不保证触发这些 Hook。
+
+当前可依赖的验证入口：
+- Windows：`powershell -ExecutionPolicy Bypass -File scripts/check.ps1`
+- 类 Unix：`bash scripts/check.sh`
+- 后端：`cd backend && mvn test`
+- 前端：`cd frontend && pnpm type-check && pnpm lint && pnpm coverage && pnpm build`
+
+当前自动化边界：
+- Claude Hook 可拦截部分危险 Bash 命令和不合规提交信息
+- Claude Hook 可在会话结束时运行轻量编译/类型检查提醒
+- Java 的 checkstyle/spotless 尚未在 Maven 中配置，不应视为已自动执行
 
 ---
 

@@ -10,8 +10,7 @@
 ```
 ┌─────────────────────────────────────────────────────────┐
 │  L1：工具调用级（毫秒）                                   │
-│  Write/Edit → PostToolUse Hook → checkstyle/spotless/prettier 自动修复  │
-│  Bash → PreToolUse Hook → 危险命令拦截                   │
+│  Claude Hook → 轻量检查/危险命令拦截；Codex 环境 → 手动验证命令        │
 └─────────────────────────────────────────────────────────┘
                           ↓
 ┌─────────────────────────────────────────────────────────┐
@@ -21,7 +20,7 @@
                           ↓
 ┌─────────────────────────────────────────────────────────┐
 │  L3：会话级（小时）                                       │
-│  Stop Hook → lint + 类型检查 + DoD 提醒 → 推送代码       │
+│  质量门禁脚本 + DoD 核查 → 按任务类型提交/推送            │
 └─────────────────────────────────────────────────────────┘
                           ↓
 ┌─────────────────────────────────────────────────────────┐
@@ -32,15 +31,19 @@
 
 ---
 
-## L1：工具调用级反馈（自动，已配置）
+## L1：工具调用级反馈（按环境区分）
 
-| 触发 | 反馈 | 配置位置 |
-|------|------|---------|
-| 写入/编辑 `.java` 文件 | checkstyle + spotless check | settings.json PostToolUse |
-| 写入/编辑 `.vue/.ts` 文件 | prettier + eslint --fix | settings.json PostToolUse |
-| 执行 `mvn test`/`vitest` | 提示检查覆盖率是否满足 DoD | settings.json PostToolUse |
-| 执行危险命令 | 拦截并报错 | settings.json PreToolUse |
-| 会话结束 | lint + 类型检查 + DoD 提醒 | settings.json Stop |
+| 环境 | 触发 | 反馈 | 配置位置 |
+|------|------|------|---------|
+| Claude Code | 执行危险 Bash 命令 | 拦截 `rm -rf`、强推、`git reset --hard`、危险 SQL 等 | `.claude/settings.json` PreToolUse |
+| Claude Code | `git commit -m` | 校验 Conventional Commits 格式 | `.claude/settings.json` PreToolUse |
+| Claude Code | 执行 `mvn test` / `vitest` | 提醒人工核对覆盖率是否满足 DoD | `.claude/settings.json` PostToolUse |
+| Claude Code | 会话结束 | 运行轻量编译/类型检查并提醒 DoD、任务清单、CHANGELOG | `.claude/settings.json` Stop |
+| Codex / PowerShell | 任务完成前 | 手动运行 `scripts/check.ps1` 或分项验证命令 | `scripts/check.ps1` |
+
+说明：
+- `.claude/settings.json` 不保证在 Codex 环境触发。
+- Java checkstyle/spotless 当前未在 Maven 中配置；文档不得把它们描述为已生效的自动门禁。
 
 ---
 
@@ -56,7 +59,7 @@
 5. 写测试（RED）
 6. 写实现（GREEN）
 7. 运行测试，确认通过
-8. 检查覆盖率 ≥ 80%
+8. 检查覆盖率目标；后端当前需人工核对 Jacoco 报告，未达目标时补测或记录豁免原因
 9. 逐项核对 DoD 清单
 10. 运行 `scripts/check.sh`；Windows 使用 `powershell -ExecutionPolicy Bypass -File scripts/check.ps1`
 11. 更新 docs/task-list.md 状态为 [x]
@@ -67,14 +70,19 @@
 
 ---
 
-## L3：会话级反馈（Stop Hook 自动执行）
+## L3：会话级反馈
 
-Stop Hook 在每次会话结束时自动运行：
-- Java 编译（mvn compile）
-- Java 代码规范（checkstyle）
-- TypeScript 类型检查（vue-tsc）
+Claude Code 环境的 Stop Hook 会运行轻量检查和提醒：
+- Java 编译（`mvn compile`）
+- TypeScript 类型检查（`vue-tsc`）
 - DoD 核查提醒
 - 任务清单更新提醒
+
+Codex / PowerShell 环境不依赖 Stop Hook，任务完成前手动运行：
+- 文档任务：`git diff --check`
+- 后端任务：`cd backend && mvn test`
+- 前端任务：`cd frontend && pnpm type-check && pnpm lint && pnpm coverage && pnpm build`
+- 全量质量门禁：`powershell -ExecutionPolicy Bypass -File scripts/check.ps1`
 
 ---
 
@@ -120,7 +128,7 @@ Agent 在每次工作结束前确认：
 
 - [ ] 所有修改的文件已通过 lint/格式化
 - [ ] 新增代码有测试，测试已通过
-- [ ] 覆盖率未下降
+- [ ] 覆盖率已人工核对，或本次任务不涉及代码
 - [ ] 日志中无未处理的异常
 - [ ] DoD 清单已逐项核对
 - [ ] 任务状态已更新
