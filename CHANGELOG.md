@@ -13,7 +13,7 @@
   - 明确规范优先级，减少 `AGENTS.md`、`CLAUDE.md`、DoD、历史记录之间的冲突判定成本
   - 将任务收尾从“一律默认 commit + push”调整为按代码、文档/配置、只读分析任务分流
   - 补充 SDD 快速判断规则，保留原有轻量/完整 SDD 闭环要求
-  - 修正 ADR 中 Java 版本和 COLA Maven 多模块描述漂移
+  - 修正 ADR 中 COLA Maven 多模块描述漂移，并明确项目编译目标为 Java 17
   - 更新会话交接状态到阶段 4 完成、阶段 5 待开始
 
 ### Added
@@ -108,7 +108,7 @@
 
 ### Changed
 - **后端技术栈切换**：FastAPI + PostgreSQL + SQLAlchemy → Spring Boot 3 + MySQL + MyBatis-Plus
-- **后端语言**：Python 3.12 → Java 21（兼容 Java 17+）
+- **后端语言**：Python 3.12 → Java 17
 - **构建工具**：uv/pip → Maven 3.9+
 - **测试框架**：pytest + httpx → JUnit 5 + Mockito + Spring Boot Test
 - **ORM 框架**：SQLAlchemy 2.0 → MyBatis-Plus 3.5.x（代码生成器 + 条件构造器）

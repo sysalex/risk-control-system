@@ -6,7 +6,7 @@
 ## 决策
 
 - 前端: Vue 3 + TypeScript + Vite + Pinia
-- 后端: Java 21（兼容 Java 17+）+ Spring Boot 3.x + MyBatis-Plus 3.5.x
+- 后端: Java 17 + Spring Boot 3.x + MyBatis-Plus 3.5.x
 - 数据库: MySQL 8.0
 - 构建工具: Maven 3.9+
 
@@ -14,7 +14,7 @@
 
 - Spring Boot 3.x 生态成熟，企业级开发标准框架
 - MyBatis-Plus 简化 CRUD 操作，条件构造器灵活，代码生成器提升开发效率
-- Java 21 LTS 长期支持版本，性能稳定；保留 Java 17+ 兼容性作为最低运行边界
+- Java 17 LTS 是项目编译目标，生态稳定；本地开发脚本可使用 IDEA JDK 21 作为 Maven 运行时
 - Vue 3 Composition API 更好 TypeScript 支持和逻辑复用
 - Pinia 是 Vue 官方推荐的状态管理，比 Vuex 更简洁
 - MySQL 8.0 在国内社区资源丰富，团队熟悉度高

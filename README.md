@@ -17,18 +17,26 @@
 - [pnpm](https://pnpm.io/installation)（Node 包管理）
 - JDK 17+
 
-### 一键初始化（首次）
+### 安装依赖（首次）
 
 ```bash
-bash scripts/setup.sh
+cd backend
+mvn test
+
+cd ../frontend
+pnpm install
 ```
 
-完成后会自动：安装前后端依赖、创建 `.env`、启动数据库、运行迁移。
+本地数据库和 `.env` 按 [CLAUDE.md](./CLAUDE.md) 中的开发环境配置准备。
 
 ### 启动开发服务器
 
 ```bash
-bash scripts/dev.sh
+cd backend
+mvn spring-boot:run
+
+cd ../frontend
+pnpm dev
 ```
 
 | 服务 | 地址 |
@@ -41,9 +49,11 @@ bash scripts/dev.sh
 ### 运行测试
 
 ```bash
-bash scripts/test.sh              # 全量测试
-bash scripts/test.sh --backend-only   # 仅后端
-bash scripts/test.sh --frontend-only  # 仅前端
+cd backend
+mvn test
+
+cd ../frontend
+pnpm vitest run
 ```
 
 ### 质量门禁检查
