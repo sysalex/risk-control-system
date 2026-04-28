@@ -20,6 +20,12 @@ describe('router', () => {
     expect(router.resolve('/rules').name).toBe('rules')
   })
 
+  it('registers analyst feature pages under main layout', () => {
+    expect(router.resolve('/events').name).toBe('events')
+    expect(router.resolve('/decisions').name).toBe('score-decisions')
+    expect(router.resolve('/audit-logs').name).toBe('audit-logs')
+  })
+
   it('loads the dashboard view component lazily', async () => {
     const route = router.getRoutes().find((item) => item.name === 'dashboard')
     const component = route?.components?.default

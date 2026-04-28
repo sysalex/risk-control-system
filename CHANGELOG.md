@@ -28,6 +28,13 @@
   - 更新会话交接状态到阶段 4 完成、阶段 5 待开始
 
 ### Added
+- 分析师前端功能（Stage 9）：
+  - `EventAnalysisView`：风险事件列表和未处理事件处理动作
+  - `ScoreDecisionView`：风险评分列表、决策记录列表和用户重新评分入口
+  - `AuditLogView`：审计日志列表
+  - 路由接入：`/events`、`/decisions`、`/audit-logs`
+  - 测试：`EventAnalysisView.spec`、`ScoreDecisionView.spec`、`AuditLogView.spec`、分析师路由断言
+  - SDD 产物：`docs/specs/analyst-frontend.md`、`docs/plans/analyst-frontend.md`
 - 管理员前端功能（Stage 8）：
   - `UserManagementView`：用户列表、新增用户、删除用户
   - `RuleManagementView`：规则列表、新增规则、删除规则、启用/停用规则

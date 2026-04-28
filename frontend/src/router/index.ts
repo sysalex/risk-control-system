@@ -25,6 +25,21 @@ const routes: RouteRecordRaw[] = [
         name: 'rules',
         component: () => import('@/views/RuleManagementView.vue'),
       },
+      {
+        path: 'events',
+        name: 'events',
+        component: () => import('@/views/EventAnalysisView.vue'),
+      },
+      {
+        path: 'decisions',
+        name: 'score-decisions',
+        component: () => import('@/views/ScoreDecisionView.vue'),
+      },
+      {
+        path: 'audit-logs',
+        name: 'audit-logs',
+        component: () => import('@/views/AuditLogView.vue'),
+      },
     ],
   },
 ]
