@@ -245,6 +245,7 @@ View → Store (Pinia) → API Layer → Backend
 - Spring Boot 版本：3.x
 - 类型：所有方法必须有完整类型注解
 - 命名：变量/方法 camelCase，类名/接口名 PascalCase，常量 UPPER_SNAKE_CASE
+- 枚举类统一放在 `enums` 包下，命名格式为 `XxxEnums`，例如 `UserRoleEnums`、`RiskLevelEnums`
 - **Starter 层**：`@SpringBootApplication` 入口、`@MapperScan`、配置类（Cors、Mvc、Redis 等）
 - **Interfaces 层**：`@RestController` + `@RequestMapping`，只做参数校验和响应格式化
 - **Application 层**：`@Service`，用例编排、`@Transactional` 事务管理
