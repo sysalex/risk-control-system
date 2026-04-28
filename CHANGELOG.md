@@ -9,6 +9,13 @@
 ## [Unreleased]
 
 ### Added
+- 规则管理 API（Stage 3）：
+  - `RiskRuleMapper`（risk-infrastructure）：MyBatis-Plus `BaseMapper<RiskRule>` 基础数据访问
+  - `RiskRuleService` + `RiskRuleServiceImpl`（risk-application）：规则 CRUD、启停、分页查询（按 priority 升序 + createdAt 降序）
+  - `RuleController`（risk-interfaces）：`/api/v1/rules` 完整 REST 端点，list/get 对所有认证用户开放，写操作仅限 ADMIN
+  - DTO（risk-application）：`CreateRuleRequest`、`UpdateRuleRequest`、`RuleResponse`
+  - 测试：`RiskRuleServiceTest` (12) Mockito 单元测试 + `RuleControllerTest` (9) MockMvc 集成测试
+  - SDD 产物：`docs/specs/rule-management.md`、`docs/plans/rule-management.md`
 - 认证与用户 API（Stage 2）：
   - `JwtUtil`（risk-common）：HS256 JWT 生成/解析，支持 access token / refresh token，密钥通过 SHA-256 派生固定为 32 字节
   - `PasswordEncoder`（risk-common）：BCrypt 哈希包装器（strength=10）

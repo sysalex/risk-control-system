@@ -43,13 +43,72 @@ DELETE /users/{id}          # 删除用户（admin）
 ## 规则接口
 
 ```
-GET    /rules                       # 规则列表
-POST   /rules                       # 创建规则（admin/analyst）
-GET    /rules/{id}                  # 规则详情
-PUT    /rules/{id}                  # 更新规则
-DELETE /rules/{id}                  # 删除规则
-POST   /rules/{id}/enable           # 启用规则
-POST   /rules/{id}/disable          # 停用规则
+GET    /rules                       # 规则列表（所有认证用户）
+POST   /rules                       # 创建规则（admin）
+GET    /rules/{id}                  # 规则详情（所有认证用户）
+PUT    /rules/{id}                  # 更新规则（admin）
+DELETE /rules/{id}                  # 删除规则（admin）
+POST   /rules/{id}/enable           # 启用规则（admin）
+POST   /rules/{id}/disable          # 停用规则（admin）
+```
+
+### 请求/响应示例
+
+**创建规则**
+```http
+POST /api/v1/rules
+Authorization: Bearer <JWT>
+Content-Type: application/json
+
+{
+  "name": "大额交易检测",
+  "description": "检测单笔超过 1 万的交易",
+  "conditions": "{\"operator\":\"AND\",\"conditions\":[]}",
+  "actions": "{\"type\":\"alert\",\"risk_level\":\"high\"}",
+  "priority": 10
+}
+```
+
+**响应**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "name": "大额交易检测",
+    "description": "检测单笔超过 1 万的交易",
+    "conditions": "{\"operator\":\"AND\",\"conditions\":[]}",
+    "actions": "{\"type\":\"alert\",\"risk_level\":\"high\"}",
+    "priority": 10,
+    "enabled": true,
+    "creatorId": 1,
+    "createdAt": "2026-04-27T10:00:00",
+    "updatedAt": "2026-04-27T10:00:00"
+  },
+  "message": null,
+  "meta": null
+}
+```
+
+**规则列表**
+```http
+GET /api/v1/rules?page=1&limit=20
+Authorization: Bearer <JWT>
+```
+
+**响应**
+```json
+{
+  "success": true,
+  "data": {
+    "records": [...],
+    "total": 100,
+    "size": 20,
+    "current": 1
+  },
+  "message": null,
+  "meta": { "total": 100, "page": 1, "limit": 20 }
+}
 ```
 
 ## 风险事件接口

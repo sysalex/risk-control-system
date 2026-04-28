@@ -76,10 +76,24 @@
 
 ## 阶段 3：后端 API — 规则管理
 
-- [ ] 3.1 RiskRuleRepository
-- [ ] 3.2 RiskRuleService（CRUD、启停规则）
-- [ ] 3.3 /rules 路由
-- [ ] 3.4 规则模块测试
+- [x] 3.1 RiskRuleRepository
+  - 完成时间：2026-04-27
+  - 新增 `RiskRuleMapper` 继承 `BaseMapper<RiskRule>`
+- [x] 3.2 RiskRuleService（CRUD、启停规则）
+  - 完成时间：2026-04-27
+  - 新增 `RiskRuleService` 接口 + `RiskRuleServiceImpl`
+  - 包含：create / getById / list（按 priority asc, createdAt desc 分页）/ update / delete / enableRule / disableRule
+  - 名称唯一性校验、不存在时抛 404 业务异常
+- [x] 3.3 /rules 路由
+  - 完成时间：2026-04-27
+  - 新增 `RuleController`：GET /rules、GET /rules/{id}、POST /rules、PUT /rules/{id}、DELETE /rules/{id}、POST /rules/{id}/enable、POST /rules/{id}/disable
+  - 权限：list/get 对所有认证用户开放；写操作仅限 ADMIN
+- [x] 3.4 规则模块测试
+  - 完成时间：2026-04-27
+  - 后端全量测试：73 个用例，0 失败
+  - risk-application：`RiskRuleServiceTest` (12) — Mockito 单元测试
+  - risk-starter：`RuleControllerTest` (9) — `@SpringBootTest` + `MockMvc` 集成测试
+  - 审查状态：代码审查通过
 
 依赖：阶段 2 完成
 
