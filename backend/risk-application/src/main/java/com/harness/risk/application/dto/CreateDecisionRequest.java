@@ -5,17 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-/**
- * 创建决策请求 DTO
- *
- * @param eventId       关联事件 ID
- * @param decisionType  决策类型
- * @param reason        决策原因
- * @param notes         备注
- * @param decidedBy     决策人用户 ID
- * @author harness-agent
- * @since 2026-04-28
- */
+/** 创建决策请求。 */
 public record CreateDecisionRequest(
         @NotNull(message = "事件 ID 不能为空")
         Long eventId,

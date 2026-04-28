@@ -6,16 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-/**
- * 管理员创建用户请求 DTO
- *
- * @param username 用户名
- * @param email    邮箱
- * @param password 密码
- * @param role     角色
- * @author harness-agent
- * @since 2026-04-27
- */
+/** 管理员创建用户请求。 */
 public record CreateUserRequest(
         @NotBlank(message = "用户名不能为空")
         String username,

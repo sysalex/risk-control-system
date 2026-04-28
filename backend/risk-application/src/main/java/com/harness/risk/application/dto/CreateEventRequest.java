@@ -5,17 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-/**
- * 创建风险事件请求 DTO
- *
- * @param ruleId      触发规则的 ID
- * @param subjectType 主体类型
- * @param subjectId   主体 ID
- * @param riskLevel   风险等级
- * @param description 事件描述
- * @author harness-agent
- * @since 2026-04-27
- */
+/** 创建风险事件请求。 */
 public record CreateEventRequest(
         @NotNull(message = "规则 ID 不能为空")
         Long ruleId,

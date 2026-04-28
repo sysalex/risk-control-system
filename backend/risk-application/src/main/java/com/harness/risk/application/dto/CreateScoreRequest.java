@@ -8,19 +8,7 @@ import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 
-/**
- * 创建风险评分请求 DTO
- *
- * @param eventId     关联事件 ID
- * @param subjectType 主体类型
- * @param subjectId   主体 ID
- * @param score       风险评分
- * @param maxScore    满分值
- * @param dimensions  维度明细 JSON
- * @param evaluatorId 评估人用户 ID
- * @author harness-agent
- * @since 2026-04-28
- */
+/** 创建风险评分请求。 */
 public record CreateScoreRequest(
         @NotNull(message = "事件 ID 不能为空")
         Long eventId,

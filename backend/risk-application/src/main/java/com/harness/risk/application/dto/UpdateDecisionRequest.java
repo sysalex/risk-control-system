@@ -3,15 +3,7 @@ package com.harness.risk.application.dto;
 import com.harness.risk.domain.decision.DecisionType;
 import jakarta.validation.constraints.Size;
 
-/**
- * 更新决策请求 DTO
- *
- * @param decisionType 决策类型
- * @param reason       决策原因
- * @param notes        备注
- * @author harness-agent
- * @since 2026-04-28
- */
+/** 更新决策请求。 */
 public record UpdateDecisionRequest(
         DecisionType decisionType,
 
