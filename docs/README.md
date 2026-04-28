@@ -9,6 +9,12 @@
 | [`../CLAUDE.md`](../CLAUDE.md) | Harness 核心规范：技术栈、架构约束、编码规范 | 所有 Agent |
 | [`../AGENTS.md`](../AGENTS.md) | Agent 行为指令：工作流程、决策树、协作模式 | 所有 Agent |
 
+### 规范优先级
+
+冲突裁决顺序：当前用户指令 → `AGENTS.md` → `invariants-and-guardrails.md` → `CLAUDE.md` → `definition-of-done.md` → `specs/` / `plans/` → 历史记录。
+
+涉及 API 契约、数据库 schema、认证授权、安全边界或生产配置时，必须先确认影响范围和回滚方式。
+
 ## 开发指南
 
 | 文件 | 说明 |

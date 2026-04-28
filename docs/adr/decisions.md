@@ -6,7 +6,7 @@
 ## 决策
 
 - 前端: Vue 3 + TypeScript + Vite + Pinia
-- 后端: Java 17 + Spring Boot 3.x + MyBatis-Plus 3.5.x
+- 后端: Java 21（兼容 Java 17+）+ Spring Boot 3.x + MyBatis-Plus 3.5.x
 - 数据库: MySQL 8.0
 - 构建工具: Maven 3.9+
 
@@ -14,7 +14,7 @@
 
 - Spring Boot 3.x 生态成熟，企业级开发标准框架
 - MyBatis-Plus 简化 CRUD 操作，条件构造器灵活，代码生成器提升开发效率
-- Java 17 LTS 长期支持版本，性能稳定
+- Java 21 LTS 长期支持版本，性能稳定；保留 Java 17+ 兼容性作为最低运行边界
 - Vue 3 Composition API 更好 TypeScript 支持和逻辑复用
 - Pinia 是 Vue 官方推荐的状态管理，比 Vuex 更简洁
 - MySQL 8.0 在国内社区资源丰富，团队熟悉度高
@@ -111,8 +111,8 @@ starter → interfaces → application → infrastructure → domain
 - COLA 架构通过依赖方向强制解耦，Domain 层不依赖任何技术实现
 - Application 层专注用例编排，Domain 层专注业务规则，职责清晰
 - 与传统的 `Controller → Service → Mapper` 扁平结构相比，增加了 Application/Domain 的分离，避免 Service 层膨胀成"上帝类"
-- 采用包级分层而非 Maven 多模块，避免小项目过度工程化（多模块适合微服务场景）
-- 若未来需要拆分为微服务，每个模块可直接升级为独立 Maven sub-module
+- 采用 Maven 多模块固化依赖边界，避免接口层、应用层、领域层之间发生隐式跨层引用
+- 若未来需要拆分为微服务，现有模块边界可作为服务拆分和发布单元划分的基础
 
 ## 与传统分层的对比
 

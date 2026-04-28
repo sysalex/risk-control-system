@@ -8,6 +8,14 @@
 
 ## [Unreleased]
 
+### Docs
+- 优化 Harness Engineering 规范：
+  - 明确规范优先级，减少 `AGENTS.md`、`CLAUDE.md`、DoD、历史记录之间的冲突判定成本
+  - 将任务收尾从“一律默认 commit + push”调整为按代码、文档/配置、只读分析任务分流
+  - 补充 SDD 快速判断规则，保留原有轻量/完整 SDD 闭环要求
+  - 修正 ADR 中 Java 版本和 COLA Maven 多模块描述漂移
+  - 更新会话交接状态到阶段 4 完成、阶段 5 待开始
+
 ### Added
 - 风险事件 API（Stage 4）：
   - `RiskEventMapper`（risk-infrastructure）：MyBatis-Plus `BaseMapper<RiskEvent>` 基础数据访问
@@ -40,21 +48,6 @@
     - risk-starter：AuthControllerTest (4) + UserControllerTest (5) + JwtInterceptorTest (4) + Flyway 迁移测试 (4)
   - SDD 产物：`docs/specs/auth-api.md`、`docs/plans/auth-api.md`
 
-### Changed
-- **后端技术栈切换**：FastAPI + PostgreSQL + SQLAlchemy → Spring Boot 3 + MySQL + MyBatis-Plus
-- **后端语言**：Python 3.12 → Java 17
-- **构建工具**：uv/pip → Maven 3.9+
-- **测试框架**：pytest + httpx → JUnit 5 + Mockito + Spring Boot Test
-- **ORM 框架**：SQLAlchemy 2.0 → MyBatis-Plus 3.5.x（代码生成器 + 条件构造器）
-- **数据库迁移**：Alembic → Flyway
-- **端口调整**：后端 8000 → 8080
-- **质量门禁**：ruff + mypy → checkstyle + spotless + javac
-- **后端目录结构**：app/{api/core/models/services/repositories} → backend/ 下 6 个 Maven 子模块（starter/interfaces/application/infrastructure/domain/common）
-- **编码规范**：Python snake_case → Java camelCase/PascalCase，`@Slf4j` 替代 `print()`
-- **异常处理**：`AppError` → `AppException`，`@ControllerAdvice` 全局异常处理
-- **日志规范**：`from app.core.logging import get_logger` → `@Slf4j` + `log.info()`
-
-### Added
 - AuditLog 模型与迁移：
   - 新增 `AuditLog` 领域模型，记录操作类型、资源类型/ID、前后值快照、操作者 IP 等审计字段
   - 新增 `AuditLogMapper` 基础 Mapper，为后续审计日志自动注入提供持久化边界
@@ -114,6 +107,18 @@
 - 架构决策记录：docs/adr/decisions.md（技术栈选型、分层架构、认证方案、审计日志不可变）
 
 ### Changed
+- **后端技术栈切换**：FastAPI + PostgreSQL + SQLAlchemy → Spring Boot 3 + MySQL + MyBatis-Plus
+- **后端语言**：Python 3.12 → Java 21（兼容 Java 17+）
+- **构建工具**：uv/pip → Maven 3.9+
+- **测试框架**：pytest + httpx → JUnit 5 + Mockito + Spring Boot Test
+- **ORM 框架**：SQLAlchemy 2.0 → MyBatis-Plus 3.5.x（代码生成器 + 条件构造器）
+- **数据库迁移**：Alembic → Flyway
+- **端口调整**：后端 8000 → 8080
+- **质量门禁**：ruff + mypy → checkstyle + spotless + javac
+- **后端目录结构**：app/{api/core/models/services/repositories} → backend/ 下 6 个 Maven 子模块（starter/interfaces/application/infrastructure/domain/common）
+- **编码规范**：Python snake_case → Java camelCase/PascalCase，`@Slf4j` 替代 `print()`
+- **异常处理**：`AppError` → `AppException`，`@ControllerAdvice` 全局异常处理
+- **日志规范**：`from app.core.logging import get_logger` → `@Slf4j` + `log.info()`
 - **后端分层架构**：`Controller → Service → Mapper` 扁平三层 → COLA 四层（Interfaces → Application → Domain ← Infrastructure）
 - **ADR-005**：新增 COLA 分层架构决策记录，含与传统分层对比表
 - **AGENTS.md**：多 AI 代理兼容的上下文文件，Cursor/Codex 等工具可读取
