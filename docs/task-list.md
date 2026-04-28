@@ -126,11 +126,26 @@
 
 ## 阶段 5：后端 API — 评分与决策
 
-- [ ] 5.1 RiskScoreRepository + DecisionRepository
-- [ ] 5.2 RiskScoreService + DecisionService
-- [ ] 5.3 /scores 路由
-- [ ] 5.4 /decisions 路由
-- [ ] 5.5 评分决策模块测试
+- [x] 5.1 RiskScoreRepository + DecisionRepository
+  - 完成时间：2026-04-28
+  - 复用阶段 1.3 已完成的 `RiskScoreMapper` / `DecisionMapper`
+- [x] 5.2 RiskScoreService + DecisionService
+  - 完成时间：2026-04-28
+  - 新增 `RiskScoreService` / `DecisionService` 接口与实现
+  - 包含：评分创建、详情、分页、主体最新评分查询；决策创建、详情、分页、更新
+- [x] 5.3 /scores 路由
+  - 完成时间：2026-04-28
+  - 新增 `ScoreController`：GET /scores、POST /scores/evaluate、GET /scores/{id}、GET /scores/subject/{type}/{id}
+  - 权限：list/get 对所有认证用户开放；evaluate 仅限 ADMIN
+- [x] 5.4 /decisions 路由
+  - 完成时间：2026-04-28
+  - 新增 `DecisionController`：GET /decisions、POST /decisions、GET /decisions/{id}、PUT /decisions/{id}
+  - 权限：list/get 对所有认证用户开放；create/update 仅限 ADMIN
+- [x] 5.5 评分决策模块测试
+  - 完成时间：2026-04-28
+  - risk-application：`RiskScoreServiceTest` (7) + `DecisionServiceTest` (7) Mockito 单元测试
+  - risk-starter：`ScoreControllerTest` (5) + `DecisionControllerTest` (5) MockMvc 集成测试
+  - 审查状态：本地代码/安全自检通过；全量质量门禁通过
 
 依赖：阶段 4 完成
 

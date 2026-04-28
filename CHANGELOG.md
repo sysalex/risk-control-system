@@ -23,6 +23,14 @@
   - 更新会话交接状态到阶段 4 完成、阶段 5 待开始
 
 ### Added
+- 风险评分与决策 API（Stage 5）：
+  - `RiskScoreService` + `RiskScoreServiceImpl`（risk-application）：评分创建、详情、分页、主体最新评分查询
+  - `DecisionService` + `DecisionServiceImpl`（risk-application）：决策创建、详情、分页、更新
+  - `ScoreController`（risk-interfaces）：`/api/v1/scores` REST 端点，list/get 对认证用户开放，evaluate 仅限 ADMIN
+  - `DecisionController`（risk-interfaces）：`/api/v1/decisions` REST 端点，list/get 对认证用户开放，create/update 仅限 ADMIN
+  - DTO（risk-application）：`CreateScoreRequest`、`ScoreResponse`、`CreateDecisionRequest`、`UpdateDecisionRequest`、`DecisionResponse`
+  - 测试：`RiskScoreServiceTest` (7) + `DecisionServiceTest` (7) Mockito 单元测试，`ScoreControllerTest` (5) + `DecisionControllerTest` (5) MockMvc 集成测试
+  - SDD 产物：`docs/specs/score-decision-api.md`、`docs/plans/score-decision-api.md`
 - 风险事件 API（Stage 4）：
   - `RiskEventMapper`（risk-infrastructure）：MyBatis-Plus `BaseMapper<RiskEvent>` 基础数据访问
   - `RiskEventService` + `RiskEventServiceImpl`（risk-application）：事件 CRUD、状态更新、解决事件（幂等处理）
