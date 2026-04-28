@@ -31,8 +31,8 @@ Get-NetTCPConnection -LocalPort 5173,8080 -ErrorAction SilentlyContinue | ForEac
 | Maven 本地仓库 | `E:\repository` | 非默认 `~/.m2/repository` |
 | JDK (DataGrip JBR) | `E:\JetBrains\DataGrip\jbr` | 无独立 JDK 时直接用 IDE 自带的 |
 | `javac` / `java` | `E:\JetBrains\DataGrip\jbr\bin\javac.exe` | 用于脚本编译或 JDBC 直连 |
-| MySQL 客户端 | **本机未安装** `mysql.exe` | 用 JDBC 直连替代（见下方） |
-| MySQL JDBC 驱动 | `E:\repository\com\mysql\mysql-connector-j\8.3.0\mysql-connector-j-8.3.0.jar` | 用于 JDBC 脚本 |
+| MySQL 客户端 | `E:\mysql-8.0.16-winx64\bin\mysql.exe` | 本机已安装，但不在 PATH 中 |
+| MySQL JDBC 驱动 | `E:\repository\com\mysql\mysql-connector-j\8.3.0\mysql-connector-j-8.3.0.jar` | 无客户端时的 fallback |
 | 测试账号 | `admin` / `admin12345` | 与 `RegisterRequest @Size(min=8)` 对齐 |
 
 ### MySQL JDBC 直连（无 mysql.exe 时）
