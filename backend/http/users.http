@@ -1,0 +1,36 @@
+### 获取当前用户
+GET http://localhost:8080/api/v1/users/me
+Authorization: Bearer {{accessToken}}
+
+### 用户列表（ADMIN）
+GET http://localhost:8080/api/v1/users?page=1&limit=20
+Authorization: Bearer {{accessToken}}
+
+### 创建用户（ADMIN）
+POST http://localhost:8080/api/v1/users
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "username": "operator1",
+  "email": "operator1@example.com",
+  "password": "operator123",
+  "role": "operator",
+  "active": true
+}
+
+### 更新用户（ADMIN）
+PUT http://localhost:8080/api/v1/users/2
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "username": "operator1",
+  "email": "operator1@example.com",
+  "role": "operator",
+  "active": false
+}
+
+### 删除用户（ADMIN）
+DELETE http://localhost:8080/api/v1/users/2
+Authorization: Bearer {{accessToken}}

@@ -1,0 +1,31 @@
+### 创建决策（ADMIN）
+POST http://localhost:8080/api/v1/decisions
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "eventId": 1,
+  "decisionType": "MANUAL_REVIEW",
+  "reason": "金额较大，需要人工复核",
+  "notes": "已通知风控分析师",
+  "decidedBy": 1
+}
+
+### 决策列表
+GET http://localhost:8080/api/v1/decisions?page=1&limit=20
+Authorization: Bearer {{accessToken}}
+
+### 决策详情
+GET http://localhost:8080/api/v1/decisions/1
+Authorization: Bearer {{accessToken}}
+
+### 更新决策（ADMIN）
+PUT http://localhost:8080/api/v1/decisions/1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "decisionType": "ESCALATE",
+  "reason": "升级处理",
+  "notes": "转高级审核"
+}

@@ -16,7 +16,7 @@ Web 版风控系统，支持规则引擎、风险事件管理、风险评分、�
 | 构建工具 | Maven 3.9+ |
 | 认证 | JWT (jjwt) |
 | 测试 - 前端 | Vitest + Vue Test Utils |
-| 测试 - 后端 | JUnit 5 + Spring Boot Test |
+| 测试 - 后端 | HTTP 请求示例（IntelliJ HTTP Client `.http` 格式）|
 | 包管理 - 前端 | pnpm / npm |
 | 包管理 - 后端 | Maven |
 
@@ -81,6 +81,7 @@ harness-agent/
 │   └── vite.config.ts
 ├── backend/                     # Java Spring Boot 后端（Maven 多模块）
 │   ├── pom.xml                  # 父 POM（dependencyManagement + modules）
+│   ├── http/                    # HTTP 请求示例（IntelliJ HTTP Client .http 格式）
 │   ├── risk-common/             # 公共组件（异常、响应、配置、DTO）
 │   │   ├── pom.xml
 │   │   └── src/main/java/com/harness/risk/common/
@@ -218,18 +219,16 @@ View → Store (Pinia) → API Layer → Backend
 
 ## 测试要求
 
-- 后端覆盖率目标 ≥ 80%（当前 Jacoco 生成报告，阈值需人工核对；自动阈值见技术债务）
-- 前端覆盖率 ≥ 80%（vitest --coverage）
+- **前端**：覆盖率 ≥ 80%（vitest --coverage），新功能先写测试（TDD）
+- **后端**：不写 JUnit/Mockito 单元测试和 `@SpringBootTest` 集成测试，改为提供 HTTP 请求示例文件；新增 API 必须同步提供 `.http` 示例，覆盖正常请求、错误边界、权限差异
 - E2E 测试覆盖核心用户流程（Playwright）
-- 新功能必须先写测试（TDD）
 
-### 测试框架
+### 测试/验证框架
 
-| 测试类型 | 框架 | 配置 |
-|---------|------|------|
-| 后端单元测试 | JUnit 5 + Mockito | `backend/pom.xml` |
-| 后端集成测试 | Spring Boot Test + @SpringBootTest | `backend/pom.xml` |
-| 前端组件测试 | Vitest + Vue Test Utils | `frontend/vite.config.ts` |
+| 类型 | 方式 | 配置/位置 |
+|------|------|----------|
+| 后端验证 | IntelliJ HTTP Client `.http` 文件 | `backend/http/` 目录 |
+| 前端单元测试 | Vitest + Vue Test Utils | `frontend/vite.config.ts` |
 | E2E 测试 | Playwright | `frontend/playwright.config.ts` |
 
 ## 领域模型（核心实体）

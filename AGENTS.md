@@ -9,7 +9,7 @@
 2. **质量优先**：每个阶段必须通过质量门禁
 3. **自动化优先**：能自动化的绝不手动
 4. **并行优先**：独立任务必须并行执行
-5. **TDD 强制**：新功能/修复必须先写测试
+5. **TDD 强制**：前端新功能/修复必须先写测试；后端以 HTTP 请求示例替代单元/集成测试用例
 6. **注释语言统一**：代码需要注释时默认使用中文，优先写"为什么/边界/约束"
 7. **任务收尾按类型执行**：代码任务验证通过后默认 `commit + push`；只读/分析任务不提交；仅文档任务有实际修改时再提交，除非用户明确禁止或要求暂停
 
@@ -44,9 +44,9 @@
 
 | 任务类型 | 工作模式 | 触发条件 |
 |---------|---------|---------|
-| 新功能实现 | TDD + 多 Agent | 需要新增代码 |
-| Bug 修复 | TDD + Code Review | 修改现有代码 |
-| 重构 | Planner + TDD | 影响多个文件 |
+| 新功能实现 | 前端 TDD + 后端 HTTP 示例 + 多 Agent | 需要新增代码 |
+| Bug 修复 | 前端 TDD + 后端 HTTP 示例 + Code Review | 修改现有代码 |
+| 重构 | Planner + 前端 TDD / 后端 HTTP 示例 | 影响多个文件 |
 | 文档/配置 | 单 Agent + 验证 | 仅修改文档或配置 |
 
 ### 2.5 复杂任务前置：规格驱动开发（SDD）
@@ -57,9 +57,9 @@
 
 | 级别 | 触发条件 | 必需产物 | 是否等待用户确认 |
 |------|---------|---------|----------------|
-| 跳过 SDD | 影响文件 ≤ 5 **且** 不涉及 API 契约 / 数据库 schema / 认证授权 / 安全边界 | 直接 TDD | 否 |
+| 跳过 SDD | 影响文件 ≤ 5 **且** 不涉及 API 契约 / 数据库 schema / 认证授权 / 安全边界 | 前端直接 TDD / 后端直接写实现 + HTTP 示例 | 否 |
 | 轻量 SDD | 影响文件 > 5 **且** 需求明确、边界单一、无破坏性变更 | `docs/specs/<feature>.md` + `docs/plans/<feature>.md` | 仅存在待确认问题时 |
-| 完整 SDD | 架构变更、跨阶段/跨端联动、API 契约变更、认证/授权/安全边界、破坏性 schema 变更、需求存在歧义 | Specify → Clarify → Plan → Tasks → TDD | 是 |
+| 完整 SDD | 架构变更、跨阶段/跨端联动、API 契约变更、认证/授权/安全边界、破坏性 schema 变更、需求存在歧义 | Specify → Clarify → Plan → Tasks → 前端 TDD / 后端 HTTP 示例 | 是 |
 
 > **判定优先级**：安全/架构/API 边界优先于文件数。即使只改 1 个文件，只要涉及 JWT、权限、数据库 schema 或对外 API 契约，就必须走轻量或完整 SDD。
 
@@ -68,7 +68,7 @@
 - 涉及 API 契约、数据库 schema、认证授权或安全边界：至少轻量 SDD
 - 涉及架构变更、破坏性变更、跨端/跨阶段联动或需求不清：完整 SDD，并等待用户确认
 - 影响文件 > 5 且边界清楚、无破坏性变更：轻量 SDD
-- 影响文件 ≤ 5 且不触碰高风险边界：跳过 SDD，直接 TDD
+- 影响文件 ≤ 5 且不触碰高风险边界：跳过 SDD，前端直接 TDD / 后端直接实现 + HTTP 示例
 
 #### 闭环要求
 
@@ -76,8 +76,8 @@
 |------|------|------------------|------------------|
 | Specify | `docs/specs/<feature>.md` | 写清目标、非目标、验收标准、默认假设 | 同轻量 SDD |
 | Clarify | 规格中的 QA/假设记录 | 若无待确认问题，记录“无待确认问题”；若有问题，先问用户再继续 | 必须记录问题、用户答复和最终决策 |
-| Plan | `docs/plans/<feature>.md` | 写清文件计划、TDD 步骤、风险与验证命令 | 同轻量 SDD，并补数据流、异常路径、回滚/兼容策略 |
-| Tasks | Plan 中的文件级任务清单或 `task-list.md` 子任务 | Plan 中文件计划 + TDD 步骤即可闭环 | 必须拆到 `task-list.md` 子任务，单项 2-15 分钟、可独立验证 |
+| Plan | `docs/plans/<feature>.md` | 写清文件计划、前端 TDD 步骤 / 后端 HTTP 示例清单、风险与验证命令 | 同轻量 SDD，并补数据流、异常路径、回滚/兼容策略 |
+| Tasks | Plan 中的文件级任务清单或 `task-list.md` 子任务 | Plan 中文件计划 + 前端 TDD 步骤 / 后端 HTTP 示例清单即可闭环 | 必须拆到 `task-list.md` 子任务，单项 2-15 分钟、可独立验证 |
 
 **全栈任务**：后端优先（先 API 提供类型和数据契约，再前端）。
 **数据库任务**：已登记的新增迁移默认可按轻量 SDD 执行；修改既有迁移、破坏性 DDL、生产 schema 变更必须走完整 SDD 并等待确认。
@@ -96,7 +96,7 @@
 
 | 场景 | 工作模式 | 执行时机 | 跳过条件 |
 |------|---------|---------|---------|
-| 新功能/Bug 修复 | TDD 模式 | 开始编码前 | 仅修改文档/配置 |
+| 新功能/Bug 修复 | 前端 TDD / 后端 HTTP 示例 | 开始编码前 | 仅修改文档/配置 |
 | 代码已写入/修改 | Code Review 模式 | 写入后立即 | 无 |
 | 涉及认证/授权/用户输入 | 安全审查模式 | 写入后立即 | 无 |
 | 构建失败 | 构建修复模式 | 构建失败时 | 无 |
@@ -111,12 +111,14 @@
 | 代码维护 | 重构清理模式 | 阶段完成后 |
 | 文档更新 | 文档同步模式 | 代码变更后 |
 
-## TDD 工作流（强制）
+## 验证工作流（强制）
 
 ```
-[RED] 写测试 → 运行确认失败
+[前端 RED] 写测试 → 运行确认失败
     → [GREEN] 写最小实现 → 运行确认通过
     → [REFACTOR] 优化代码 → 运行确认通过
+    → [后端 RED] 写 HTTP 请求示例 → 手动执行确认预期响应
+    → [GREEN] 写最小实现 → 手动执行确认通过
     → [REVIEW] Code Review → 修复 CRITICAL/HIGH
     → [DOD] 按 docs/definition-of-done.md 逐项核对
 ```
@@ -124,20 +126,26 @@
 **前端测试**：单元用 `Vitest + Vue Test Utils`，端到端用 `Playwright`。
 **骨架/占位页/局部组件**不强制 Playwright，关键用户流程联动必须补。
 
-### 测试分层边界
+**后端验证**：不写 JUnit/Mockito 单元测试和 `@SpringBootTest` 集成测试，改为在 `backend/http/` 目录提供 HTTP 请求示例文件（IntelliJ HTTP Client `.http` 格式），覆盖：
+- 正常请求与预期响应
+- 错误边界（404、409、422、403 等）
+- 权限差异（ADMIN vs OPERATOR）
 
-| 层级 | 测试类型 | 框架 | 容器 | 适用场景 |
-|------|---------|------|------|---------|
-| Domain | 单元测试 | JUnit 5 | 不启动 Spring | 纯业务规则、枚举、值对象 |
-| Application | 单元测试 | JUnit 5 + Mockito | 不启动 Spring | Service 逻辑、用例编排（mock Mapper/依赖） |
-| Infrastructure | 集成测试 | Spring Boot Test | 启动 Spring + H2 | Mapper 边界、SQL 映射验证 |
-| Interfaces | 集成测试 | `@SpringBootTest` + `MockMvc` | 启动 Spring + H2 | Controller 路由、拦截器、序列化、状态码 |
-| 前端 | 单元测试 | Vitest | Node | Store、工具函数、组件渲染 |
-| 前端 | E2E | Playwright | 浏览器 | 核心用户流程（登录→业务→退出） |
+### 验证分层边界
+
+| 层级 | 验证方式 | 工具 | 适用场景 |
+|------|---------|------|---------|
+| 后端 Domain | 代码审查 + 手动调试 | IDEA Debugger | 纯业务规则、枚举、值对象 |
+| 后端 Application | HTTP 请求示例 | IntelliJ HTTP Client / curl | Service 逻辑、用例编排 |
+| 后端 Infrastructure | HTTP 请求示例 + 数据库断言 | IntelliJ HTTP Client / DataGrip | Mapper 边界、SQL 映射验证 |
+| 后端 Interfaces | HTTP 请求示例 | IntelliJ HTTP Client / curl | Controller 路由、拦截器、序列化、状态码 |
+| 前端 | 单元测试 | Vitest | Store、工具函数、组件渲染 |
+| 前端 | E2E | Playwright | 核心用户流程（登录→业务→退出） |
 
 **红线**：
-- Service 层单元测试禁止启动 Spring 容器（使用 Mockito 隔离依赖）。
-- Controller 层禁止只测 Service mock，必须走完整 HTTP 请求链路（验证拦截器、参数绑定、响应包装）。
+- 后端新增 API 必须同步提供对应的 `.http` 请求示例文件。
+- HTTP 请求示例必须包含 `Authorization` 头和请求体，可直接复制到 HTTP Client 运行。
+- 禁止用 JUnit/Mockito 写后端 Service 层或 Controller 层单元测试（保留存量测试不删除）。
 
 ## 多 Agent 协作
 
@@ -151,27 +159,27 @@
 
 ## 质量门禁
 
-每个任务完成前运行质量门禁：类 Unix 环境使用 `scripts/check.sh`，Windows PowerShell 使用 `scripts/check.ps1`，确保 lint 零错误、编译通过、覆盖率 ≥ 80%、全部测试通过。详细命令和反馈循环见 `docs/feedback-loop.md`。
+每个任务完成前运行质量门禁：类 Unix 环境使用 `scripts/check.sh`，Windows PowerShell 使用 `scripts/check.ps1`，确保 lint 零错误、编译通过、前端覆盖率 ≥ 80%、全部测试通过。详细命令和反馈循环见 `docs/feedback-loop.md`。
 
 ## 异常处理
 
 | 异常 | 处理 |
 |------|------|
 | 编译失败 | 触发 build-error-resolver → 修复 → 重新编译 |
-| 测试失败 | 分析根因 → 修复实现（不是修测试）→ 重测 |
+| 测试失败 / HTTP 示例不通过 | 分析根因 → 修复实现（不是修改示例跳过问题）→ 重测 |
 | Code Review 不通过 | 修复 CRITICAL/HIGH → 重新审查 |
 | 安全问题 | 立即停止 → 触发 security-reviewer → 修复 → 重审 |
 | Harness 审查 | 重大功能完成后 / 阶段切换前 / 交接前运行 |
 
-**禁止**：跳过 hooks（--no-verify）、强制推送、删除测试以通过构建。
+**禁止**：跳过 hooks（--no-verify）、强制推送、删除测试或修改 HTTP 示例以掩盖实现问题。
 
 ## 决策树
 
 ### 何时使用 planner / SDD？
 ```
-影响文件 ≤ 5 且不涉及架构/API/schema/安全？ → 跳过 SDD，直接 TDD
-影响文件 > 5 但边界清楚、无破坏性变更？ → 轻量 SDD → TDD
-架构变更 / 跨阶段 / API 契约 / 安全边界 / 破坏性 schema / 需求歧义？ → 完整 SDD → 用户确认 → TDD
+影响文件 ≤ 5 且不涉及架构/API/schema/安全？ → 跳过 SDD，前端直接 TDD / 后端直接实现 + HTTP 示例
+影响文件 > 5 但边界清楚、无破坏性变更？ → 轻量 SDD → 前端 TDD / 后端 HTTP 示例
+架构变更 / 跨阶段 / API 契约 / 安全边界 / 破坏性 schema / 需求歧义？ → 完整 SDD → 用户确认 → 前端 TDD / 后端 HTTP 示例
 ```
 
 ### 何时并行？
@@ -193,7 +201,7 @@
 
 所有任务的完成标准（DoD）以 `docs/definition-of-done.md` 为唯一真相源。以下为高层概览：
 
-1. **代码质量**：测试通过、覆盖率 ≥ 80%、lint 零错误、编译通过
+1. **代码质量**：前端测试通过、覆盖率 ≥ 80%、lint 零错误、编译通过；后端 HTTP 请求示例可复现、与实际响应一致
 2. **代码审查**：code-reviewer 已运行、CRITICAL/HIGH 已修复、security-reviewer（如适用）
 3. **安全检查**：OWASP Top 10 通过、无敏感信息泄露、权限校验到位
 4. **文档更新**：task-list.md 状态已更新、CHANGELOG.md 已更新、API 文档已更新（如适用）
@@ -219,7 +227,7 @@
 ```markdown
 - [x] 1.1 User 模型 + Flyway 初始化迁移
   - 完成时间：2026-04-24
-  - 测试覆盖率：85%
+  - 前端测试覆盖率：85%
   - 审查状态：通过
 ```
 
@@ -234,7 +242,7 @@
    2.2 [Clarify] 确认规则条件语法、权限模型；无待确认问题时记录默认假设
    2.3 [Plan] docs/plans/rule-management.md
    2.4 [Tasks] 轻量 SDD 写入 Plan 文件计划；完整 SDD 拆入 task-list.md 子任务
-3. TDD 循环（按子任务逐个）：RED → GREEN → REFACTOR → REVIEW → DOD
+3. 验证循环（按子任务逐个）：前端 RED → GREEN → REFACTOR → REVIEW → DOD；后端 HTTP 示例 → 实现 → 手动验证 → REVIEW → DOD
 4. code-reviewer + security-reviewer → 修复问题
 5. 知识沉淀：记录规则引擎设计的模式/反模式
 6. DoD 核查 → 更新 task-list.md → 更新 CHANGELOG → commit + push
@@ -243,8 +251,8 @@
 ## 禁止操作清单
 
 ### 绝对禁止
-- ❌ 跳过测试 / Code Review / DoD 核查
-- ❌ 修改测试以通过构建（应该修复实现）
+- ❌ 跳过前端测试 / Code Review / DoD 核查
+- ❌ 修改 HTTP 请求示例以掩盖实现问题（应该修复实现）
 - ❌ 硬编码敏感信息
 - ❌ 跨层调用（Controller 直接调用 Mapper）
 - ❌ 直接使用 System.out.println()（应该用 @Slf4j 日志）
@@ -258,13 +266,12 @@
 ```bash
 # 后端
 cd backend
-mvn test                                     # 运行所有测试
-mvn test -Dtest=ClassName                    # 运行指定测试
-mvn verify                                   # 测试 + 打包
+mvn compile                                  # 编译
+mvn verify                                   # 编译 + 打包（不含测试运行）
 mvn compile                                  # 编译
 mvn checkstyle:check                         # 代码规范检查
 mvn spotless:check                           # 代码格式检查
-mvn jacoco:report                            # 生成覆盖率报告
+# 后端验证通过 IntelliJ HTTP Client 或 curl 执行 backend/http/ 下的 .http 文件
 mvn spring-boot:run                          # 启动开发服务器
 
 # 前端

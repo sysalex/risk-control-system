@@ -1,0 +1,49 @@
+### 创建规则（ADMIN）
+POST http://localhost:8080/api/v1/rules
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "大额交易检测",
+  "description": "单笔金额超过1万触发预警",
+  "conditions": "{\"operator\":\"AND\",\"conditions\":[{\"field\":\"amount\",\"op\":\">\",\"value\":10000}]}",
+  "actions": "{\"type\":\"create_event\",\"riskLevel\":\"high\"}",
+  "priority": 10
+}
+
+### 规则列表
+GET http://localhost:8080/api/v1/rules?page=1&limit=20
+Authorization: Bearer {{accessToken}}
+
+### 规则详情
+GET http://localhost:8080/api/v1/rules/1
+Authorization: Bearer {{accessToken}}
+
+### 更新规则
+PUT http://localhost:8080/api/v1/rules/1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "大额交易检测-更新",
+  "description": "单笔金额超过5万触发预警",
+  "conditions": "{\"operator\":\"AND\",\"conditions\":[{\"field\":\"amount\",\"op\":\">\",\"value\":50000}]}",
+  "actions": "{\"type\":\"create_event\",\"riskLevel\":\"high\"}",
+  "priority": 5
+}
+
+### 删除规则（无引用）
+DELETE http://localhost:8080/api/v1/rules/2
+Authorization: Bearer {{accessToken}}
+
+### 删除规则（被引用，应返回 409）
+DELETE http://localhost:8080/api/v1/rules/1
+Authorization: Bearer {{accessToken}}
+
+### 启用规则
+POST http://localhost:8080/api/v1/rules/1/enable
+Authorization: Bearer {{accessToken}}
+
+### 停用规则
+POST http://localhost:8080/api/v1/rules/1/disable
+Authorization: Bearer {{accessToken}}
