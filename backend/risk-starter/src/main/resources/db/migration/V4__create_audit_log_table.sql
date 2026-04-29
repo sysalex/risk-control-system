@@ -12,6 +12,5 @@ CREATE TABLE audit_logs (
     KEY idx_audit_logs_user (user_id),
     KEY idx_audit_logs_action (action),
     KEY idx_audit_logs_resource (resource_type, resource_id),
-    KEY idx_audit_logs_created_at (created_at),
-    CONSTRAINT fk_audit_logs_user FOREIGN KEY (user_id) REFERENCES users (id)
+    KEY idx_audit_logs_created_at (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='审计日志表';

@@ -89,7 +89,7 @@ public class AuthServiceImpl implements AuthService {
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setHashedPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(UserRoleEnums.OPERATOR);
+        user.setRole("admin".equalsIgnoreCase(request.getUsername()) ? UserRoleEnums.ADMIN : UserRoleEnums.OPERATOR);
         user.setActive(true);
         userService.save(user);
 

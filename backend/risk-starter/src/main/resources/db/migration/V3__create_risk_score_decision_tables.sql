@@ -14,9 +14,7 @@ CREATE TABLE risk_scores (
     UNIQUE KEY uk_risk_scores_event (event_id),
     KEY idx_risk_scores_subject (subject_type, subject_id),
     KEY idx_risk_scores_evaluated_at (evaluated_at),
-    KEY idx_risk_scores_evaluator (evaluator_id),
-    CONSTRAINT fk_risk_scores_event FOREIGN KEY (event_id) REFERENCES risk_events (id),
-    CONSTRAINT fk_risk_scores_evaluator FOREIGN KEY (evaluator_id) REFERENCES users (id)
+    KEY idx_risk_scores_evaluator (evaluator_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='风险评分表';
 
 CREATE TABLE decisions (
@@ -33,7 +31,5 @@ CREATE TABLE decisions (
     UNIQUE KEY uk_decisions_event (event_id),
     KEY idx_decisions_type (decision_type),
     KEY idx_decisions_decided_by (decided_by),
-    KEY idx_decisions_decided_at (decided_at),
-    CONSTRAINT fk_decisions_event FOREIGN KEY (event_id) REFERENCES risk_events (id),
-    CONSTRAINT fk_decisions_decided_by FOREIGN KEY (decided_by) REFERENCES users (id)
+    KEY idx_decisions_decided_at (decided_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='决策记录表';

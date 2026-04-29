@@ -12,8 +12,7 @@ CREATE TABLE risk_rules (
     PRIMARY KEY (id),
     UNIQUE KEY uk_risk_rules_name (name),
     KEY idx_risk_rules_creator (creator_id),
-    KEY idx_risk_rules_enabled_priority (enabled, priority),
-    CONSTRAINT fk_risk_rules_creator FOREIGN KEY (creator_id) REFERENCES users (id)
+    KEY idx_risk_rules_enabled_priority (enabled, priority)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='风控规则表';
 
 CREATE TABLE risk_events (
@@ -34,7 +33,5 @@ CREATE TABLE risk_events (
     KEY idx_risk_events_subject (subject_type, subject_id),
     KEY idx_risk_events_status (status, risk_level),
     KEY idx_risk_events_triggered_at (triggered_at),
-    KEY idx_risk_events_resolved_by (resolved_by),
-    CONSTRAINT fk_risk_events_rule FOREIGN KEY (rule_id) REFERENCES risk_rules (id),
-    CONSTRAINT fk_risk_events_resolved_by FOREIGN KEY (resolved_by) REFERENCES users (id)
+    KEY idx_risk_events_resolved_by (resolved_by)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='风险事件表';

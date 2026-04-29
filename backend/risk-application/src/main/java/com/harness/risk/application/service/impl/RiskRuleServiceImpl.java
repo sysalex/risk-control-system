@@ -8,7 +8,9 @@ import com.harness.risk.application.dto.RuleResponse;
 import com.harness.risk.application.dto.UpdateRuleRequest;
 import com.harness.risk.application.service.RiskRuleService;
 import com.harness.risk.common.exception.AppException;
+import com.harness.risk.domain.model.entity.RiskEventEntity;
 import com.harness.risk.domain.model.entity.RiskRuleEntity;
+import com.harness.risk.infrastructure.mapper.RiskEventMapper;
 import com.harness.risk.infrastructure.mapper.RiskRuleMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,12 @@ import java.util.List;
  */
 @Service
 public class RiskRuleServiceImpl extends ServiceImpl<RiskRuleMapper, RiskRuleEntity> implements RiskRuleService {
+
+    private final RiskEventMapper riskEventMapper;
+
+    public RiskRuleServiceImpl(RiskEventMapper riskEventMapper) {
+        this.riskEventMapper = riskEventMapper;
+    }
 
     @Override
     @Transactional
@@ -108,6 +116,11 @@ public class RiskRuleServiceImpl extends ServiceImpl<RiskRuleMapper, RiskRuleEnt
     @Transactional
     public void delete(Long id) {
         findOrThrow(id);
+        long eventCount = riskEventMapper.selectCount(
+                new LambdaQueryWrapper<RiskEventEntity>().eq(RiskEventEntity::getRuleId, id));
+        if (eventCount > 0) {
+            throw AppException.conflict("规则已被风险事件引用，无法删除");
+        }
         getBaseMapper().deleteById(id);
     }
 

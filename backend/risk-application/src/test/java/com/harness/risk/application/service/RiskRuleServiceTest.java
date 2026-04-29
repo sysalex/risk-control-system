@@ -8,6 +8,7 @@ import com.harness.risk.application.dto.RuleResponse;
 import com.harness.risk.application.service.impl.RiskRuleServiceImpl;
 import com.harness.risk.common.exception.AppException;
 import com.harness.risk.domain.model.entity.RiskRuleEntity;
+import com.harness.risk.infrastructure.mapper.RiskEventMapper;
 import com.harness.risk.infrastructure.mapper.RiskRuleMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,11 +36,14 @@ class RiskRuleServiceTest {
     @Mock
     private RiskRuleMapper riskRuleMapper;
 
+    @Mock
+    private RiskEventMapper riskEventMapper;
+
     private RiskRuleServiceImpl riskRuleService;
 
     @BeforeEach
     void setUp() {
-        riskRuleService = new RiskRuleServiceImpl();
+        riskRuleService = new RiskRuleServiceImpl(riskEventMapper);
         ReflectionTestUtils.setField(riskRuleService, "baseMapper", riskRuleMapper);
     }
 
@@ -146,6 +150,7 @@ class RiskRuleServiceTest {
     @Test
     void deleteSuccess() {
         when(riskRuleMapper.selectById(1L)).thenReturn(sampleRule());
+        when(riskEventMapper.selectCount(any())).thenReturn(0L);
 
         riskRuleService.delete(1L);
 
@@ -158,6 +163,15 @@ class RiskRuleServiceTest {
 
         AppException e = assertThrows(AppException.class, () -> riskRuleService.delete(1L));
         assertEquals(404, e.getCode());
+    }
+
+    @Test
+    void deleteFailsWhenReferencedByEvents() {
+        when(riskRuleMapper.selectById(1L)).thenReturn(sampleRule());
+        when(riskEventMapper.selectCount(any())).thenReturn(1L);
+
+        AppException e = assertThrows(AppException.class, () -> riskRuleService.delete(1L));
+        assertEquals(409, e.getCode());
     }
 
     @Test
