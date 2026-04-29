@@ -126,7 +126,7 @@
 **前端测试**：单元用 `Vitest + Vue Test Utils`，端到端用 `Playwright`。
 **骨架/占位页/局部组件**不强制 Playwright，关键用户流程联动必须补。
 
-**后端验证**：不写 JUnit/Mockito 单元测试和 `@SpringBootTest` 集成测试，改为在 `backend/http/` 目录提供 HTTP 请求示例文件（IntelliJ HTTP Client `.http` 格式），覆盖：
+**后端验证**：不写 JUnit/Mockito 单元测试和 `@SpringBootTest` 集成测试，改为在 `risk-starter/src/test/resources/http/` 目录提供 HTTP 请求示例文件（IntelliJ HTTP Client `.http` 格式），覆盖：
 - 正常请求与预期响应
 - 错误边界（404、409、422、403 等）
 - 权限差异（ADMIN vs OPERATOR）
@@ -271,7 +271,7 @@ mvn verify                                   # 编译 + 打包（不含测试运
 mvn compile                                  # 编译
 mvn checkstyle:check                         # 代码规范检查
 mvn spotless:check                           # 代码格式检查
-# 后端验证通过 IntelliJ HTTP Client 或 curl 执行 backend/http/ 下的 .http 文件
+# 后端验证通过 IntelliJ HTTP Client 或 curl 执行 `risk-starter/src/test/resources/http/` 下的 .http 文件
 mvn spring-boot:run                          # 启动开发服务器
 
 # 前端

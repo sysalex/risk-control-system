@@ -81,7 +81,8 @@ harness-agent/
 │   └── vite.config.ts
 ├── backend/                     # Java Spring Boot 后端（Maven 多模块）
 │   ├── pom.xml                  # 父 POM（dependencyManagement + modules）
-│   ├── http/                    # HTTP 请求示例（IntelliJ HTTP Client .http 格式）
+│   ├── risk-starter/
+│   │   └── src/test/resources/http/  # HTTP 请求示例（IntelliJ HTTP Client .http 格式）
 │   ├── risk-common/             # 公共组件（异常、响应、配置、DTO）
 │   │   ├── pom.xml
 │   │   └── src/main/java/com/harness/risk/common/
