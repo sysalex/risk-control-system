@@ -123,3 +123,33 @@ starter → interfaces → application → infrastructure → domain
 | 依赖方向 | 单向：Controller → Service → Mapper | 单向：starter → interfaces → application → infrastructure → domain |
 | 可测试性 | Service 难独立测试 | Domain Service 可独立单元测试 |
 | 适用场景 | 简单 CRUD 项目 | 业务逻辑复杂的中大型项目 |
+
+---
+
+# ADR-006: 数据库外键约束策略
+
+日期: 2026-04-29
+状态: 已接受
+
+## 决策
+
+数据库层不再使用外键约束（FOREIGN KEY），数据一致性由业务层（Application Service）显式检查和维护。
+
+具体措施：
+- 所有 Flyway 迁移脚本（V2、V3、V4）已移除 `CONSTRAINT fk_xxx` 外键定义
+- 删除被引用的资源前，Service 层必须先查询引用关系，存在引用时抛出业务异常（409 Conflict）
+- 关联查询使用 MyBatis-Plus `LambdaQueryWrapper.eq(关联字段, 值)` 实现，不依赖数据库 JOIN
+
+## 理由
+
+- **业务语义化错误**：数据库外键约束触发时抛出 `SQLException`，映射为 500 Internal Server Error，用户无法得知真实原因；业务层检查可返回明确的 409 Conflict 及中文错误消息
+- **避免级联删除失控**：数据库级联删除（ON DELETE CASCADE）会静默删除关联数据，在风控系统中可能导致审计链断裂；业务层检查强制开发者显式决定如何处理引用关系
+- **微服务演进预留**：若未来拆分为独立服务（如规则服务、事件服务），跨服务外键无法在数据库层面维护，业务层一致性检查是可迁移的方案
+- **测试友好**：移除外键后，E2E 测试可以更灵活地构造和清理测试数据，无需按外键依赖顺序操作
+
+## 代价
+
+- Application Service 需显式编写引用检查逻辑（如 `RiskRuleServiceImpl.delete()` 中检查 `riskEventMapper.selectCount`）
+- 数据完整性依赖代码正确性，需通过测试保障（已补充 `deleteFailsWhenReferencedByEvents` 测试）
+
+---

@@ -124,7 +124,9 @@ VITE_API_BASE_URL=http://localhost:8080
 
 ## 种子数据
 
-Flyway 迁移脚本只建表不插数据。本地开发首次启动后没有默认用户，需手动注册：
+### 开发环境默认账号
+
+Flyway 迁移脚本只建表不插数据。首次启动后没有默认用户，需手动注册：
 
 ```bash
 curl -X POST http://localhost:8080/api/v1/auth/register \
@@ -132,9 +134,18 @@ curl -X POST http://localhost:8080/api/v1/auth/register \
   -d '{"username":"admin","email":"admin@example.com","password":"admin12345"}'
 ```
 
-注册后角色默认为 `operator`，如需 `admin` 角色，用 JDBC 执行：
-```sql
-UPDATE users SET role = 'admin' WHERE username = 'admin';
+**注册时若用户名为 `admin`，系统会自动分配 `ADMIN` 角色**（其他用户名默认 `OPERATOR`）。无需手动 UPDATE。
+
+### 业务测试数据
+
+`scripts/seed-data.sql` 包含规则、风险事件、评分、决策、审计日志的示例数据，用于开发和演示：
+
+```bash
+# 在 mysql.exe 中执行
+source scripts/seed-data.sql;
 ```
 
-> **待改进**：考虑增加 `db/migration/V0_1__seed_admin_user.sql` 自动写入开发环境种子数据。
+**原则**：
+- 种子数据不纳入 Flyway 迁移（避免污染生产环境）
+- E2E 测试如需前置数据，应在 `auth.setup.ts` 或测试 `beforeAll` 中通过 API 创建，而非直接操作数据库
+- 数据库清空后重新启动，`auth.setup.ts` 会自动重新注册 admin 账号

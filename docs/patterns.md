@@ -27,6 +27,13 @@
 
 <!-- 踩过的坑，格式：标题 + 症状 + 根因 + 正确做法 -->
 
+### 数据库外键隐式依赖
+
+- **症状**：删除规则时数据库外键约束触发 `SQLException`，表现为 500 Internal Server Error，前端只能看到"服务器内部错误"
+- **根因**：将数据完整性完全委托给数据库外键，业务层未做前置检查；同时数据库外键会阻止正常的业务删除操作
+- **正确做法**：数据库层不依赖外键约束（或仅作为文档说明），业务层在 Service 中显式检查引用关系，返回语义化业务异常（409 Conflict + 中文错误消息）
+- **示例**：`RiskRuleServiceImpl.delete()` 中先 `riskEventMapper.selectCount(ruleId = ?)`，若 > 0 则抛出 `AppException.conflict("规则已被风险事件引用，无法删除")`
+
 ### [示例] 在 Controller 层写业务逻辑
 
 - **症状**：Controller 方法直接调 Mapper，包含条件判断和数据转换

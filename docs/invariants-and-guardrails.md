@@ -89,6 +89,11 @@ View → Store → API Layer → Backend
 
 ### 数据库与迁移
 - Flyway 迁移失败时，禁止手动修改 `flyway_schema_history` 表绕过；必须回滚至上一稳定版本或修复迁移脚本
+- **已执行的迁移文件原则上不可修改**；如必须修改（仅限开发环境），标准流程为：
+  1. 备份当前数据（`mysqldump` 或 DataGrip 导出）
+  2. 在目标环境重新执行 `mvn flyway:clean`（开发环境）或新建补偿迁移（生产环境）
+  3. 重新运行应用，让 Flyway 按最新脚本重建 schema
+  4. 恢复数据并验证 schema 与数据一致性
 - 生产环境数据订正必须：备份 → 在 staging 验证 → 双人 review → 低峰期执行 → 事后验证
 
 ### 运行时异常
