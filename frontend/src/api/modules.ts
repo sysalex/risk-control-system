@@ -23,6 +23,7 @@ export interface UserResponse {
   username: string
   email: string
   role: string
+  active?: boolean
   enabled: boolean
 }
 
@@ -66,6 +67,24 @@ export interface AuditLogResponse {
   ipAddress: string
 }
 
+export interface PagePayload<T> {
+  records: T[]
+  total: number
+  size: number
+  current: number
+  pages: number
+}
+
+export type ListPayload<T> = T[] | PagePayload<T>
+
+export function listRecords<T>(payload: ListPayload<T> | null | undefined): T[] {
+  if (Array.isArray(payload)) {
+    return payload
+  }
+
+  return payload?.records ?? []
+}
+
 export const authApi = {
   login(request: LoginRequest) {
     return http.post<ApiResponse<TokenResponse>>('/auth/login', request)
@@ -83,7 +102,7 @@ export const userApi = {
     return http.get<ApiResponse<UserResponse>>('/users/me')
   },
   list(params: PageQuery) {
-    return http.get<ApiResponse<UserResponse[]>>('/users', { params })
+    return http.get<ApiResponse<ListPayload<UserResponse>>>('/users', { params })
   },
   create(request: Payload) {
     return http.post<ApiResponse<UserResponse>>('/users', request)
@@ -98,7 +117,7 @@ export const userApi = {
 
 export const ruleApi = {
   list(params: PageQuery) {
-    return http.get<ApiResponse<RuleResponse[]>>('/rules', { params })
+    return http.get<ApiResponse<ListPayload<RuleResponse>>>('/rules', { params })
   },
   create(request: Payload) {
     return http.post<ApiResponse<RuleResponse>>('/rules', request)
@@ -119,7 +138,7 @@ export const ruleApi = {
 
 export const eventApi = {
   list(params: PageQuery & { riskLevel?: string; status?: string }) {
-    return http.get<ApiResponse<EventResponse[]>>('/events', { params })
+    return http.get<ApiResponse<ListPayload<EventResponse>>>('/events', { params })
   },
   create(request: Payload) {
     return http.post<ApiResponse<EventResponse>>('/events', request)
@@ -134,7 +153,7 @@ export const eventApi = {
 
 export const scoreApi = {
   list(params: PageQuery) {
-    return http.get<ApiResponse<ScoreResponse[]>>('/scores', { params })
+    return http.get<ApiResponse<ListPayload<ScoreResponse>>>('/scores', { params })
   },
   evaluate(request: Payload) {
     return http.post<ApiResponse<ScoreResponse>>('/scores/evaluate', request)
@@ -146,7 +165,7 @@ export const scoreApi = {
 
 export const decisionApi = {
   list(params: PageQuery) {
-    return http.get<ApiResponse<DecisionResponse[]>>('/decisions', { params })
+    return http.get<ApiResponse<ListPayload<DecisionResponse>>>('/decisions', { params })
   },
   create(request: Payload) {
     return http.post<ApiResponse<DecisionResponse>>('/decisions', request)
@@ -158,6 +177,6 @@ export const decisionApi = {
 
 export const auditApi = {
   list(params: PageQuery & { userId?: number; action?: string; resourceType?: string }) {
-    return http.get<ApiResponse<AuditLogResponse[]>>('/audit-logs', { params })
+    return http.get<ApiResponse<ListPayload<AuditLogResponse>>>('/audit-logs', { params })
   },
 }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { inject, onMounted, reactive, ref } from 'vue'
 
-import { userApi as defaultUserApi, type Payload, type UserResponse } from '@/api/modules'
+import { listRecords, userApi as defaultUserApi, type Payload, type UserResponse } from '@/api/modules'
 
 type UserApi = typeof defaultUserApi
 
@@ -12,14 +12,14 @@ const form = reactive({
   username: '',
   email: '',
   password: '',
-  role: 'analyst',
+  role: 'RISK_ANALYST',
 })
 
 async function loadUsers() {
   loading.value = true
   try {
     const response = await userApi.list({ page: 1, limit: 20 })
-    users.value = response.data.data ?? []
+    users.value = listRecords(response.data.data)
   } finally {
     loading.value = false
   }
@@ -36,7 +36,7 @@ async function createUser() {
   form.username = ''
   form.email = ''
   form.password = ''
-  form.role = 'analyst'
+  form.role = 'RISK_ANALYST'
   await loadUsers()
 }
 
@@ -81,11 +81,14 @@ onMounted(loadUsers)
         required
       >
       <select v-model="form.role">
-        <option value="analyst">
-          analyst
+        <option value="RISK_ANALYST">
+          RISK_ANALYST
         </option>
-        <option value="admin">
-          admin
+        <option value="ADMIN">
+          ADMIN
+        </option>
+        <option value="OPERATOR">
+          OPERATOR
         </option>
       </select>
       <button type="submit">
@@ -118,7 +121,7 @@ onMounted(loadUsers)
             <td>{{ user.username }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.role }}</td>
-            <td>{{ user.enabled ? '启用' : '停用' }}</td>
+            <td>{{ (user.enabled ?? user.active) ? '启用' : '停用' }}</td>
             <td>
               <button
                 class="text-button danger"

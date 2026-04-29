@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { inject, onMounted, ref } from 'vue'
 
-import { auditApi as defaultAuditApi, type AuditLogResponse } from '@/api/modules'
+import { auditApi as defaultAuditApi, listRecords, type AuditLogResponse } from '@/api/modules'
 
 type AuditApi = Pick<typeof defaultAuditApi, 'list'>
 
@@ -13,7 +13,7 @@ async function loadLogs() {
   loading.value = true
   try {
     const response = await auditApi.list({ page: 1, limit: 20 })
-    logs.value = response.data.data ?? []
+    logs.value = listRecords(response.data.data)
   } finally {
     loading.value = false
   }

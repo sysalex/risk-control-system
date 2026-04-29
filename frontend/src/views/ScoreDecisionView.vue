@@ -3,6 +3,7 @@ import { inject, onMounted, reactive, ref } from 'vue'
 
 import {
   decisionApi as defaultDecisionApi,
+  listRecords,
   scoreApi as defaultScoreApi,
   type DecisionResponse,
   type Payload,
@@ -23,12 +24,12 @@ const form = reactive({
 
 async function loadScores() {
   const response = await scoreApi.list({ page: 1, limit: 20 })
-  scores.value = response.data.data ?? []
+  scores.value = listRecords(response.data.data)
 }
 
 async function loadDecisions() {
   const response = await decisionApi.list({ page: 1, limit: 20 })
-  decisions.value = response.data.data ?? []
+  decisions.value = listRecords(response.data.data)
 }
 
 async function loadPageData() {

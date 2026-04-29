@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { inject, onMounted, ref } from 'vue'
 
-import { eventApi as defaultEventApi, type EventResponse } from '@/api/modules'
+import { eventApi as defaultEventApi, listRecords, type EventResponse } from '@/api/modules'
 
 type EventApi = Pick<typeof defaultEventApi, 'list' | 'resolve'>
 
@@ -13,7 +13,7 @@ async function loadEvents() {
   loading.value = true
   try {
     const response = await eventApi.list({ page: 1, limit: 20 })
-    events.value = response.data.data ?? []
+    events.value = listRecords(response.data.data)
   } finally {
     loading.value = false
   }

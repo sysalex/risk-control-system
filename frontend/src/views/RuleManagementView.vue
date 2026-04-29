@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { inject, onMounted, reactive, ref } from 'vue'
 
-import { ruleApi as defaultRuleApi, type Payload, type RuleResponse } from '@/api/modules'
+import { listRecords, ruleApi as defaultRuleApi, type Payload, type RuleResponse } from '@/api/modules'
 
 type RuleApi = typeof defaultRuleApi
 
@@ -18,7 +18,7 @@ async function loadRules() {
   loading.value = true
   try {
     const response = await ruleApi.list({ page: 1, limit: 20 })
-    rules.value = response.data.data ?? []
+    rules.value = listRecords(response.data.data)
   } finally {
     loading.value = false
   }

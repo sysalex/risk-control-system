@@ -10,7 +10,7 @@ describe('UserManagementView', () => {
       { id: 2, username: 'bob', email: 'bob@example.com', role: 'analyst', enabled: false },
     ]
     const api = {
-      list: vi.fn().mockResolvedValue({ data: { data: users } }),
+      list: vi.fn().mockResolvedValue({ data: { data: { records: users } } }),
       create: vi.fn(),
       update: vi.fn(),
       remove: vi.fn(),
@@ -56,7 +56,7 @@ describe('UserManagementView', () => {
       username: 'carol',
       email: 'carol@example.com',
       password: 'password123',
-      role: 'analyst',
+      role: 'RISK_ANALYST',
     })
     expect(api.list).toHaveBeenCalledTimes(2)
   })
