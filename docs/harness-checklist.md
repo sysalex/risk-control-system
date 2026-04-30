@@ -16,6 +16,9 @@
 - [ ] 上下文限定在 Agent 任务所需范围（不是整个代码库）
 - [ ] 长期状态（计划、决策、进度）在文件中，不在 prompt 中
 - [ ] Agent 可访问的上下文中无敏感数据（密钥、凭证）
+- [ ] 会话恢复、上下文压缩、换 Agent 或接手未完成任务时，已重读 `session-handoff.md`、`docs/task-list.md` 和相关规格/计划
+- [ ] 未以“当前 prompt 没写”为理由忽略仓库文件中的长期状态、约束或验收标准
+- [ ] 未通过少读上下文降低 SDD / TDD / DoD / Code Review / Security Review 的执行级别
 
 ## 权限和沙箱
 

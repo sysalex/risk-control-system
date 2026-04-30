@@ -9,6 +9,7 @@
 
 ### 规格前置（复杂任务）
 - [ ] 已按 `AGENTS.md` 判定 SDD 级别：跳过 / 轻量 SDD / 完整 SDD
+- [ ] 已按 `AGENTS.md` 的“上下文防规避规则”重载必要规范、任务清单、交接记录和相关 SDD 产物
 - [ ] 轻量 SDD：规格文档位于 `docs/specs/`，计划文档位于 `docs/plans/`
 - [ ] 轻量 SDD：规格中已记录“无待确认问题”或已完成必要问答；计划中包含文件计划、TDD 步骤、验证命令
 - [ ] 完整 SDD：已完成 Specify → Clarify → Plan → Tasks，用户确认已记录，`task-list.md` 已拆分可验证子任务
@@ -114,3 +115,4 @@ Agent 发现以下情况时，**必须停止当前任务并上报**，不得绕�
 | 安全漏洞（SQL注入/XSS等） | 立即修复，记录到 `docs/adr/` |
 | 跨层调用（Controller→Mapper） | 重构，不得以"临时方案"提交 |
 | 复杂任务跳过 SDD 直接编码 | 补写规格/计划文档，再进入 TDD |
+| 通过少读上下文降低执行级别 | 停止当前任务，重读 `AGENTS.md`、`CLAUDE.md`、`docs/task-list.md`、`session-handoff.md` 和相关 SDD 产物后重新判定 |

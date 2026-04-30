@@ -25,6 +25,10 @@
 - 重构 7 个 Controller 集成测试继承 `BaseApiIntegrationTest`，消除重复注解和注入字段
 
 ### Docs
+- 补充上下文防规避规则：
+  - 在 `AGENTS.md` 明确必须重载的上下文、会话恢复规则和禁止的上下文规避行为
+  - 在 DoD、Harness 自检和变更前预检中加入防止选择性忽略长期状态的检查项
+- 登记 `TD-005`：`scripts/check.ps1` 在 Maven 后端测试失败时仍可能误报整体通过。
 - 调整配置文件提交规范：`backend/risk-starter/src/main/resources/application.yml` 纳入 Git，但只允许保留本地开发默认值和环境变量占位符。
 - 补充 Java 命名规范：
   - DTO 统一为 `class + @Data + @NoArgsConstructor + @AllArgsConstructor`，字段使用块级 Javadoc
